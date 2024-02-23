@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public int Number;
     void Start()
     {
         CheckPossession();
