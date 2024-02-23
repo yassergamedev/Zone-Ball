@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Right Mid Zone
+  - Right Inside Zone
+  - Left Mid Zone
+  - Left Inside Zone
+  - Right Net
+  - Left Net
+  - Ball
+  - Opp
+  - Team
+  - OppPlayer
   layers:
   - Default
   - TransparentFX
