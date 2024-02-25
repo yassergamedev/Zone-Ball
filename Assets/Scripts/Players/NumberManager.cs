@@ -9,20 +9,12 @@ public class NumberManager : MonoBehaviour
     public GameObject firstDigitObject;
     public GameObject secondDigitObject;
 
-    void Start()
+    // Call this method to set the player's number
+    public void SetPlayerNumber(int playerNumber)
     {
-        // Set the sprites for the first and second digits based on the player's index
-        SetDigitSprites();
-    }
-
-    void SetDigitSprites()
-    {
-        // Get the index of the player in the team
-        int playerIndex = transform.GetSiblingIndex(); // Assuming players are ordered in the hierarchy
-
-        // Calculate the tens and units digits of the player's number
-        int tensDigit = playerIndex / 10; // Calculate tens digit
-        int unitsDigit = playerIndex % 10; // Calculate units digit
+        // Get the tens and units digits of the player's number
+        int tensDigit = playerNumber / 10; // Calculate tens digit
+        int unitsDigit = playerNumber % 10; // Calculate units digit
 
         // Set the sprites for the first and second digits
         SetDigitSprite(firstDigitObject, tensDigit);

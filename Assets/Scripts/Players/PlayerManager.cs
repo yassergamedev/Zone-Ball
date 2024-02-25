@@ -2,12 +2,19 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public int Number;
+    public NumberManager numberManager;
+    public int number;
+    
     void Start()
     {
         CheckPossession();
+        numberManager.SetPlayerNumber(number);
     }
 
+    void Update()
+    {
+        numberManager.SetPlayerNumber(number);
+    }
     void CheckPossession()
     {
         GameObject ball = GameObject.FindGameObjectWithTag("Ball");
