@@ -95,6 +95,8 @@ GameObject:
   - component: {fileID: 4595736981918210993}
   - component: {fileID: 852650424858261300}
   - component: {fileID: 7311617659134426190}
+  - component: {fileID: 5245444289781073889}
+  - component: {fileID: 4839342472652246457}
   m_Layer: 0
   m_Name: Team Player
   m_TagString: Player
@@ -183,7 +185,69 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberManager: {fileID: 8323752013313015466}
+  possessionManager: {fileID: 5245444289781073889}
   number: 12
+--- !u!114 &5245444289781073889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747531156060756348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3dfd20199beb348b150f21eed3b72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4839342472652246457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747531156060756348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5073b86aa04d1c4d83d8d233ace9929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Number: 0
+  Age: 0
+  contract:
+    years: 0
+    salary: 0
+  consistency:
+    value: 0
+    potential: 0
+  awareness:
+    value: 0
+    potential: 0
+  zoning:
+    value: 0
+    potential: 0
+  guarding:
+    value: 0
+    potential: 0
+  steal:
+    value: 0
+    potential: 0
+  shooting:
+    value: 0
+    potential: 0
+  positioning:
+    value: 0
+    potential: 0
+  juking:
+    value: 0
+    potential: 0
+  pressure:
+    value: 0
+    potential: 0
+  learning: 0
+  longevity: 0
+  personality: 0
+  zoneStyle: 0
 --- !u!1 &5824290097319221151
 GameObject:
   m_ObjectHideFlags: 0

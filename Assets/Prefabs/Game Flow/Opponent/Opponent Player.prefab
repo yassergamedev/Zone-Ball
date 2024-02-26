@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 7019215351104668879}
   - component: {fileID: 4080329452606344245}
   - component: {fileID: 6438316986038068396}
+  - component: {fileID: 1030237790027982857}
   m_Layer: 0
   m_Name: Opponent Player
   m_TagString: OppPlayer
@@ -326,4 +327,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberManager: {fileID: 634979254363395298}
+  possessionManager: {fileID: 1030237790027982857}
   number: 0
+--- !u!114 &1030237790027982857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961882880654064167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3dfd20199beb348b150f21eed3b72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
