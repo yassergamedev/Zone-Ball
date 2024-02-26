@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 959919359501972305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -0.02, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.1, y: -0.02, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6590627110850916848}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -731578664, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
+  m_Sprite: {fileID: -1996544891, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -210,8 +210,8 @@ Transform:
   m_GameObject: {fileID: 5824290097319221151}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: -0.03, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.63, y: -0.03, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6590627110850916848}
@@ -257,7 +257,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -731578664, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
+  m_Sprite: {fileID: -1996544891, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -315,15 +315,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   digitSprites:
-  - {fileID: -525798408, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: 31038983, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -714694949, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -731578664, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: 1378615864, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -1184184871, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -1001503153, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -18183709, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: 1466244366, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
-  - {fileID: -462138037, guid: 9904721c9fbbc8946b289fa3d8d1705d, type: 3}
+  - {fileID: 2043728393, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 1588263003, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 1958196459, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: -362522125, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: -1996544891, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 321062795, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 1573102985, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 1664653677, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: -1390315736, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
+  - {fileID: 241418451, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
   firstDigitObject: {fileID: 959919359501972305}
   secondDigitObject: {fileID: 5824290097319221151}

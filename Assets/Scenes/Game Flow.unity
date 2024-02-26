@@ -551,7 +551,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7011c5227a2cbcc4b93d18b45041bd6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerWithBall: {fileID: 0}
 --- !u!4 &7295145948585556003 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1463145140289628895, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
