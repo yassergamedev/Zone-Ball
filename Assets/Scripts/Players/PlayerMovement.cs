@@ -44,12 +44,19 @@ public class PlayerMovement : MonoBehaviour
                 // If possession is null, return "Defense"
                 if (possession == null)
                 {
-                    return "Defense";
+                    return "Offense";
                 }
                 // If possession is not null, return "Offense"
                 else
                 {
-                    return "Offense";
+                    if(possession.tag == gameObject.tag)
+                    {
+                        return "Offense";
+                     }
+                     else
+                       {
+                        return "Defense";
+                         }
                 }
         // Return an empty string if the gameObject's tag is not Player or OppPlayer
         return "";
@@ -59,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Check the play mode (Offense or Defense)
         string playMode = CheckPlay();
-
+        Debug.Log(gameObject.name + " " + playMode);
 
         Vector3 direction;
 
