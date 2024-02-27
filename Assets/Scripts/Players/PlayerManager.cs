@@ -4,7 +4,7 @@ public class PlayerManager : MonoBehaviour
 {
     public NumberManager numberManager;
     public PossessionManager possessionManager;
- 
+    public PlayerMovement playerMovement;
     public int number;
        private GameObject Possessor;
     void Start()
@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         numberManager.SetPlayerNumber(number);
+        playerMovement.MovePlayer();
     }
     
 }

@@ -240,6 +240,9 @@ GameObject:
   - component: {fileID: 6438316986038068396}
   - component: {fileID: 1030237790027982857}
   - component: {fileID: 8557897525512321945}
+  - component: {fileID: 624264053948464998}
+  - component: {fileID: 9006858517967312335}
+  - component: {fileID: 8329450127982786551}
   m_Layer: 0
   m_Name: Opponent Player
   m_TagString: OppPlayer
@@ -329,6 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberManager: {fileID: 634979254363395298}
   possessionManager: {fileID: 1030237790027982857}
+  playerMovement: {fileID: 624264053948464998}
   number: 0
 --- !u!114 &1030237790027982857
 MonoBehaviour:
@@ -377,3 +381,94 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.000000029802322}
   serializedVersion: 2
   m_Radius: 0.1
+--- !u!114 &624264053948464998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961882880654064167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7d0dc523e695f44dab9f38e372a2109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possessionManager: {fileID: 1030237790027982857}
+  speed: 0.5
+--- !u!50 &9006858517967312335
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961882880654064167}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &8329450127982786551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961882880654064167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5073b86aa04d1c4d83d8d233ace9929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberManager: {fileID: 634979254363395298}
+  Name: 
+  Number: 0
+  Age: 0
+  contract:
+    years: 0
+    salary: 0
+  consistency:
+    value: 0
+    potential: 0
+  awareness:
+    value: 0
+    potential: 0
+  zoning:
+    value: 0
+    potential: 0
+  guarding:
+    value: 0
+    potential: 0
+  steal:
+    value: 0
+    potential: 0
+  shooting:
+    value: 0
+    potential: 0
+  positioning:
+    value: 0
+    potential: 0
+  juking:
+    value: 0
+    potential: 0
+  pressure:
+    value: 0
+    potential: 0
+  learning: 0
+  longevity: 0
+  personality: 0
+  zoneStyle: 0
