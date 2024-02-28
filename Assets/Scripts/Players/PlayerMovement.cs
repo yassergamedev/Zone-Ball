@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
 
     public PossessionManager possessionManager;
     public Player player;
-
     private string playerTag;
 
     //to simulate players moving in different locations
@@ -17,9 +16,11 @@ public class PlayerMovement : MonoBehaviour
     float randomNumber;
 
     bool isInOwnHalf = true;
+    bool isInPreferredZone = false;
+
+    string[] preferredZones;
     Vector3 direction;
-    //true == left
-    //false == right
+    
 
     private float horizontalMovement = 0f;
     private float verticalMovement = 0f;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     //checking playmode for movement
     string playMode;
     string Half ;
+    string otherHalf;
 
 
     void Start()
@@ -39,12 +41,13 @@ public class PlayerMovement : MonoBehaviour
         if (playerTag == "Player")
         {
             Half = "RightHalf";
-
+            otherHalf = "LeftHalf";
             horizontalMovement = Random.Range(-100, 0);
             verticalMovement = Random.Range(-100, 100);
         }
         else{
             Half = "LeftHalf";
+            otherHalf = "RightHalf";
             horizontalMovement = Random.Range(0, 100);
             verticalMovement = Random.Range(-100, 100);
         }
@@ -64,53 +67,25 @@ public class PlayerMovement : MonoBehaviour
                 // If the player is in his own half
                 if (isInOwnHalf)
                 {
-                    // Generate a random number between 0 and 99
-                    randomNumber = Random.Range(0, 100);
-
-                    // If the random number is less than or equal to 90 (90% chance)
-                    if (randomNumber <= 90)
-                    {
+                 
                         // Create a vector for movement direction
                         direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
                         // Move the player to the opposite direction (left for Offense, right for Defense)
                         transform.Translate(currentSpeed * Time.deltaTime * direction);
-                    }
-                    // Otherwise (10% chance)
-                    else
-                    {
-                        // Move the player randomly
-                        float randomX = Random.Range(-1f, 1f);
-                        float randomY = Random.Range(-1f, 1f);
-                        Vector3 randomDirection = new Vector3(randomX, randomY, 0f);
-                        transform.Translate(currentSpeed * Time.deltaTime * randomDirection);
-                    }
+               
                 }
 
                 // If the player is not in his own half
                 else
                 {
-                    // change nothing for now
-                    randomNumber = Random.Range(0, 100);
-
-                    // If the random number is less than or equal to 90 (90% chance)
-                    if (randomNumber <= 90)
-                    {
+                 
                         // Create a vector for movement direction
                         direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
                         // Move the player to the opposite direction (left for Offense, right for Defense)
                         transform.Translate(currentSpeed * Time.deltaTime * direction);
-                    }
-                    // Otherwise (10% chance)
-                    else
-                    {
-                        // Move the player randomly
-                        float randomX = Random.Range(-1f, 1f);
-                        float randomY = Random.Range(-1f, 1f);
-                        Vector3 randomDirection = new Vector3(randomX, randomY, 0f);
-                        transform.Translate(currentSpeed * Time.deltaTime * randomDirection);
-                    }
+                
 
                 }
             }
@@ -121,58 +96,26 @@ public class PlayerMovement : MonoBehaviour
                 if (isInOwnHalf)
                 {
 
-                    // Generate a random number between 0 and 99
-                    randomNumber = Random.Range(0, 100);
-
-                    // If the random number is less than or equal to 90 (90% chance)
-                    if (randomNumber <= 90)
-                    {
-
+                  
                         // Create a vector for movement direction
                         direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
                         // Move the player to the opposite direction (left for Offense, right for Defense)
                         transform.Translate(direction * currentSpeed * Time.deltaTime);
-                    }
-                    // Otherwise (10% chance)
-                    else
-                    {
-                        
-                        // Move the player randomly
-                        float randomX = Random.Range(-1f, 1f);
-                        float randomY = Random.Range(-1f, 1f);
-                        Vector3 randomDirection = new Vector3(randomX, randomY, 0f);
-                        transform.Translate(randomDirection * currentSpeed * Time.deltaTime);
-                    }
+               
                 }
 
                 // If the player is not in his own half
                 else
                 {
-                    // change nothing for now
-                    // Generate a random number between 0 and 99
-                    randomNumber = Random.Range(0, 100);
-
-                    // If the random number is less than or equal to 90 (90% chance)
-                    if (randomNumber <= 90)
-                    {
+                   
 
                         // Create a vector for movement direction
                         direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
                         // Move the player to the opposite direction (left for Offense, right for Defense)
                         transform.Translate(direction * currentSpeed * Time.deltaTime);
-                    }
-                    // Otherwise (10% chance)
-                    else
-                    {
                    
-                        // Move the player randomly
-                        float randomX = Random.Range(-1f, 1f);
-                        float randomY = Random.Range(-1f, 1f);
-                        Vector3 randomDirection = new Vector3(randomX, randomY, 0f);
-                        transform.Translate(randomDirection * currentSpeed * Time.deltaTime);
-                    }
                 }
             }
         } 
@@ -253,9 +196,18 @@ public class PlayerMovement : MonoBehaviour
            
             }
             else {
-                isInOwnHalf = false;
+                 if(other.gameObject.CompareTag(otherHalf))
+                 {
+                     isInOwnHalf = false;
+                 }
+                   else
+                    {
+                    
+                     }
+                
 
             }
+       
         }
 
     }
