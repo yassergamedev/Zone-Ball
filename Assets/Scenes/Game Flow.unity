@@ -422,12 +422,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1600415281505781568, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1600415281505781568, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
       propertyPath: m_TagString
       value: LeftHalf
+      objectReference: {fileID: 0}
+    - target: {fileID: 2012067513048714412, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2136474003241285718, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2136474003241285718, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
       propertyPath: m_TagString
       value: Right Mid Zone
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832858199024240946, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4832858199024240946, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
       propertyPath: m_TagString
@@ -476,6 +492,10 @@ PrefabInstance:
     - target: {fileID: 6880519752535103418, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001018467385661837, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7001018467385661837, guid: f9bbaf51cef1c1744b1d54d29164c35e, type: 3}
       propertyPath: m_TagString

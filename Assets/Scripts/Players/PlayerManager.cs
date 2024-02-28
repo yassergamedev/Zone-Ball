@@ -22,7 +22,7 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         numberManager.SetPlayerNumber(number);
-        playerMovement.MovePlayer();
+       
     }
     
 }

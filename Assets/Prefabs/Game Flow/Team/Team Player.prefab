@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 7211894981638876784}
   - component: {fileID: 3495739315391244454}
   - component: {fileID: 1308741391939902101}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Team Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -301,7 +301,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possessionManager: {fileID: 5245444289781073889}
-  speed: 0.5
+  player: {fileID: 0}
+  timeToMove: 2
+  moveTimer: 0
 --- !u!50 &1308741391939902101
 Rigidbody2D:
   serializedVersion: 4
