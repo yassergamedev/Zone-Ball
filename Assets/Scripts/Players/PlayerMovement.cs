@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,6 +8,17 @@ public class PlayerMovement : MonoBehaviour
 
     public PossessionManager possessionManager;
     public Player player;
+    private GameObject RightMid;
+    private GameObject RightInside;
+    private GameObject LeftMid;
+    private GameObject LeftInside;
+    private GameObject GuardedPlayer;
+    string GuardedPlayrTag;
+
+    
+    GameObject[] playersToBeGuarded;
+  
+
     private string playerTag;
 
     //to simulate players moving in different locations
@@ -17,8 +29,11 @@ public class PlayerMovement : MonoBehaviour
 
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
+    string preferredZone;
+    
+    
 
-    string[] preferredZones;
+    
     Vector3 direction;
     
 
@@ -34,22 +49,88 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        int prefIndex = FindPreferredZone();
 
+       
+        RightMid = GameObject.FindGameObjectWithTag("RightMid");
+        RightInside = GameObject.FindGameObjectWithTag("RightInside");
+        LeftMid = GameObject.FindGameObjectWithTag("LeftMid");
+        LeftInside = GameObject.FindGameObjectWithTag("LeftInside");
+
+        switch (prefIndex)
+        {
+            case 0:
+                {
+                    if (playerTag == "Player")
+                    {
+                        preferredZone = "LeftInside";
+                        
+                    }
+                    else
+                    {
+                        preferredZone = "RightInside";
+                        
+                    }
+                    break;
+                    
+                }
+            case 1:
+                {
+                    if (playerTag == "Player")
+                    {
+                        preferredZone = "LeftMid";
+                    }
+                    else
+                    {
+                        preferredZone = "RightMid";
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    if (playerTag == "Player")
+                    {
+                        preferredZone = "RightHalf";
+                    }
+                    else
+                    {
+                        preferredZone = "LeftHalf";
+                    }
+                    break;
+                }
+        }
         timeToMove = Random.Range(1, 3);
         playerTag = transform.gameObject.tag;
-
+        
         if (playerTag == "Player")
         {
             Half = "RightHalf";
             otherHalf = "LeftHalf";
+            GuardedPlayrTag = "OppPlayer";
             horizontalMovement = Random.Range(-100, 0);
             verticalMovement = Random.Range(-100, 100);
         }
         else{
             Half = "LeftHalf";
             otherHalf = "RightHalf";
+            GuardedPlayrTag = "Player";
             horizontalMovement = Random.Range(0, 100);
             verticalMovement = Random.Range(-100, 100);
+        }
+
+        playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
+        Debug.Log(playersToBeGuarded.Length);
+        
+
+
+        while (GuardedPlayer == null)
+        {
+            int rand = Random.Range(0, playersToBeGuarded.Length);
+            if (playersToBeGuarded[rand].GetComponent<Player>().isGuarded ==false)
+            {
+                GuardedPlayer = playersToBeGuarded[rand];
+                GuardedPlayer.GetComponent<Player>().isGuarded = true;
+            }
         }
         StartCoroutine(UpdateSpeed());
     }
@@ -67,25 +148,35 @@ public class PlayerMovement : MonoBehaviour
                 // If the player is in his own half
                 if (isInOwnHalf)
                 {
-                 
                         // Create a vector for movement direction
                         direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
                         // Move the player to the opposite direction (left for Offense, right for Defense)
                         transform.Translate(currentSpeed * Time.deltaTime * direction);
-               
                 }
 
                 // If the player is not in his own half
                 else
                 {
-                 
-                        // Create a vector for movement direction
-                        direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
 
+                    if(!isInPreferredZone)
+                    {
+                        randomNumber = Random.Range(1, 99);
+                        if(randomNumber < player.awareness.value)
+                        {
+                            direction = FindPreferredDirection();
+                            while(!isInPreferredZone)
+                            {
+                                transform.Translate(currentSpeed * Time.deltaTime * direction);
+                            }
+                           
+                        }
+                        isInPreferredZone = true;
+                    }
+                  
+                      
                         // Move the player to the opposite direction (left for Offense, right for Defense)
-                        transform.Translate(currentSpeed * Time.deltaTime * direction);
-                
+                        
 
                 }
             }
@@ -93,37 +184,21 @@ public class PlayerMovement : MonoBehaviour
             else
             {
 
-                if (isInOwnHalf)
+
+
+                if (GuardedPlayer != null)
                 {
-
-                  
-                        // Create a vector for movement direction
-                        direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
-
-                        // Move the player to the opposite direction (left for Offense, right for Defense)
-                        transform.Translate(direction * currentSpeed * Time.deltaTime);
-               
+                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(0.0f, 0.5f, 0.0f); // Add a small offset
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
                 }
 
-                // If the player is not in his own half
-                else
-                {
-                   
-
-                        // Create a vector for movement direction
-                        direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
-
-                        // Move the player to the opposite direction (left for Offense, right for Defense)
-                        transform.Translate(direction * currentSpeed * Time.deltaTime);
-                   
-                }
             }
         } 
         else
         {
             timeToMove = Random.Range(1, 3);
             moveTimer = 0;
-            Debug.Log(gameObject.name + " time : "+ timeToMove);
+            //Debug.Log(gameObject.name + " time : "+ timeToMove);
             if (playerTag == "Player")
             {
 
@@ -131,22 +206,74 @@ public class PlayerMovement : MonoBehaviour
                 horizontalMovement = Random.Range(-100, 0);
                 verticalMovement = Random.Range(-100, 100);
 
-                Debug.Log(gameObject.name + " horizontalMovement : " + horizontalMovement);
-                Debug.Log(gameObject.name + " verticalMovement : " + verticalMovement);
+                //Debug.Log(gameObject.name + " horizontalMovement : " + horizontalMovement);
+                //Debug.Log(gameObject.name + " verticalMovement : " + verticalMovement);
             }
             else
             {
 
                 horizontalMovement = Random.Range(0, 100);
                 verticalMovement = Random.Range(-100, 100);
-                Debug.Log(gameObject.name + " horizontalMovement : " + horizontalMovement);
-                Debug.Log(gameObject.name + " verticalMovement : " + verticalMovement);
+                //Debug.Log(gameObject.name + " horizontalMovement : " + horizontalMovement);
+                //Debug.Log(gameObject.name + " verticalMovement : " + verticalMovement);
             }
 
         }
 
         }
-    
+
+    public Vector3 FindPreferredDirection()
+    {
+        int prefIndex = FindPreferredZone();
+        switch (prefIndex)
+        {
+            case 0:
+                {
+                    if (playerTag == "Player")
+                    {
+                        return (LeftInside.transform.position - transform.position).normalized;
+                    }
+                    else
+                    {
+                        return (RightInside.transform.position - transform.position).normalized;
+                    }
+                    
+
+                }
+            case 1:
+                {
+                    if (playerTag == "Player")
+                    {
+                        return (LeftMid.transform.position - transform.position).normalized;
+                    }
+                    else
+                    {
+                        return (RightMid.transform.position - transform.position).normalized;
+                    }
+                }
+            default:
+                {
+                    return new Vector3(0,0,0);
+                }
+        }
+    }
+    public int FindPreferredZone()
+    {
+
+        int maxIndex = 0;
+        int maxValue = player.zoneStyle[0];
+
+        for (int i = 1; i < player.zoneStyle.Length; i++)
+        {
+            if (player.zoneStyle[i] > maxValue)
+            {
+                maxValue = player.zoneStyle[i];
+                maxIndex = i;
+            }
+        }
+
+        return maxIndex;
+    }
     private string CheckPlay()
     {
         
@@ -187,8 +314,6 @@ public class PlayerMovement : MonoBehaviour
         }
         void OnTriggerStay2D(Collider2D other)
         {
-
-
             if (other.gameObject.CompareTag(Half))
             {
 
@@ -199,15 +324,21 @@ public class PlayerMovement : MonoBehaviour
                  if(other.gameObject.CompareTag(otherHalf))
                  {
                      isInOwnHalf = false;
-                 }
-                   else
-                    {
                     
-                     }
+                 }
+                  else
+                  {
+                        if (other.gameObject.CompareTag(preferredZone))
+                        {
+                            isInPreferredZone = true;
+                        }
+                        
+                     
+                   }
                 
-
             }
        
         }
+
 
     }

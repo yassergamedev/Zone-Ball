@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
 
     public NumberManager numberManager;
 
+    //gameflow variables
+    public bool isGuarded = false;
+
     public List<int[]> zoneStyles = new List<int[]>()
     {
         new int[] {20, 30, 50},

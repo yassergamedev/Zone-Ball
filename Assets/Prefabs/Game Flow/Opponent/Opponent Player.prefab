@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possessionManager: {fileID: 1030237790027982857}
-  player: {fileID: 0}
+  player: {fileID: 8329450127982786551}
   timeToMove: 2
   moveTimer: 0
 --- !u!50 &9006858517967312335
@@ -437,6 +437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberManager: {fileID: 634979254363395298}
+  isGuarded: 0
   Name: 
   Number: 0
   Age: 0
@@ -473,4 +474,4 @@ MonoBehaviour:
   learning: 0
   longevity: 0
   personality: 0
-  zoneStyle: 0
+  zoneStyle: 140000001e00000032000000
