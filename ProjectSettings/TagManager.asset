@@ -4,10 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Right Mid Zone
-  - Right Inside Zone
-  - Left Mid Zone
-  - Left Inside Zone
   - Right Net
   - Left Net
   - Ball
@@ -16,6 +12,12 @@ TagManager:
   - OppPlayer
   - RightHalf
   - LeftHalf
+  - RightMid
+  - RightInside
+  - LeftInside
+  - LeftMid
+  - BoundX
+  - BoundY
   layers:
   - Default
   - TransparentFX

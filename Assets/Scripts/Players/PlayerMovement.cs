@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private GameObject LeftMid;
     private GameObject LeftInside;
     private GameObject GuardedPlayer;
+    private GameObject boundX;
+    private GameObject boundY;
     string GuardedPlayrTag;
 
     
@@ -25,7 +27,9 @@ public class PlayerMovement : MonoBehaviour
     public float timeToMove = 2f;
     public float moveTimer = 0;
     //to decide whether to go upfront or just in a random location
-    float randomNumber;
+    float randomNumberForAwareness;
+    float randomX;
+    float randomY;
 
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
@@ -51,7 +55,8 @@ public class PlayerMovement : MonoBehaviour
     {
         int prefIndex = FindPreferredZone();
 
-       
+       boundX = GameObject.FindGameObjectWithTag("BoundX");
+        boundY = GameObject.FindGameObjectWithTag("BoundY");
         RightMid = GameObject.FindGameObjectWithTag("RightMid");
         RightInside = GameObject.FindGameObjectWithTag("RightInside");
         LeftMid = GameObject.FindGameObjectWithTag("LeftMid");
@@ -109,6 +114,8 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "OppPlayer";
             horizontalMovement = Random.Range(-100, 0);
             verticalMovement = Random.Range(-100, 100);
+            randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
+            randomX = Random.Range(-boundX.transform.position.x, 0);
         }
         else{
             Half = "LeftHalf";
@@ -116,6 +123,8 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "Player";
             horizontalMovement = Random.Range(0, 100);
             verticalMovement = Random.Range(-100, 100);
+            randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
+            randomX = Random.Range(0, boundX.transform.position.x);
         }
 
         playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
@@ -133,6 +142,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         StartCoroutine(UpdateSpeed());
+
+
+        randomNumberForAwareness = Random.Range(1, 99);
+
+       
     }
 
     private void Update()
@@ -161,17 +175,33 @@ public class PlayerMovement : MonoBehaviour
 
                     if(!isInPreferredZone)
                     {
-                        randomNumber = Random.Range(1, 99);
-                        if(randomNumber < player.awareness.value)
+                        
+                        if(randomNumberForAwareness < player.awareness.value)
                         {
                             direction = FindPreferredDirection();
-                            while(!isInPreferredZone)
+                            
+                            transform.Translate(currentSpeed * Time.deltaTime * direction);
+                            
+
+                        }
+                        else
+                        {
+                            //random target position
+
+                            Vector3 targetPosition =  new Vector3(randomX, randomY, 0.0f);
+                            Debug.Log(gameObject.name + " targetPosition : " + targetPosition);
+                            // rancom movement and distance
+                            if(transform.position != targetPosition)
                             {
-                                transform.Translate(currentSpeed * Time.deltaTime * direction);
+                                transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
+                            }
+                            else
+                            {
+                                isInPreferredZone  = true;
                             }
                            
                         }
-                        isInPreferredZone = true;
+                        
                     }
                   
                       
@@ -188,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (GuardedPlayer != null)
                 {
-                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(0.0f, 0.5f, 0.0f); // Add a small offset
+                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(1f, 0f, 0.0f); // Add a small offset
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
                 }
 

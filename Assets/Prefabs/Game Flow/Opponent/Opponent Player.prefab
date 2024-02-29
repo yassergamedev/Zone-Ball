@@ -143,6 +143,88 @@ MonoBehaviour:
   - {fileID: 241418451, guid: ac6c83e653174cd43ac6090e4d5e6155, type: 3}
   firstDigitObject: {fileID: 3706743506970671191}
   secondDigitObject: {fileID: 6757813370974097674}
+--- !u!1 &5651709341019594481
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4976748646102948037}
+  - component: {fileID: 3041449698238130307}
+  m_Layer: 15
+  m_Name: ShootingRange
+  m_TagString: OppShootingRange
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4976748646102948037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5651709341019594481}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.015, y: -0.009, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7019215351104668879}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!68 &3041449698238130307
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5651709341019594481}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: 0.00476954, y: -0.0044669863}
+  - {x: 0.17613468, y: 0.08933973}
+  - {x: 0.18466367, y: 0.0735444}
+  - {x: 0.18766727, y: 0.059577692}
+  - {x: 0.19075574, y: 0.03671397}
+  - {x: 0.19387342, y: 0.015915811}
+  - {x: 0.19292425, y: -0.009337982}
+  - {x: 0.18917572, y: -0.031842716}
+  - {x: 0.18840621, y: -0.04752603}
+  - {x: 0.17837447, y: -0.07084894}
+  - {x: 0.01309827, y: 0.0067005157}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!1 &6757813370974097674
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,6 +345,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4976748646102948037}
   - {fileID: 5511994063292480222}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -448,7 +531,7 @@ MonoBehaviour:
     value: 0
     potential: 0
   awareness:
-    value: 0
+    value: 50
     potential: 0
   zoning:
     value: 0
@@ -474,4 +557,4 @@ MonoBehaviour:
   learning: 0
   longevity: 0
   personality: 0
-  zoneStyle: 140000001e00000032000000
+  zoneStyle: 32000000140000001e000000
