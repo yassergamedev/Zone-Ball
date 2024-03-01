@@ -30,7 +30,8 @@ public class PlayerMovement : MonoBehaviour
     float randomNumberForAwareness;
     float randomX;
     float randomY;
-
+    float guardingX;
+    float guardingY;
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
     string preferredZone;
@@ -114,6 +115,8 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "OppPlayer";
             horizontalMovement = Random.Range(-100, 0);
             verticalMovement = Random.Range(-100, 100);
+            guardingX = Random.Range(1,1.5f );
+            guardingY = Random.Range(0,.5f );
             randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
             randomX = Random.Range(-boundX.transform.position.x, 0);
         }
@@ -123,6 +126,8 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "Player";
             horizontalMovement = Random.Range(0, 100);
             verticalMovement = Random.Range(-100, 100);
+            guardingX = Random.Range(-1.5f, -1);
+            guardingY = Random.Range(-.5f, 0) ;
             randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
             randomX = Random.Range(0, boundX.transform.position.x);
         }
@@ -218,7 +223,8 @@ public class PlayerMovement : MonoBehaviour
 
                 if (GuardedPlayer != null)
                 {
-                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(1f, 0f, 0.0f); // Add a small offset
+                    
+                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(guardingX, guardingY, 0.0f); // Add a small offset
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
                 }
 

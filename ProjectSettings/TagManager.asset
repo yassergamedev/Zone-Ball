@@ -18,6 +18,8 @@ TagManager:
   - LeftMid
   - BoundX
   - BoundY
+  - OppShootingRange
+  - ShootingRange
   layers:
   - Default
   - TransparentFX
@@ -33,8 +35,8 @@ TagManager:
   - Left Inside Zone
   - Player
   - OppPlayer
-  - 
-  - 
+  - ShootingRange
+  - OppShootingRange
   - 
   - 
   - 

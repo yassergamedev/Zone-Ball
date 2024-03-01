@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 7211894981638876784}
   - component: {fileID: 3495739315391244454}
   - component: {fileID: 1308741391939902101}
+  - component: {fileID: 6849713754702302580}
   m_Layer: 12
   m_Name: Team Player
   m_TagString: Player
@@ -230,13 +231,10 @@ MonoBehaviour:
   awareness:
     value: 0
     potential: 0
-  zoning:
+  juking:
     value: 0
     potential: 0
-  guarding:
-    value: 0
-    potential: 0
-  steal:
+  control:
     value: 0
     potential: 0
   shooting:
@@ -245,10 +243,22 @@ MonoBehaviour:
   positioning:
     value: 0
     potential: 0
-  juking:
+  steal:
+    value: 0
+    potential: 0
+  guarding:
     value: 0
     potential: 0
   pressure:
+    value: 0
+    potential: 0
+  inside:
+    value: 0
+    potential: 0
+  mid:
+    value: 0
+    potential: 0
+  Outside:
     value: 0
     potential: 0
   learning: 0
@@ -333,6 +343,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6849713754702302580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747531156060756348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0bb80e451712442865fee05525204e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 4839342472652246457}
+  otherPlayerObject: {fileID: 0}
+  ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
 --- !u!1 &2585102181140095219
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,13 +383,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2585102181140095219}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4595736981918210993}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!68 &3615155762669485759
 EdgeCollider2D:
   m_ObjectHideFlags: 0

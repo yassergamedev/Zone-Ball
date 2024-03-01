@@ -325,6 +325,7 @@ GameObject:
   - component: {fileID: 624264053948464998}
   - component: {fileID: 9006858517967312335}
   - component: {fileID: 8329450127982786551}
+  - component: {fileID: 3951723174469918079}
   m_Layer: 13
   m_Name: Opponent Player
   m_TagString: OppPlayer
@@ -533,13 +534,10 @@ MonoBehaviour:
   awareness:
     value: 50
     potential: 0
-  zoning:
+  juking:
     value: 0
     potential: 0
-  guarding:
-    value: 0
-    potential: 0
-  steal:
+  control:
     value: 0
     potential: 0
   shooting:
@@ -548,13 +546,39 @@ MonoBehaviour:
   positioning:
     value: 0
     potential: 0
-  juking:
+  steal:
+    value: 0
+    potential: 0
+  guarding:
     value: 0
     potential: 0
   pressure:
+    value: 0
+    potential: 0
+  inside:
+    value: 0
+    potential: 0
+  mid:
+    value: 0
+    potential: 0
+  Outside:
     value: 0
     potential: 0
   learning: 0
   longevity: 0
   personality: 0
   zoneStyle: 32000000140000001e000000
+--- !u!114 &3951723174469918079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961882880654064167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0bb80e451712442865fee05525204e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8329450127982786551}
+  ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
