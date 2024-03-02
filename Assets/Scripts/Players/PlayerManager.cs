@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
         {
             Debug.Log("I am " + gameObject.name);
         }else{
-            Debug.Log("the ball isn't with me");
+       
         }
         numberManager.SetPlayerNumber(number);
     }

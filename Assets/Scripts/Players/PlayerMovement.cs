@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     public PossessionManager possessionManager;
     public Player player;
+    public PlayerActions PlayerActions;
     private GameObject RightMid;
     private GameObject RightInside;
     private GameObject LeftMid;
@@ -34,8 +35,9 @@ public class PlayerMovement : MonoBehaviour
     float guardingY;
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
+    bool hasPickedAnAction = false;
     string preferredZone;
-    
+
     
 
     
@@ -133,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
-        Debug.Log(playersToBeGuarded.Length);
+      
         
 
 
@@ -143,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
             if (playersToBeGuarded[rand].GetComponent<Player>().isGuarded ==false)
             {
                 GuardedPlayer = playersToBeGuarded[rand];
+                PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<Player>());
                 GuardedPlayer.GetComponent<Player>().isGuarded = true;
             }
         }
@@ -194,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
                             //random target position
 
                             Vector3 targetPosition =  new Vector3(randomX, randomY, 0.0f);
-                            Debug.Log(gameObject.name + " targetPosition : " + targetPosition);
+                            
                             // rancom movement and distance
                             if(transform.position != targetPosition)
                             {
@@ -203,8 +206,18 @@ public class PlayerMovement : MonoBehaviour
                             else
                             {
                                 isInPreferredZone  = true;
+
                             }
                            
+                        }
+
+                    }
+                    else
+                    {
+                        if(possessionManager.CheckPossession() == null && !hasPickedAnAction)
+                        {
+                            PlayerActions.PickAnAction();
+                            hasPickedAnAction = true;
                         }
                         
                     }

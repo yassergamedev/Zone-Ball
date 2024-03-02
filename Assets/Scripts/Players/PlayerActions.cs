@@ -13,7 +13,7 @@ public class PlayerActions : MonoBehaviour
     private Player otherPlayer;
     private GameObject otherPlayerObject;
    public GameObject ball;
-    public Team team;
+    private Team team;
     public PossessionManager possessionManager;
 
     string playerTag;
@@ -33,13 +33,13 @@ public class PlayerActions : MonoBehaviour
         playerTag = gameObject.tag;
         if (playerTag == "Player")
         {
-            Net = GameObject.FindGameObjectWithTag("LeftNet");
+            Net = GameObject.FindGameObjectWithTag("Left Net");
             team = GameObject.FindGameObjectWithTag("Team").GetComponent<Team>();
         }
         else
         {
-            Net = GameObject.FindGameObjectWithTag("RightNet");
-            team = GameObject.FindGameObjectWithTag("OppTeam").GetComponent<Team>();
+            Net = GameObject.FindGameObjectWithTag("Right Net");
+            team = GameObject.FindGameObjectWithTag("Opp").GetComponent<Team>();
         }
     }
 
@@ -55,7 +55,7 @@ public class PlayerActions : MonoBehaviour
         }  
            freeBall = true;   
     }
-
+    //action 1 == the other player tries to steal the ball
     public void Steal()
     {
         switch (FoulCheck())
@@ -73,11 +73,13 @@ public class PlayerActions : MonoBehaviour
                 break;
             case "No Foul":
                 Debug.Log("Ball Stolen");
+                otherPlayer.steals += 1;
                 possessionManager.ChangePossession(otherPlayerObject);
                 break;
 
         }
     }
+    //action 2 == the player tries to shoot the ball
     public void Shoot()
     {
         if(ShotCheck())
@@ -102,8 +104,7 @@ public class PlayerActions : MonoBehaviour
 
             if (RandShot <= shotAccuracy)
             {
-                StartCoroutine((string)MoveBall());
-
+             
                 switch (zoneIndex)
                 {
                     case 0:
@@ -112,7 +113,6 @@ public class PlayerActions : MonoBehaviour
                         player.insideShots += 1;
                         otherPlayer.pointsAllowed += 4;
                         team.teamScore += 4;
-                        
                         break;
                     case 1:
                         player.pointsScored += 5;
@@ -149,17 +149,27 @@ public class PlayerActions : MonoBehaviour
         }
         
     }
-  
+    //action 3 == the player tries to juke the other player
     public void Juke()
     {
         
-        if(JukeCheck())
+        if(JukeCheck() == "Juke")
         {
-            
-
-          }
+            otherPlayer.isJuked = true;
+            Shoot();
+        }else if(JukeCheck() == "Steal")
+        {
+            Debug.Log("Ball Stolen");
+            otherPlayer.steals += 1;
+            possessionManager.ChangePossession(otherPlayerObject);
+        }
+        else
+        {
+            Debug.Log("Nothing");
+            PickAnAction();
+        }
     }
-        public bool JukeCheck()
+        public string JukeCheck()
     {
             int playerStatSum = player.consistency.value + player.juking.value + player.shooting.value + zoneBonus + positionalBonus;
             int otherPlayerStatSum = otherPlayer.consistency.value + otherPlayer.guarding.value + otherPlayer.steal.value + otherZoneBonus;
@@ -168,18 +178,18 @@ public class PlayerActions : MonoBehaviour
             
            if(disparity >= 100)
             {
-                return true;
+                return "Juke";
 
             }
             else
             {
                 if(disparity >= -99)
                 {
-                    return false;
+                    return "Nothing";
                 }
                 else
                 {
-                    return false;
+                    return "Steal";
 
                 }
             }
@@ -214,7 +224,7 @@ public class PlayerActions : MonoBehaviour
         }
 
     }
-
+   
     public void FoulShot(int times)
     {
         FoulShotCheck();
@@ -226,7 +236,7 @@ public class PlayerActions : MonoBehaviour
                 player.foulShotsMade += 2;
                 player.pointsScored += 2;
                 team.teamScore += 2;
-                StartCoroutine((string)MoveBall());
+                
             }
             else
             {
@@ -396,14 +406,16 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    public void Pass()
-    {
-
-    }
+   
 
     public void SetOtherPlayer(Player player)
     {
         otherPlayer = player;
+        otherPlayerObject = otherPlayer.gameObject;
+    }
+    public Player GetOtherPlayer()
+    {
+        return otherPlayer;
     }
     public void SetZoneBonus(int zoneI)
     {
@@ -420,6 +432,23 @@ public class PlayerActions : MonoBehaviour
             case 2:
                   zoneBonus = player.Outside.value;
                 otherZoneBonus = otherPlayer.Outside.value;
+                break;
+        }
+    }
+
+    public void PickAnAction()
+    {
+        int action = UnityEngine.Random.Range(1, 4);
+        switch (action)
+        {
+            case 1:
+                Steal();
+                break;
+            case 2:
+                Shoot();
+                break;
+            case 3:
+                Juke();
                 break;
         }
     }

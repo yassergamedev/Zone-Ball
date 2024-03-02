@@ -479,6 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possessionManager: {fileID: 1030237790027982857}
   player: {fileID: 8329450127982786551}
+  PlayerActions: {fileID: 3951723174469918079}
   timeToMove: 2
   moveTimer: 0
 --- !u!50 &9006858517967312335
@@ -522,9 +523,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberManager: {fileID: 634979254363395298}
   isGuarded: 0
+  isJuked: 0
+  isShooting: 0
+  foulOutThreshold: 0
+  foulout: 0
+  pressures: 0
+  blocks: 0
+  steals: 0
+  fouls: 0
+  pointsAllowed: 0
+  jukes: 0
+  shots: 0
+  shotsTaken: 0
+  pointsScored: 0
+  foulShots: 0
+  foulShotsMade: 0
+  foulPointsScored: 0
+  turnovers: 0
+  plays: 0
+  maxPlays: 8
+  insideShots: 0
+  insideShotsMade: 0
+  midShots: 0
+  midShotsMade: 0
+  outsideShots: 0
+  outsideShotsMade: 0
   Name: 
   Number: 0
   Age: 0
+  YearsPro: 0
   contract:
     years: 0
     salary: 0
@@ -582,3 +609,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 8329450127982786551}
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
+  possessionManager: {fileID: 1030237790027982857}
