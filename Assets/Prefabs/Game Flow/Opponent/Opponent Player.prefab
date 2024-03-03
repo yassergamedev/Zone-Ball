@@ -556,44 +556,44 @@ MonoBehaviour:
     years: 0
     salary: 0
   consistency:
-    value: 0
+    value: 40
     potential: 0
   awareness:
-    value: 50
+    value: 40
     potential: 0
   juking:
-    value: 0
+    value: 40
     potential: 0
   control:
-    value: 0
+    value: 40
     potential: 0
   shooting:
-    value: 0
+    value: 40
     potential: 0
   positioning:
-    value: 0
+    value: 40
     potential: 0
   steal:
-    value: 0
+    value: 40
     potential: 0
   guarding:
-    value: 0
+    value: 40
     potential: 0
   pressure:
-    value: 0
+    value: 40
     potential: 0
   inside:
-    value: 0
+    value: 40
     potential: 0
   mid:
-    value: 0
+    value: 40
     potential: 0
   Outside:
-    value: 0
+    value: 40
     potential: 0
   learning: 0
   longevity: 0
-  personality: 0
+  personality: 2
   zoneStyle: 32000000140000001e000000
 --- !u!114 &3951723174469918079
 MonoBehaviour:

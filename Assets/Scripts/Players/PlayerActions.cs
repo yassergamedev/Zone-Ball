@@ -108,6 +108,7 @@ public class PlayerActions : MonoBehaviour
                 switch (zoneIndex)
                 {
                     case 0:
+                        Debug.Log("Inside Shot Made");
                         player.pointsScored += 4;
                         player.insideShotsMade += 1;
                         player.insideShots += 1;
@@ -115,6 +116,7 @@ public class PlayerActions : MonoBehaviour
                         team.teamScore += 4;
                         break;
                     case 1:
+                        Debug.Log("mid Shot Made");
                         player.pointsScored += 5;
                         player.midShotsMade += 1;
                         player.midShots += 1;
@@ -122,6 +124,7 @@ public class PlayerActions : MonoBehaviour
                         team.teamScore += 5;
                         break;
                     case 2:
+                        Debug.Log("Outside Shot Made");
                         player.pointsScored += 6;
                         player.outsideShotsMade += 1;
                         player.outsideShots += 1;
@@ -133,10 +136,9 @@ public class PlayerActions : MonoBehaviour
             else
             {
                 Debug.Log("Missed");
-                if(freeBall)
-                {
+               
                     possessionManager.ChangePossession(otherPlayerObject);
-                }
+                
                
             }
 
@@ -159,7 +161,7 @@ public class PlayerActions : MonoBehaviour
             Shoot();
         }else if(JukeCheck() == "Steal")
         {
-            Debug.Log("Ball Stolen");
+            Debug.Log("Ball Stolen while tring to juke");
             otherPlayer.steals += 1;
             possessionManager.ChangePossession(otherPlayerObject);
         }
@@ -439,15 +441,19 @@ public class PlayerActions : MonoBehaviour
     public void PickAnAction()
     {
         int action = UnityEngine.Random.Range(1, 4);
+        Debug.Log(action);
         switch (action)
         {
             case 1:
+                Debug.Log("Going to steal");
                 Steal();
                 break;
             case 2:
+                Debug.Log("Going to shoot");
                 Shoot();
                 break;
             case 3:
+                Debug.Log("Going to juke");
                 Juke();
                 break;
         }

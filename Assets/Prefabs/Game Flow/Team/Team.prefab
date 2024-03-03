@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8181216858663909528}
+  - component: {fileID: 2784135727510872395}
   m_Layer: 0
   m_Name: Team
   m_TagString: Team
@@ -35,6 +36,20 @@ Transform:
   - {fileID: 4456036250069123879}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2784135727510872395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5775509849117499436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35628fc787dc29743b691a78bfa91c40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamScore: 0
+  Plays: 0
 --- !u!1001 &140448720007312294
 PrefabInstance:
   m_ObjectHideFlags: 0
