@@ -15,18 +15,15 @@ public class PossessionManager : MonoBehaviour
     }
     public GameObject CheckPossession()
     {
- 
-
     // Check if the ball is in possession
-    if (ball != null && ball.transform.IsChildOf(transform))
-    {
-        return null;
-    }
-    else
-    {
-  
-        return ball.transform.parent.gameObject; // Return the GameObject that has the ball
-    }
+         if (ball.transform.IsChildOf(transform))
+         {
+         return null;
+            }
+         else
+           {
+                 return ball.transform.parent.gameObject; // Return the GameObject that has the ball
+             }
     }
 
     public void ChangePossession(GameObject parent)
@@ -37,13 +34,13 @@ public class PossessionManager : MonoBehaviour
 
         GameObject team;
         playersToPlay = GameObject.FindGameObjectsWithTag(teamTag);
-
+        int i = 0;
         Player player = parent.GetComponent<Player>();
         if(player.plays >= player.maxPlays)
         {
             while(!assignedPlayer)
             {
-     
+             
                 int rand = Random.Range(0, playersToPlay.Length);
                 if (playersToPlay[rand].GetComponent<Player>().plays <
                     playersToPlay[rand].GetComponent<Player>().maxPlays)

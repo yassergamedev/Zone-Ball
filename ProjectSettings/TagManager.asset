@@ -20,6 +20,10 @@ TagManager:
   - BoundY
   - OppShootingRange
   - ShootingRange
+  - BoundXR
+  - BoundXL
+  - BoundYU
+  - BoundYD
   layers:
   - Default
   - TransparentFX

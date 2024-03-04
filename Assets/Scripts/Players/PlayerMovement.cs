@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
@@ -9,13 +10,20 @@ public class PlayerMovement : MonoBehaviour
     public PossessionManager possessionManager;
     public Player player;
     public PlayerActions PlayerActions;
+
+
     private GameObject RightMid;
     private GameObject RightInside;
     private GameObject LeftMid;
     private GameObject LeftInside;
     private GameObject GuardedPlayer;
-    private GameObject boundX;
-    private GameObject boundY;
+
+    //Bounds for the player to move
+    private GameObject boundXL;
+    private GameObject boundYU;
+    private GameObject boundXR;
+    private GameObject boundYD;
+    private GameObject MidPoint;
     string GuardedPlayrTag;
 
     
@@ -33,9 +41,11 @@ public class PlayerMovement : MonoBehaviour
     float randomY;
     float guardingX;
     float guardingY;
+
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
-   
+    bool setNewLocation = false;
+    bool isMovingTowardPreferredZone = false;
     string preferredZone;
 
     
@@ -45,9 +55,8 @@ public class PlayerMovement : MonoBehaviour
     // Target position for the player to move to when is not in own half, and when he isn't aware of his best zone
     Vector3 targetPosition;
 
-    private float horizontalMovement = 0f;
-    private float verticalMovement = 0f;
-    private float currentSpeed; // Current speed for the player
+
+    private float currentSpeed = 4; // Current speed for the player
 
     //checking playmode for movement
     string playMode;
@@ -59,8 +68,12 @@ public class PlayerMovement : MonoBehaviour
     {
         int prefIndex = FindPreferredZone();
 
-       boundX = GameObject.FindGameObjectWithTag("BoundX");
-        boundY = GameObject.FindGameObjectWithTag("BoundY");
+       boundXL = GameObject.FindGameObjectWithTag("BoundXL");
+        boundYU = GameObject.FindGameObjectWithTag("BoundYU");
+        boundXR = GameObject.FindGameObjectWithTag("BoundXR");
+        boundYD = GameObject.FindGameObjectWithTag("BoundYD");
+        MidPoint = GameObject.FindGameObjectWithTag("MidPoint");
+
         RightMid = GameObject.FindGameObjectWithTag("RightMid");
         RightInside = GameObject.FindGameObjectWithTag("RightInside");
         LeftMid = GameObject.FindGameObjectWithTag("LeftMid");
@@ -110,144 +123,132 @@ public class PlayerMovement : MonoBehaviour
         }
    
            setNewRandoms();
-        StartCoroutine(UpdateSpeed());
-
-
-      
-
        
     }
 
     private void Update()
     {
-        moveTimer += Time.deltaTime;
+      
         playMode = CheckPlay();
 
-        if (moveTimer < timeToMove)
-        {
            
             if (playMode == "Offense")
             {
+                    // Move the player to the opposite direction (left for Offense, right for Defense)
 
-                // If the player is in his own half
-                if (isInOwnHalf)
-                {
-                        // Create a vector for movement direction
-                        direction = new Vector3(horizontalMovement, verticalMovement, 0f).normalized;
-
-                        // Move the player to the opposite direction (left for Offense, right for Defense)
-                        transform.Translate(currentSpeed * Time.deltaTime * direction);
-                }
-
-                // If the player is not in his own half
-                else
+            if(transform.position != targetPosition && !isMovingTowardPreferredZone)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
+            }
+         
+            else 
+            {
+                if (!isInPreferredZone)
                 {
 
-                    if(!isInPreferredZone)
+                    if (randomNumberForAwareness < player.awareness.value)
                     {
-                        
-                        if(randomNumberForAwareness < player.awareness.value)
-                        {
-                            direction = FindPreferredDirection();
-                            
-                            transform.Translate(currentSpeed * Time.deltaTime * direction);
-                            
+                        isMovingTowardPreferredZone = true;
+                       
+                        direction = FindPreferredDirection();
+                        transform.Translate(currentSpeed * Time.deltaTime * direction);
 
-                        }
-                        else
-                        {
-                            //random target position
-
-                         
-                            
-                            // rancom movement and distance
-                            if(transform.position != targetPosition)
-                            {
-                                transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
-                            }
-                            else
-                            {
-                                isInPreferredZone  = true;
-
-                            }
-                           
-                        }
 
                     }
                     else
                     {
-                        Debug.Log(gameObject.name + " is in preferred zone");
-                        if(possessionManager.CheckPossession() == null)
-                        {
-                            Debug.Log(gameObject.name + " has picked an action");
-                            PlayerActions.PickAnAction();
-                           
-                        }
                         
+                         isInPreferredZone = true;
+                        Debug.Log(gameObject.name + " " + possessionManager.CheckPossession());
+
+
                     }
-                    Debug.Log(gameObject.name + " " + isInPreferredZone);
-
-                    // Move the player to the opposite direction (left for Offense, right for Defense)
-
 
                 }
+                else
+                {
+                    Debug.Log(gameObject.name + " is stuck ");
+                    if (possessionManager.CheckPossession() == null)
+                    {
+                        Debug.Log(possessionManager.CheckPossession());
+                        Debug.Log(gameObject.name + " has picked an action");
+                        PlayerActions.PickAnAction();
+
+                    }
+
+                }
+
+
+                // Move the player to the opposite direction (left for Offense, right for Defense)
+
+            }
+                
             }
 
             else
             {
-
-
-
-                if (GuardedPlayer != null)
+            isMovingTowardPreferredZone = false;
+            setNewLocation = false;
+            isInPreferredZone = false;
+            setRandomLocation();
+            if (GuardedPlayer != null)
                 {
-                    isInPreferredZone = false;
-
+                  
                     Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(guardingX, guardingY, 0.0f); // Add a small offset
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
                 }
 
             }
-        } 
+       
+       
+           
+
+
+        
+
+        }
+
+    public void setRandomLocation()
+    {
+        if(playerTag =="Player")
+        {
+            randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
+            randomX = Random.Range(boundXL.transform.position.x, MidPoint.transform.position.x);
+            targetPosition = new Vector3(randomX, randomY, 0);
+        }
         else
         {
-           
-         
-         setNewRandoms();
-
+            randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
+            randomX = Random.Range(MidPoint.transform.position.x, boundXR.transform.position.x);
         }
 
-        }
+        targetPosition = new Vector3(randomX, randomY, 0);
 
-
+    }
     public void setNewRandoms()
     {
-        moveTimer = 0;
         timeToMove = Random.Range(1, 3);
         playerTag = transform.gameObject.tag;
-
+        setRandomLocation();
         if (playerTag == "Player")
         {
             Half = "RightHalf";
             otherHalf = "LeftHalf";
             GuardedPlayrTag = "OppPlayer";
-            horizontalMovement = Random.Range(-100, 0);
-            verticalMovement = Random.Range(-100, 100);
-            guardingX = Random.Range(1, 1.5f);
-            guardingY = Random.Range(0, .5f);
-            randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
-            randomX = Random.Range(-boundX.transform.position.x, 0);
+        
+            guardingX = .5f;
+            guardingY =  .5f;
+          
         }
         else
         {
             Half = "LeftHalf";
             otherHalf = "RightHalf";
             GuardedPlayrTag = "Player";
-            horizontalMovement = Random.Range(0, 100);
-            verticalMovement = Random.Range(-100, 100);
-            guardingX = Random.Range(-1.5f, -1);
-            guardingY = Random.Range(-.5f, 0);
-            randomY = Random.Range(-boundY.transform.position.y, boundY.transform.position.y);
-            randomX = Random.Range(0, boundX.transform.position.x);
+       
+            guardingX = -.5f;
+            guardingY = -.5f;
+          
         }
 
         playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
@@ -295,10 +296,12 @@ public class PlayerMovement : MonoBehaviour
                         return (RightMid.transform.position - transform.position).normalized;
                     }
                 }
-            default:
+            case 2:
                 {
                     return new Vector3(0,0,0);
                 }
+            default:
+                return new Vector3(0, 0, 0);
         }
     }
     public int FindPreferredZone()
@@ -345,17 +348,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
    
-        private IEnumerator UpdateSpeed()
-        {
-            while (true)
-            {
-                // Wait for 1 to 3 seconds
-                yield return new WaitForSeconds(Random.Range(1f, 3f));
-
-                // Update current speed to a new random value within the specified range
-                currentSpeed = Random.Range(2, 5);
-            }
-        }
+      
         void OnTriggerStay2D(Collider2D other)
         {
             string otherTag = other.gameObject.tag;
@@ -374,6 +367,7 @@ public class PlayerMovement : MonoBehaviour
                 PlayerActions.SetZoneBonus(0);
                     }
             }
+
             if (other.gameObject.CompareTag(Half))
             {
 
@@ -381,24 +375,18 @@ public class PlayerMovement : MonoBehaviour
            
             }
             else {
-                 if(other.gameObject.CompareTag(otherHalf))
-                 {
-                     isInOwnHalf = false;
+                   isInOwnHalf = false;
                     
-                 }
-                  else
-                  {
-                        if (other.gameObject.CompareTag(preferredZone))
-                        {
-                            isInPreferredZone = true;
-                        }
-                        
-                     
-                   }
-                
-            }
-       
+              }
+        if (other.gameObject.CompareTag(preferredZone))
+        {
+            isInPreferredZone = true;
         }
 
 
-    }
+        }
+
+}
+
+
+    
