@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerActions : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    public ActionTextManager actionTextManager;
     public Player player;
     private Player otherPlayer;
     private GameObject otherPlayerObject;
@@ -30,6 +30,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void Start()
     {
+        
         playerTag = gameObject.tag;
         if (playerTag == "Player")
         {
@@ -61,18 +62,20 @@ public class PlayerActions : MonoBehaviour
         switch (FoulCheck())
         {
             case "Major Foul":
+                actionTextManager.ShowActionText("Major Foul");
                 otherPlayer.fouls += 1;
                 player.foulShots += 2;
                 FoulShot(3);
                 
                 break;
             case "Minor Foul":
+                actionTextManager.ShowActionText("Minor Foul");
                 otherPlayer.fouls += 1;
                 player.foulShots += 3;
                 FoulShot(2);
                 break;
             case "No Foul":
-                Debug.Log("Ball Stolen");
+                actionTextManager.ShowActionText("Ball Stolen");
                 otherPlayer.steals += 1;
                 possessionManager.ChangePossession(otherPlayerObject);
                 break;
@@ -108,7 +111,7 @@ public class PlayerActions : MonoBehaviour
                 switch (zoneIndex)
                 {
                     case 0:
-                        Debug.Log("Inside Shot Made");
+                        actionTextManager.ShowActionText("Inside Shot Made");
                         player.pointsScored += 4;
                         player.insideShotsMade += 1;
                         player.insideShots += 1;
@@ -440,6 +443,7 @@ public class PlayerActions : MonoBehaviour
 
     public void PickAnAction()
     {
+        actionTextManager.ShowActionText("Minor Foul");
         int action = UnityEngine.Random.Range(1, 4);
         Debug.Log(action);
         switch (action)
