@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private GameObject boundYD;
     private GameObject MidPoint;
     string GuardedPlayrTag;
-
+   
     
     GameObject[] playersToBeGuarded;
   
@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool isInOwnHalf = true;
     bool isInPreferredZone = false;
+    bool hasArrived = false;
     bool setNewLocation = false;
     bool isMovingTowardPreferredZone = false;
     string preferredZone;
@@ -128,20 +129,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-      
+        if(!PlayerActions.isPicking)
+        {
+      MovementLogic();
+        }
+       
+        
+
+     }
+
+    public void MovementLogic()
+    {
         playMode = CheckPlay();
 
-           
-            if (playMode == "Offense")
-            {
-                    // Move the player to the opposite direction (left for Offense, right for Defense)
 
-            if(transform.position != targetPosition && !isMovingTowardPreferredZone)
+        if (playMode == "Offense")
+        {
+            // Move the player to the opposite direction (left for Offense, right for Defense)
+
+            if (transform.position != targetPosition && !isMovingTowardPreferredZone)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
             }
-         
-            else 
+
+            else
             {
                 if (!isInPreferredZone)
                 {
@@ -149,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
                     if (randomNumberForAwareness < player.awareness.value)
                     {
                         isMovingTowardPreferredZone = true;
-                       
+
                         direction = FindPreferredDirection();
                         transform.Translate(currentSpeed * Time.deltaTime * direction);
 
@@ -157,8 +168,8 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        
-                         isInPreferredZone = true;
+
+                        isInPreferredZone = true;
                         Debug.Log(gameObject.name + " " + possessionManager.CheckPossession());
 
 
@@ -172,7 +183,8 @@ public class PlayerMovement : MonoBehaviour
                     {
                         Debug.Log(possessionManager.CheckPossession());
                         Debug.Log(gameObject.name + " has picked an action");
-                        PlayerActions.PickAnAction();
+                        StartCoroutine(PlayerActions.PickAnAction());
+                
 
                     }
 
@@ -182,31 +194,29 @@ public class PlayerMovement : MonoBehaviour
                 // Move the player to the opposite direction (left for Offense, right for Defense)
 
             }
-                
-            }
 
-            else
-            {
+        }
+
+        else
+        {
             isMovingTowardPreferredZone = false;
             setNewLocation = false;
             isInPreferredZone = false;
             setRandomLocation();
             if (GuardedPlayer != null)
-                {
-                  
-                    Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(guardingX, guardingY, 0.0f); // Add a small offset
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
-                }
+            {
 
+                Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(guardingX, guardingY, 0.0f); // Add a small offset
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
             }
-       
-       
-           
-
-
-        
 
         }
+
+
+
+
+
+    }
 
     public void setRandomLocation()
     {
@@ -237,7 +247,7 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "OppPlayer";
         
             guardingX = .5f;
-            guardingY =  .5f;
+          
           
         }
         else
@@ -247,7 +257,7 @@ public class PlayerMovement : MonoBehaviour
             GuardedPlayrTag = "Player";
        
             guardingX = -.5f;
-            guardingY = -.5f;
+      
           
         }
 

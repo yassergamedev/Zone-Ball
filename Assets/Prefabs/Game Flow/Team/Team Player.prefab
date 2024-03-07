@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionTextManager: {fileID: 5007221562605948427}
+  FloatingTextPrefab: {fileID: 4576452480331502704, guid: caf077891905ada4f920eda5c918655b, type: 3}
   player: {fileID: 4839342472652246457}
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
   possessionManager: {fileID: 5245444289781073889}

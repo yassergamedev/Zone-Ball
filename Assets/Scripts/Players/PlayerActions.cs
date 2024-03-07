@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
 {
     // Start is called before the first frame update
-    public ActionTextManager actionTextManager;
+
+    public GameObject FloatingTextPrefab;
+    private GameObject newInstanceOfText;
     public Player player;
     private Player otherPlayer;
     private GameObject otherPlayerObject;
@@ -23,14 +26,23 @@ public class PlayerActions : MonoBehaviour
     private int positionalBonus;
     private int accuracy;
     private int zoneIndex;
-    private bool freeBall = true;
+    public bool hasPicked = false;
+    public bool isPicking = false;
+    private float timeToPick = 2.0f;
+    private float timeMoving = 0f;
+
     void Update()
     {
-       
+        StartCoroutine(TextRemover());
+
+      
     }
     private void Start()
     {
         
+        newInstanceOfText = Instantiate(FloatingTextPrefab, transform.position + new Vector3(-0.5f, 0.5f, 0), Quaternion.identity, transform);
+        newInstanceOfText.GetComponent<TextMesh>().text = "";
+
         playerTag = gameObject.tag;
         if (playerTag == "Player")
         {
@@ -42,50 +54,67 @@ public class PlayerActions : MonoBehaviour
             Net = GameObject.FindGameObjectWithTag("Right Net");
             team = GameObject.FindGameObjectWithTag("Opp").GetComponent<Team>();
         }
+
+       
     }
 
-    public IEnumerable MoveBall()
+ 
+
+    public IEnumerator MoveBall()
     {
         while(ball.transform.position != Net.transform.position )
         {
             ball.transform.position = Vector3.MoveTowards(ball.transform.position, Net.transform.position, 0.1f);
-            freeBall = false;
+          
             yield return null;
 
 
         }  
-           freeBall = true;   
+  
     }
     //action 1 == the other player tries to steal the ball
-    public void Steal()
+    public IEnumerator Steal()
     {
+    
+
         switch (FoulCheck())
         {
-            case "Major Foul":
-                actionTextManager.ShowActionText("Major Foul");
+            case "Major Foul":   
+                    newInstanceOfText.GetComponent<TextMesh>().text = "Major Foul";
+                yield return new WaitForSeconds(2f);
+
                 otherPlayer.fouls += 1;
                 player.foulShots += 2;
                 FoulShot(3);
                 
                 break;
             case "Minor Foul":
-                actionTextManager.ShowActionText("Minor Foul");
+                
+                    newInstanceOfText.GetComponent<TextMesh>().text = "Major Foul";
+                yield return new WaitForSeconds(2f);
                 otherPlayer.fouls += 1;
                 player.foulShots += 3;
                 FoulShot(2);
                 break;
             case "No Foul":
-                actionTextManager.ShowActionText("Ball Stolen");
+               
+
+                    newInstanceOfText.GetComponent<TextMesh>().text = "Major Foul";
+                    yield return new WaitForSeconds(2f);
+                
                 otherPlayer.steals += 1;
                 possessionManager.ChangePossession(otherPlayerObject);
                 break;
 
         }
+        yield return new WaitForSeconds(2f);
+
     }
     //action 2 == the player tries to shoot the ball
-    public void Shoot()
+    public IEnumerator Shoot()
     {
-        if(ShotCheck())
+        yield return new WaitForSeconds(2f);
+        if (ShotCheck())
         {
             player.isShooting = true;
             player.shots += 1;
@@ -111,68 +140,88 @@ public class PlayerActions : MonoBehaviour
                 switch (zoneIndex)
                 {
                     case 0:
-                        actionTextManager.ShowActionText("Inside Shot Made");
+                        
+                            newInstanceOfText.GetComponent<TextMesh>().text = "Inside Shot Made!";
+
+                     
                         player.pointsScored += 4;
                         player.insideShotsMade += 1;
                         player.insideShots += 1;
                         otherPlayer.pointsAllowed += 4;
                         team.teamScore += 4;
+                        yield return new WaitForSeconds(2f);
                         break;
                     case 1:
-                        Debug.Log("mid Shot Made");
+                        
+                            newInstanceOfText.GetComponent<TextMesh>().text = "Mid Shot Made!";
+                   
                         player.pointsScored += 5;
                         player.midShotsMade += 1;
                         player.midShots += 1;
                         otherPlayer.pointsAllowed += 5;
                         team.teamScore += 5;
+                        yield return new WaitForSeconds(2f);
                         break;
                     case 2:
-                        Debug.Log("Outside Shot Made");
+                       
+                            newInstanceOfText.GetComponent<TextMesh>().text = "Outside Shot Made!";
+                        
                         player.pointsScored += 6;
                         player.outsideShotsMade += 1;
                         player.outsideShots += 1;
                         otherPlayer.pointsAllowed += 6;
                         team.teamScore += 6;
+                        yield return new WaitForSeconds(2f);
                         break;
                 }
             }
             else
             {
-                Debug.Log("Missed");
-               
-                    possessionManager.ChangePossession(otherPlayerObject);
+                
+                    newInstanceOfText.GetComponent<TextMesh>().text = "Missed Shot";
+                
+                yield return new WaitForSeconds(2f);
+                possessionManager.ChangePossession(otherPlayerObject);
                 
                
             }
 
 
         }
-        else { 
+        else {
 
-            Debug.Log("Blocked");
+            
+                newInstanceOfText.GetComponent<TextMesh>().text = "Blocked!";
+            yield return new WaitForSeconds(2f);
             possessionManager.ChangePossession(otherPlayerObject);
         }
-        
+        hasPicked = true;
+       
     }
     //action 3 == the player tries to juke the other player
-    public void Juke()
+    public IEnumerator Juke()
     {
-        
+   
         if(JukeCheck() == "Juke")
         {
+            newInstanceOfText.GetComponent<TextMesh>().text = "Juke Successful";
             otherPlayer.isJuked = true;
-            Shoot();
+            yield return new WaitForSeconds(2f);
+            StartCoroutine(Shoot());
         }else if(JukeCheck() == "Steal")
         {
-            Debug.Log("Ball Stolen while tring to juke");
+            newInstanceOfText.GetComponent<TextMesh>().text = "Ball Stolen";
+            yield return new WaitForSeconds(2f);
             otherPlayer.steals += 1;
             possessionManager.ChangePossession(otherPlayerObject);
         }
         else
         {
-            Debug.Log("Nothing");
-            PickAnAction();
+            newInstanceOfText.GetComponent<TextMesh>().text = "Juke Failed";
+            yield return new WaitForSeconds(2f);
+            StartCoroutine(PickAnAction());
         }
+
     }
         public string JukeCheck()
     {
@@ -441,28 +490,60 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    public void PickAnAction()
+    public void ShowFloatingTextPrefab(string text)
     {
-        actionTextManager.ShowActionText("Minor Foul");
+       
+        newInstanceOfText.GetComponent<TextMesh>().text = text;
+
+    }
+
+    public IEnumerator PickAnAction()
+    {
+        isPicking = true;
         int action = UnityEngine.Random.Range(1, 4);
         Debug.Log(action);
+        
         switch (action)
         {
             case 1:
+               
                 Debug.Log("Going to steal");
-                Steal();
+                ShowFloatingTextPrefab("Other Player going To Steal");
+                yield return new WaitForSeconds(2f);
+                StartCoroutine(Steal());
+                
                 break;
             case 2:
+               
                 Debug.Log("Going to shoot");
-                Shoot();
+                ShowFloatingTextPrefab("Going To Shoot");
+                yield return new WaitForSeconds(2f);
+                StartCoroutine(Shoot());
+             
                 break;
             case 3:
-                Debug.Log("Going to juke");
-                Juke();
+                
+
+                Debug.Log("Juke Attempt");     
+                ShowFloatingTextPrefab("Going To Juke");
+                yield return new WaitForSeconds(2f);
+                StartCoroutine(Juke());
                 break;
         }
+        isPicking = false;
+
     }
 
-    
-    
+    IEnumerator TextRemover()
+    {
+        if (newInstanceOfText.GetComponent<TextMesh>().text != "")
+        {
+            yield return new WaitForSeconds(2f);
+            newInstanceOfText.GetComponent<TextMesh>().text = "";
+        }
+
+    }
+
+
+
 }
