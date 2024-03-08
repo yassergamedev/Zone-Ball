@@ -8,6 +8,8 @@ public class PossessionManager : MonoBehaviour
     // Start is called before the first frame update
     GameObject ball;
     GameObject[] playersToPlay;
+
+    public bool isFouled = false;
     private void Start()
     {
          ball = GameObject.FindGameObjectWithTag("Ball");

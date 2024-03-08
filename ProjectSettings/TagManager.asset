@@ -16,8 +16,6 @@ TagManager:
   - RightInside
   - LeftInside
   - LeftMid
-  - BoundX
-  - BoundY
   - OppShootingRange
   - ShootingRange
   - BoundXR
@@ -25,6 +23,9 @@ TagManager:
   - BoundYU
   - BoundYD
   - MidPoint
+  - ShotPlaceR
+  - ShotPlaceL
+  - FoulManager
   layers:
   - Default
   - TransparentFX

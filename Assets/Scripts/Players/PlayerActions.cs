@@ -15,7 +15,10 @@ public class PlayerActions : MonoBehaviour
     public Player player;
     private Player otherPlayer;
     private GameObject otherPlayerObject;
+    private GameObject foulManager;
    public GameObject ball;
+
+
     private Team team;
     public PossessionManager possessionManager;
 
@@ -33,7 +36,7 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        StartCoroutine(TextRemover());
+        //StartCoroutine(TextRemover());
 
       
     }
@@ -41,6 +44,7 @@ public class PlayerActions : MonoBehaviour
     {
         
         newInstanceOfText = Instantiate(FloatingTextPrefab, transform.position + new Vector3(-0.5f, 0.5f, 0), Quaternion.identity, transform);
+        foulManager = GameObject.FindGameObjectWithTag("FoulManager");
         newInstanceOfText.GetComponent<TextMesh>().text = "";
 
         playerTag = gameObject.tag;
@@ -75,7 +79,7 @@ public class PlayerActions : MonoBehaviour
     //action 1 == the other player tries to steal the ball
     public IEnumerator Steal()
     {
-    
+        newInstanceOfText.GetComponent<TextMesh>().text = "Calculating Foul";
 
         switch (FoulCheck())
         {
@@ -85,7 +89,8 @@ public class PlayerActions : MonoBehaviour
 
                 otherPlayer.fouls += 1;
                 player.foulShots += 2;
-                FoulShot(3);
+                foulManager.GetComponent<FoulManager>().isFouled = true;
+                StartCoroutine(FoulShot(3));
                 
                 break;
             case "Minor Foul":
@@ -94,12 +99,12 @@ public class PlayerActions : MonoBehaviour
                 yield return new WaitForSeconds(2f);
                 otherPlayer.fouls += 1;
                 player.foulShots += 3;
-                FoulShot(2);
+                foulManager.GetComponent<FoulManager>().isFouled = true;
+                StartCoroutine(FoulShot(2));
                 break;
             case "No Foul":
                
-
-                    newInstanceOfText.GetComponent<TextMesh>().text = "Major Foul";
+                    newInstanceOfText.GetComponent<TextMesh>().text = " Ball Stolen";
                     yield return new WaitForSeconds(2f);
                 
                 otherPlayer.steals += 1;
@@ -113,7 +118,7 @@ public class PlayerActions : MonoBehaviour
     //action 2 == the player tries to shoot the ball
     public IEnumerator Shoot()
     {
-        yield return new WaitForSeconds(2f);
+        //yield return new WaitForSeconds(2f);
         if (ShotCheck())
         {
             player.isShooting = true;
@@ -201,25 +206,29 @@ public class PlayerActions : MonoBehaviour
     //action 3 == the player tries to juke the other player
     public IEnumerator Juke()
     {
-   
-        if(JukeCheck() == "Juke")
+
+        if (JukeCheck() == "Juke")
         {
             newInstanceOfText.GetComponent<TextMesh>().text = "Juke Successful";
             otherPlayer.isJuked = true;
             yield return new WaitForSeconds(2f);
             StartCoroutine(Shoot());
-        }else if(JukeCheck() == "Steal")
-        {
-            newInstanceOfText.GetComponent<TextMesh>().text = "Ball Stolen";
-            yield return new WaitForSeconds(2f);
-            otherPlayer.steals += 1;
-            possessionManager.ChangePossession(otherPlayerObject);
         }
         else
         {
-            newInstanceOfText.GetComponent<TextMesh>().text = "Juke Failed";
-            yield return new WaitForSeconds(2f);
-            StartCoroutine(PickAnAction());
+            if (JukeCheck() == "Steal")
+            {
+                newInstanceOfText.GetComponent<TextMesh>().text = "Ball Stolen";
+                yield return new WaitForSeconds(2f);
+                otherPlayer.steals += 1;
+                possessionManager.ChangePossession(otherPlayerObject);
+            }
+            else
+            {
+                newInstanceOfText.GetComponent<TextMesh>().text = "Juke Failed";
+                yield return new WaitForSeconds(2f);
+                StartCoroutine(PickAnAction());
+            }
         }
 
     }
@@ -271,32 +280,35 @@ public class PlayerActions : MonoBehaviour
             }
             else
             {
-                possessionManager.ChangePossession(otherPlayerObject);
-                Debug.Log("Steal");
+               
+              
                 return "No Foul";
             }
         }
 
     }
    
-    public void FoulShot(int times)
+    public IEnumerator FoulShot(int times)
     {
+       
         FoulShotCheck();
         for(int i = 0; i<times; i++)
         {
+            yield return new WaitForSeconds(2f);
             int RandShot = UnityEngine.Random.Range(0, 100);
             if(RandShot <= accuracy)
             {
                 player.foulShotsMade += 2;
                 player.pointsScored += 2;
                 team.teamScore += 2;
-                
+                newInstanceOfText.GetComponent<TextMesh>().text = "Shot Made";
             }
             else
             {
-                Debug.Log("Missed");
+                newInstanceOfText.GetComponent<TextMesh>().text="Shot Missed";
             }
         }
+        foulManager.GetComponent<FoulManager>().isFouled = false;
         possessionManager.ChangePossession(otherPlayerObject);
     }
 
@@ -534,15 +546,8 @@ public class PlayerActions : MonoBehaviour
 
     }
 
-    IEnumerator TextRemover()
-    {
-        if (newInstanceOfText.GetComponent<TextMesh>().text != "")
-        {
-            yield return new WaitForSeconds(2f);
-            newInstanceOfText.GetComponent<TextMesh>().text = "";
-        }
 
-    }
+
 
 
 

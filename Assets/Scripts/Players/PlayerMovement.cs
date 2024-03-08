@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private GameObject LeftMid;
     private GameObject LeftInside;
     private GameObject GuardedPlayer;
+    private GameObject foulManager;
 
     //Bounds for the player to move
     private GameObject boundXL;
@@ -24,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     private GameObject boundXR;
     private GameObject boundYD;
     private GameObject MidPoint;
+    private GameObject shotPlaceR;
+    private GameObject shotPlaceL;
+
     string GuardedPlayrTag;
    
     
@@ -46,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     bool isInPreferredZone = false;
     bool hasArrived = false;
     bool setNewLocation = false;
+    bool setFoulLocation = false;
     bool isMovingTowardPreferredZone = false;
     string preferredZone;
 
@@ -65,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
     string otherHalf;
 
 
+
+
+
+
     void Start()
     {
         int prefIndex = FindPreferredZone();
@@ -74,12 +83,14 @@ public class PlayerMovement : MonoBehaviour
         boundXR = GameObject.FindGameObjectWithTag("BoundXR");
         boundYD = GameObject.FindGameObjectWithTag("BoundYD");
         MidPoint = GameObject.FindGameObjectWithTag("MidPoint");
-
+        foulManager = GameObject.FindGameObjectWithTag("FoulManager");
         RightMid = GameObject.FindGameObjectWithTag("RightMid");
         RightInside = GameObject.FindGameObjectWithTag("RightInside");
         LeftMid = GameObject.FindGameObjectWithTag("LeftMid");
         LeftInside = GameObject.FindGameObjectWithTag("LeftInside");
 
+        shotPlaceL  = GameObject.FindGameObjectWithTag("ShotPlaceL");
+        shotPlaceR = GameObject.FindGameObjectWithTag("ShotPlaceR");
         switch (prefIndex)
         {
             case 0:
@@ -129,15 +140,61 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(!PlayerActions.isPicking)
+        if(!PlayerActions.isPicking && !foulManager.GetComponent<FoulManager>().isFouled)
         {
-      MovementLogic();
+            setFoulLocation = false;
+             MovementLogic();
+        }
+        else
+        {
+            if(foulManager.GetComponent<FoulManager>().isFouled)
+            {
+                FoulShotFormation();
+            }
         }
        
         
 
      }
 
+
+    public void FoulShotFormation()
+    {
+
+        if(possessionManager.CheckPossession() ==null)
+        {
+            if(CompareTag("Player"))
+            {
+                transform.position = shotPlaceL.transform.position;
+            }
+            else
+            {
+                transform.position = shotPlaceR.transform.position;
+            }
+        }
+        else
+        {
+            if (!setFoulLocation)
+            {
+                if (possessionManager.CheckPossession().tag == "Player")
+                {
+                    randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
+                    randomX = Random.Range(boundXL.transform.position.x, MidPoint.transform.position.x);
+
+                    transform.position = new Vector3(randomX, randomY, 0);
+                }
+
+                else
+                {
+                    randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
+                    randomX = Random.Range(boundXR.transform.position.x, MidPoint.transform.position.x);
+                    transform.position = new Vector3(randomX, randomY, 0);
+
+                }
+                setFoulLocation = true;
+            }
+        }
+    }
     public void MovementLogic()
     {
         playMode = CheckPlay();
