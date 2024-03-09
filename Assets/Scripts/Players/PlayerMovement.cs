@@ -235,11 +235,11 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(gameObject.name + " is stuck ");
+          
                     if (possessionManager.CheckPossession() == null)
                     {
                         Debug.Log(possessionManager.CheckPossession());
-                        Debug.Log(gameObject.name + " has picked an action");
+                
                         StartCoroutine(PlayerActions.PickAnAction());
                 
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -94,6 +95,28 @@ public class Player : MonoBehaviour
     public int personality; // Range: 1 to 5
     public int[] zoneStyle; // Range: 1 to 12
 
+
+    //arrays
+    public List<(string, Stat)> stats;
+
+    private void Start()
+    {
+
+        consistency = new Stat(Random.Range(10, 100));
+        awareness = new Stat(Random.Range(10, 100));
+        juking = new Stat(Random.Range(10, 100));
+            control = new Stat(Random.Range(10, 100));
+        shooting = new Stat(Random.Range(10, 100));
+        positioning = new Stat(Random.Range(10, 100));
+        steal = new Stat(Random.Range(10, 100));
+        guarding = new Stat(Random.Range(10, 100));
+        pressure = new Stat(Random.Range(10, 100));
+        inside = new Stat(Random.Range(10, 100));
+        mid = new Stat(Random.Range(10, 100));
+        Outside = new Stat(Random.Range(10, 100));
+
+        stats = new List<(string, Stat)>{ ("Consistency", consistency), ("Awareness", awareness), ("Juking", juking), ("Control", control), ("Shooting", shooting), ("Positioning", positioning), ("Steal", steal), ("Guarding", guarding), ("Pressure", pressure), ("Inside", inside), ("Mid", mid), ("Outside", Outside) };
+    }
     private void Update()
     {
         if (foulOutThreshold >= 3)
@@ -159,10 +182,14 @@ public struct Stat
     public int potential; // Maximum value the stat can reach
 
     // Constructor
-    public Stat(int value, int potential)
+    public Stat(int value)
     {
-        this.value = Mathf.Clamp(value, 10, potential);
-        this.potential = potential;
+       
+        this.value = value;
+       
+        this.potential = Random.Range(this.value, 100);
+        
+
     }
 }
 
