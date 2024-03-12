@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
+
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -178,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!setFoulLocation)
             {
-                if (ballPossessor.CompareTag( "Player"))
+                if (ballPossessor.CompareTag("Player"))
                 {
                     // Calculate random Y position within the vertical bounds
                     float randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
@@ -186,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
                     
 
                     // Calculate the X position to maintain the specified distance
-                    float randomX = ballPossessor.transform.position.x - distance;
+                    float randomX = ballPossessor.transform.position.x + distance;
 
                     // Set the position of the player
                     transform.position = new Vector3(randomX, randomY, 0);
@@ -433,22 +430,7 @@ public class PlayerMovement : MonoBehaviour
       
         void OnTriggerStay2D(Collider2D other)
         {
-            string otherTag = other.gameObject.tag;
-            if(possessionManager.CheckPossession() == null)
-            {
-                if(otherTag == "RightHalf" || otherTag == "LeftHalf")
-            {
-                PlayerActions.SetZoneBonus(2) ;
-            }
-                 else if(otherTag == "RightMid" || otherTag == "LeftMid")
-                 {
-                    PlayerActions.SetZoneBonus(1);
-            }
-                 else
-                 {
-                PlayerActions.SetZoneBonus(0);
-                    }
-            }
+          
 
             if (other.gameObject.CompareTag(Half))
             {
@@ -466,7 +448,51 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+       
+            if (other.CompareTag( "RightHalf") || other.CompareTag("LeftHalf"))
+            {
+
+                Debug.Log("In Outside");
+                PlayerActions.SetZoneBonus(2);
+                PlayerActions.zoneIndex = 2;
+            }
+             if (other.CompareTag("RightMid") || other.CompareTag("LeftMid"))
+           {
+
+                Debug.Log("In Mid");
+                PlayerActions.SetZoneBonus(1);
+                PlayerActions.zoneIndex = 1;
+            }
+              if (other.CompareTag("RightInside") || other.CompareTag("LeftInside"))
+               {
+
+                Debug.Log("In Inside");
+                PlayerActions.SetZoneBonus(0);
+                PlayerActions.zoneIndex = 0;
+            }
+        
+
+        if (other.gameObject.CompareTag(Half))
+        {
+
+            isInOwnHalf = true;
+
         }
+        else
+        {
+            isInOwnHalf = false;
+
+        }
+        if (other.gameObject.CompareTag(preferredZone))
+        {
+            isInPreferredZone = true;
+        }
+
+
+    }
 
 }
 

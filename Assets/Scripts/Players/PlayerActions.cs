@@ -23,6 +23,7 @@ public class PlayerActions : MonoBehaviour
     private GameObject foulManager;
    public GameObject ball;
 
+    private GameObject teamObject;
 
     private Team team;
     private Team oppTeam;
@@ -34,13 +35,10 @@ public class PlayerActions : MonoBehaviour
     private int otherZoneBonus;
     private int positionalBonus;
     private int accuracy;
-    private int zoneIndex;
+    public int zoneIndex;
     public bool hasPicked = false;
     public bool isPicking = false;
-    private float timeToPick = 2.0f;
-    private float timeMoving = 0f;
-    private bool showedText = false;
-    private float waitingTime = 0.75f;
+    public bool hasJuked = false;
     Text commentary;
     void Update()
     {
@@ -61,11 +59,13 @@ public class PlayerActions : MonoBehaviour
         if (playerTag == "Player")
         {
             Net = GameObject.FindGameObjectWithTag("Left Net");
+            teamObject = GameObject.FindGameObjectWithTag("Team");
             team = GameObject.FindGameObjectWithTag("Team").GetComponent<Team>();
         }
         else
         {
             Net = GameObject.FindGameObjectWithTag("Right Net");
+            teamObject = GameObject.FindGameObjectWithTag("Opp");
             oppTeam = GameObject.FindGameObjectWithTag("Opp").GetComponent<Team>();
         }
 
@@ -87,6 +87,12 @@ public class PlayerActions : MonoBehaviour
   
     }
 
+    public void decPlays()
+    {
+        teamObject.GetComponent<Team>().Plays -=1;
+        teamObject.GetComponent<Team>().decreasePlays();
+    }
+
     public void AddScore(int score)
     {         if (playerTag == "Player")
         {
@@ -102,7 +108,11 @@ public class PlayerActions : MonoBehaviour
     //action 1 == the other player tries to steal the ball
     public IEnumerator Steal()
     {
-       // commentary.text = "Calculating Foul";
+        if (!Input.GetKeyUp(KeyCode.Space))
+        {
+            // Wait until space key is pressed
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        }
 
         switch (FoulCheck())
         {
@@ -110,8 +120,11 @@ public class PlayerActions : MonoBehaviour
                 
                 ShowFloatingTextPrefab("Major Foul");
                 newInstanceOfText.transform.Translate(new Vector3(0,0.5f,0));
-                yield return new WaitForSeconds(waitingTime);
-
+                if (!Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                }
                 otherPlayer.fouls += 1;
                 player.foulShots += 2;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
@@ -122,7 +135,11 @@ public class PlayerActions : MonoBehaviour
                 
                    
                 ShowFloatingTextPrefab("Minor Foul");
-                yield return new WaitForSeconds(waitingTime);
+                if (!Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                }
                 otherPlayer.fouls += 1;
                 player.foulShots += 3;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
@@ -132,20 +149,31 @@ public class PlayerActions : MonoBehaviour
                
                    
                 ShowFloatingTextPrefab("Ball Stolen");
-                yield return new WaitForSeconds(waitingTime);
-                
+                if (!Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                }
+
                 otherPlayer.steals += 1;
+               // 
+                decPlays();
                 possessionManager.ChangePossession(otherPlayerObject);
                 break;
 
         }
-        yield return new WaitForSeconds(waitingTime);
+        if (!Input.GetKeyDown(KeyCode.Space))
+        {
+            // Wait until space key is pressed
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        }
         commentary.text = "";
 
     }
     //action 2 == the player tries to shoot the ball
     public IEnumerator Shoot()
     {
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
         //yield return new WaitForSeconds(waitingTime);
         if (ShotCheck())
         {
@@ -182,7 +210,10 @@ public class PlayerActions : MonoBehaviour
                         player.insideShots += 1;
                         otherPlayer.pointsAllowed += 4;
                         AddScore(4);
-                        yield return new WaitForSeconds(waitingTime);
+                        
+                            // Wait until space key is pressed
+                            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                        
                         commentary.text = "";
                         break;
                     case 1:
@@ -194,7 +225,10 @@ public class PlayerActions : MonoBehaviour
                         player.midShots += 1;
                         otherPlayer.pointsAllowed += 5;
                         AddScore(5);
-                        yield return new WaitForSeconds(waitingTime);
+                        
+                            // Wait until space key is pressed
+                            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                        
                         commentary.text = "";
                         break;
                     case 2:
@@ -206,67 +240,93 @@ public class PlayerActions : MonoBehaviour
                         player.outsideShots += 1;
                         otherPlayer.pointsAllowed += 6;
                         AddScore(6);
-                        yield return new WaitForSeconds(waitingTime);
+                        
+                            // Wait until space key is pressed
+                            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                        
                         commentary.text = "";
                         break;
                 }
+               
             }
             else
             {
                 
                     
                 ShowFloatingTextPrefab("Missed Shot");
-                yield return new WaitForSeconds(waitingTime);
-                commentary.text = "";
-                possessionManager.ChangePossession(otherPlayerObject);
+               
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
+               
+              
                
             }
 
 
         }
         else {
-
-            
-              
+        
             ShowFloatingTextPrefab("Blocked!");
-            yield return new WaitForSeconds(waitingTime);
-            commentary.text = "";
-            possessionManager.ChangePossession(otherPlayerObject);
+            otherPlayer.blocks += 1;
+                // Wait until space key is pressed
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+            
+            
+           
         }
+        commentary.text = "";
         hasPicked = true;
-       
+        
+        decPlays();
+        possessionManager.ChangePossession(otherPlayerObject);
     }
     //action 3 == the player tries to juke the other player
     public IEnumerator Juke()
     {
-
+        
+            // Wait until space key is pressed
+            yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+        
+        hasJuked = true;
         if (JukeCheck() == "Juke")
         {
         
             ShowFloatingTextPrefab("Juke Successful");
             otherPlayer.isJuked = true;
-            yield return new WaitForSeconds(waitingTime);
+            
+                // Wait until space key is pressed
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+            
             commentary.text = "";
-            StartCoroutine(Shoot());
+            yield return  Shoot();
         }
         else
         {
             if (JukeCheck() == "Steal")
             {
                 ShowFloatingTextPrefab("Ball Stolen");
+
+               
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
-                yield return new WaitForSeconds(waitingTime);
                 commentary.text = "";
                 otherPlayer.steals += 1;
+                
+                decPlays();
                 possessionManager.ChangePossession(otherPlayerObject);
             }
             else
             {
                 ShowFloatingTextPrefab("Juke Failed");
-         
-                yield return new WaitForSeconds(waitingTime);
-                StartCoroutine(PickAnAction());
+
+                if (!Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                }
+                yield return PickAnAction();
             }
         }
 
@@ -303,6 +363,7 @@ public class PlayerActions : MonoBehaviour
     public string FoulCheck()
     {
 
+
         int playerStatSum = player.consistency.value + zoneBonus + player.personality*10 + otherPlayer.personality*10+ positionalBonus;
         int otherPlayerStatSum = otherPlayer.consistency.value + otherPlayer.awareness.value + otherZoneBonus;
 
@@ -326,34 +387,48 @@ public class PlayerActions : MonoBehaviour
         }
 
     }
-   
+
     public IEnumerator FoulShot(int times)
     {
-       
+        // Wait until space key is pressed
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
         FoulShotCheck();
-        for(int i = 0; i<times; i++)
+        for (int i = 0; i < times; i++)
         {
-            yield return new WaitForSeconds(waitingTime);
+            ShowFloatingTextPrefab("Shot Number " + i);
+
+            // Wait until space key is released
+            yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+
             int RandShot = UnityEngine.Random.Range(0, 100);
-            if(RandShot <= accuracy)
+            if (RandShot <= accuracy)
             {
                 player.foulShotsMade += 2;
                 player.pointsScored += 2;
                 AddScore(2);
                 ShowFloatingTextPrefab("Shot Made");
-        
             }
             else
             {
                 ShowFloatingTextPrefab("Shot Missed");
-            
             }
+
+            // Wait until space key is pressed again
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         }
+
         foulManager.GetComponent<FoulManager>().isFouled = false;
-        yield return new WaitForSeconds(waitingTime);
+
+        // Wait until space key is pressed again
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
         commentary.text = "";
+        
+        decPlays();
         possessionManager.ChangePossession(otherPlayerObject);
     }
+
 
     public void FoulShotCheck()
     {
@@ -379,7 +454,7 @@ public class PlayerActions : MonoBehaviour
     
     public bool ShotCheck()
     {
-        int disparity = 0;
+        int disparity;
         int playerStatSum = player.consistency.value +
             player.control.value +
             player.shooting.value +
@@ -552,46 +627,63 @@ public class PlayerActions : MonoBehaviour
         
     }
 
-  
-
+   
+    public void StartSteal()
+    {
+        StartCoroutine(Steal());
+    }
     public IEnumerator PickAnAction()
     {
+        if(hasJuked)
+        {
+            yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+            hasJuked = false;
+        }
+     
         isPicking = true;
-        int action = UnityEngine.Random.Range(1, 2);
+        int action = UnityEngine.Random.Range(1, 4);
         Debug.Log(action);
-        commentary.text= "";
+        commentary.text = "";
         switch (action)
         {
             case 1:
-                             
-               ShowFloatingTextPrefab("Guarding Player going To Steal");
-                yield return new WaitForSeconds(waitingTime);
-                StartCoroutine(Steal());
+                ShowFloatingTextPrefab("Guarding Player going To Steal");
+                // Wait until space key is pressed
+                // Check if space key is not pressed
+               
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
+
+                // Now that space key is pressed, start the coroutine
+                Debug.Log("Starting Coroutine");
+                yield return Steal();
+
+
                 break;
             case 2:
-
-
                 ShowFloatingTextPrefab("Going To Shoot");
+                // Wait until space key is pressed
+               
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
-                yield return new WaitForSeconds(waitingTime);
-                StartCoroutine(Shoot());
-             
+                yield return Shoot();
                 break;
             case 3:
-                
-
-           
-                
-              
                 ShowFloatingTextPrefab("Going To Juke");
-                yield return new WaitForSeconds(waitingTime);
-                StartCoroutine(Juke());
+                // Wait until space key is pressed
+                
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                
+                yield return Juke();
                 break;
         }
+        Debug.Log("Done Picking");
         isPicking = false;
-
     }
+
 
 
 

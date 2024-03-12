@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using Unity.VisualScripting;
@@ -98,24 +99,49 @@ public class Player : MonoBehaviour
 
     //arrays
     public List<(string, Stat)> stats;
-
+    public List<(string, Func<int>)> gameFlowStats;
     private void Start()
     {
 
-        consistency = new Stat(Random.Range(10, 100));
-        awareness = new Stat(Random.Range(10, 100));
-        juking = new Stat(Random.Range(10, 100));
-            control = new Stat(Random.Range(10, 100));
-        shooting = new Stat(Random.Range(10, 100));
-        positioning = new Stat(Random.Range(10, 100));
-        steal = new Stat(Random.Range(10, 100));
-        guarding = new Stat(Random.Range(10, 100));
-        pressure = new Stat(Random.Range(10, 100));
-        inside = new Stat(Random.Range(10, 100));
-        mid = new Stat(Random.Range(10, 100));
-        Outside = new Stat(Random.Range(10, 100));
+        consistency = new Stat(UnityEngine.Random.Range(10, 100));
+        awareness = new Stat(UnityEngine.Random.Range(10, 100));
+        juking = new Stat(UnityEngine.Random.Range(10, 100));
+            control = new Stat(UnityEngine.Random.Range(10, 100));
+        shooting = new Stat(UnityEngine.Random.Range(10, 100));
+        positioning = new Stat(UnityEngine.Random.Range(10, 100));
+        steal = new Stat(UnityEngine.Random.Range(10, 100));
+        guarding = new Stat(UnityEngine.Random.Range(10, 100));
+        pressure = new Stat(UnityEngine.Random.Range(10, 100));
+        inside = new Stat(UnityEngine.Random.Range(10, 100));
+        mid = new Stat(UnityEngine.Random.Range(10, 100));
+        Outside = new Stat(UnityEngine.Random.Range(10, 100));
 
         stats = new List<(string, Stat)>{ ("Consistency", consistency), ("Awareness", awareness), ("Juking", juking), ("Control", control), ("Shooting", shooting), ("Positioning", positioning), ("Steal", steal), ("Guarding", guarding), ("Pressure", pressure), ("Inside", inside), ("Mid", mid), ("Outside", Outside) };
+        gameFlowStats = new List<(string, Func<int>)> {
+    ("pressures", () => pressures),
+    ("blocks", () => blocks),
+    ("steals", () => steals),
+    ("fouls", () => fouls),
+    ("pointsAllowed", () => pointsAllowed),
+    ("jukes", () => jukes),
+    ("shots", () => shots),
+    ("shotsTaken", () => shotsTaken),
+    ("pointsScored", () => pointsScored),
+    ("foulShots", () => foulShots),
+    ("foulShotsMade", () => foulShotsMade),
+    ("foulPointsScored", () => foulPointsScored),
+    ("turnovers", () => turnovers),
+    ("plays", () => plays),
+    ("maxPlays", () => maxPlays),
+    ("insideShots", () => insideShots),
+    ("insideShotsMade", () => insideShotsMade),
+    ("midShots", () => midShots),
+    ("midShotsMade", () => midShotsMade),
+    ("outsideShots", () => outsideShots),
+    ("outsideShotsMade", () => outsideShotsMade)
+};
+
+
     }
     private void Update()
     {
@@ -152,10 +178,10 @@ public class Player : MonoBehaviour
         mid = mids;
         Outside = outs;
 
-        learning = Random.Range( 1, 5);
-        longevity = Random.Range(1, 5);
-        personality = Random.Range(1, 5);
-        int z = Random.Range(1, 12);
+        learning = UnityEngine.Random.Range( 1, 5);
+        longevity = UnityEngine.Random.Range(1, 5);
+        personality = UnityEngine.Random.Range(1, 5);
+        int z = UnityEngine.Random.Range(1, 12);
         zoneStyle = zoneStyles[z];
     }
 }
@@ -187,7 +213,7 @@ public struct Stat
        
         this.value = value;
        
-        this.potential = Random.Range(this.value, 100);
+        this.potential = UnityEngine.Random.Range(this.value, 100);
         
 
     }
