@@ -24,7 +24,7 @@ public class PlayerActions : MonoBehaviour
    public GameObject ball;
 
     private GameObject teamObject;
-
+    private SoundManager    soundManager;
     private Team team;
     private Team oppTeam;
     public PossessionManager possessionManager;
@@ -53,6 +53,7 @@ public class PlayerActions : MonoBehaviour
         foulManager = GameObject.FindGameObjectWithTag("FoulManager");
         TeamScore = GameObject.FindGameObjectWithTag("TeamScore");
         OppScore = GameObject.FindGameObjectWithTag("OppScore");
+        soundManager = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
         commentary.text = "";
 
         playerTag = gameObject.tag;
@@ -119,15 +120,15 @@ public class PlayerActions : MonoBehaviour
             case "Major Foul":   
                 
                 ShowFloatingTextPrefab("Major Foul");
+                soundManager.PlayeWhistle();
                 newInstanceOfText.transform.Translate(new Vector3(0,0.5f,0));
-                if (!Input.GetKeyDown(KeyCode.Space))
-                {
-                    // Wait until space key is pressed
+                // Wait until space key is pressed
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                }
+                
                 otherPlayer.fouls += 1;
                 player.foulShots += 2;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
+                
                 StartCoroutine(FoulShot(3));
                 
                 break;
@@ -135,11 +136,10 @@ public class PlayerActions : MonoBehaviour
                 
                    
                 ShowFloatingTextPrefab("Minor Foul");
-                if (!Input.GetKeyDown(KeyCode.Space))
-                {
-                    // Wait until space key is pressed
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                }
+                soundManager.PlayeWhistle();
+                // Wait until space key is pressed
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                
                 otherPlayer.fouls += 1;
                 player.foulShots += 3;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
@@ -149,11 +149,9 @@ public class PlayerActions : MonoBehaviour
                
                    
                 ShowFloatingTextPrefab("Ball Stolen");
-                if (!Input.GetKeyDown(KeyCode.Space))
-                {
-                    // Wait until space key is pressed
+                 // Wait until space key is pressed
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                }
+                
 
                 otherPlayer.steals += 1;
                // 
@@ -162,11 +160,10 @@ public class PlayerActions : MonoBehaviour
                 break;
 
         }
-        if (!Input.GetKeyDown(KeyCode.Space))
-        {
+        
             // Wait until space key is pressed
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-        }
+        
         commentary.text = "";
 
     }
@@ -201,8 +198,8 @@ public class PlayerActions : MonoBehaviour
                 switch (zoneIndex)
                 {
                     case 0:
-                        
-                           
+
+                        soundManager.PlayNet();
                         ShowFloatingTextPrefab("Inside Shot Made!");
 
                         player.pointsScored += 4;
@@ -217,8 +214,8 @@ public class PlayerActions : MonoBehaviour
                         commentary.text = "";
                         break;
                     case 1:
-                        
-                           
+
+                        soundManager.PlayNet();
                         ShowFloatingTextPrefab("Mid Shot Made!");
                         player.pointsScored += 5;
                         player.midShotsMade += 1;
@@ -232,8 +229,8 @@ public class PlayerActions : MonoBehaviour
                         commentary.text = "";
                         break;
                     case 2:
-                       
-                         
+
+                        soundManager.PlayNet();
                         ShowFloatingTextPrefab("Outside Shot Made!");
                         player.pointsScored += 6;
                         player.outsideShotsMade += 1;
@@ -252,7 +249,7 @@ public class PlayerActions : MonoBehaviour
             else
             {
                 
-                    
+                soundManager.PlayMiss();
                 ShowFloatingTextPrefab("Missed Shot");
                
                     // Wait until space key is pressed
@@ -266,7 +263,7 @@ public class PlayerActions : MonoBehaviour
 
         }
         else {
-        
+            soundManager.PlayBlocked();
             ShowFloatingTextPrefab("Blocked!");
             otherPlayer.blocks += 1;
                 // Wait until space key is pressed
@@ -407,10 +404,12 @@ public class PlayerActions : MonoBehaviour
                 player.foulShotsMade += 2;
                 player.pointsScored += 2;
                 AddScore(2);
+                soundManager.PlayNet();
                 ShowFloatingTextPrefab("Shot Made");
             }
             else
             {
+                soundManager.PlayMiss();
                 ShowFloatingTextPrefab("Shot Missed");
             }
 

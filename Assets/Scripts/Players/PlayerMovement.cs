@@ -183,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
                     
 
                     // Calculate the X position to maintain the specified distance
-                    float randomX = ballPossessor.transform.position.x + distance;
+                    float randomX = shotPlaceL.transform.position.x + distance;
 
                     // Set the position of the player
                     transform.position = new Vector3(randomX, randomY, 0);
@@ -197,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
 
 
                     // Calculate the X position to maintain the specified distance
-                    float randomX = ballPossessor.transform.position.x - distance;
+                    float randomX = shotPlaceR.transform.position.x - distance;
 
                     // Set the position of the player
                     transform.position = new Vector3(randomX, randomY, 0);
