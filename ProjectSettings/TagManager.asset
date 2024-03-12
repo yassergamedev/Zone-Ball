@@ -26,6 +26,11 @@ TagManager:
   - ShotPlaceR
   - ShotPlaceL
   - FoulManager
+  - BoundY
+  - BoundX
+  - Commentary
+  - TeamScore
+  - OppScore
   layers:
   - Default
   - TransparentFX

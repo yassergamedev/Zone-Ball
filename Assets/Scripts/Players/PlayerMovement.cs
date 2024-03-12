@@ -160,8 +160,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void FoulShotFormation()
     {
+        GameObject ballPossessor = possessionManager.CheckPossession();
 
-        if(possessionManager.CheckPossession() ==null)
+        float distance = 1f;
+        if (ballPossessor ==null)
         {
             if(CompareTag("Player"))
             {
@@ -176,18 +178,31 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!setFoulLocation)
             {
-                if (possessionManager.CheckPossession().tag == "Player")
+                if (ballPossessor.CompareTag( "Player"))
                 {
-                    randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
-                    randomX = Random.Range(boundXL.transform.position.x, MidPoint.transform.position.x);
+                    // Calculate random Y position within the vertical bounds
+                    float randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
 
+                    
+
+                    // Calculate the X position to maintain the specified distance
+                    float randomX = ballPossessor.transform.position.x - distance;
+
+                    // Set the position of the player
                     transform.position = new Vector3(randomX, randomY, 0);
                 }
 
                 else
                 {
-                    randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
-                    randomX = Random.Range(boundXR.transform.position.x, MidPoint.transform.position.x);
+                    // Calculate random Y position within the vertical bounds
+                    float randomY = Random.Range(boundYD.transform.position.y, boundYU.transform.position.y);
+
+
+
+                    // Calculate the X position to maintain the specified distance
+                    float randomX = ballPossessor.transform.position.x - distance;
+
+                    // Set the position of the player
                     transform.position = new Vector3(randomX, randomY, 0);
 
                 }
@@ -303,7 +318,7 @@ public class PlayerMovement : MonoBehaviour
             otherHalf = "LeftHalf";
             GuardedPlayrTag = "OppPlayer";
         
-            guardingX = .5f;
+            guardingX = .3f;
           
           
         }
@@ -313,7 +328,7 @@ public class PlayerMovement : MonoBehaviour
             otherHalf = "RightHalf";
             GuardedPlayrTag = "Player";
        
-            guardingX = -.5f;
+            guardingX = -.3f;
       
           
         }

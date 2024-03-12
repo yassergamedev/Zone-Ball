@@ -542,7 +542,7 @@ MonoBehaviour:
   foulPointsScored: 0
   turnovers: 0
   plays: 0
-  maxPlays: 8
+  maxPlays: 63
   insideShots: 0
   insideShotsMade: 0
   midShots: 0
@@ -609,6 +609,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FloatingTextPrefab: {fileID: 4576452480331502704, guid: caf077891905ada4f920eda5c918655b, type: 3}
+  TeamScore: {fileID: 0}
+  OppScore: {fileID: 0}
   player: {fileID: 8329450127982786551}
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
   possessionManager: {fileID: 1030237790027982857}
