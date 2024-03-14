@@ -1,0 +1,63 @@
+{
+    "insideMade": [
+        "Drops a 4 like nothing!",
+        "Lobs that 3 in with ease!",
+        "Powerful Inside Shot! 4 points!",
+        "It's up and in for 4!"
+    ],
+    "midMade": [
+        "Nails that Mid for 5!",
+        "Completes the 5 point play!",
+        "Succeeds for 5 points!",
+        "A great mid shot for 5!"
+    ],
+    "outsideMade": [
+        "Makes the 6 Point Bomb!",
+        "Wow! What a shot for 6!",
+        "Sinks the Deep 6!",
+        "Launched for 6.. and it's good!"
+    ],
+    "insideMiss": [
+        "And he misses inside!",
+        "Inside opportunity gone for 4!",
+        "Oh! No luck on that 4 ball!",
+        "Aw how'd he miss that 4!"
+    ],
+    "midMiss": [
+        "No dice on that 5!",
+        "And a missed mid range!",
+        "Rushed mid shot, that's a miss!",
+        "No points on that mid shot!"
+    ],
+    "outsideMiss": [
+        "Little off-target with that one!",
+        "Deep chance, wasted effort!",
+        "Out of his range, that's a miss!",
+        "Risk and no rewards on that 6!"
+    ],
+    "jukeSuccess": [
+        "Oh! That was a killer fake-out!",
+        "Psyche! That's a juke folks!",
+        "The double-move got em!",
+        "Studder-step success!"
+    ],
+    "stealSuccess": [
+        "Stolen! Going the other way",
+        "The double-move got em!",
+        "A well-timed steal!",
+        "Turnover, that's a steal!"
+    ],
+    "minorFoul": [
+        "A bit too physical, minor foul!",
+        "The ref called it, a minour foul!",
+        "That's a foul and two chances!",
+        "Lack of awareness, foul!"
+    ],
+    "majorFoul": [
+        "Way too rough on that play!",
+        "Ref's all over that, major foul!",
+        "Emotions rising, a major foul!",
+        "C'mon, that's not allowed! Big foul!"
+    ]
+
+}
