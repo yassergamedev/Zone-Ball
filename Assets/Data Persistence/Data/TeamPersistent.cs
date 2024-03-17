@@ -6,9 +6,9 @@ using UnityEngine;
 [System.Serializable]
 public class TeamPersistent 
 {
-    int id;
+    public int id;
     public string name;
-    public PlayerPersistent[] players;
+    public int[] players;
     public TeamPersistent(int id, string name)
    {
         this.id = id;
@@ -44,7 +44,7 @@ public class TeamPersistent
             int yrs = UnityEngine.Random.Range(1, 5);
             int age = UnityEngine.Random.Range(18, 34);
             ContractPersistent con = new ContractPersistent(yrs, sal);
-            players[i] = new PlayerPersistent((int)Time.time + i, "Player " + i,i, yrs, age, ovrl, con);
+          //  players[i] = new PlayerPersistent((int)Time.time + i, "Player " + i,i, yrs, age, ovrl, con);
         }
     }
 

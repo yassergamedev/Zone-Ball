@@ -8,7 +8,8 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerPersistent 
 {
-    private int id;
+
+    public int id;
 
 
     // Player basic info
@@ -106,20 +107,50 @@ public class PlayerPersistent
 
 
     }
-  
-  
- 
+    //a copy constructor
+    public PlayerPersistent(PlayerPersistent p)
+    {
+        id = p.id;
+        Name = p.Name;
+        Number = p.Number;
+        YearsPro = p.YearsPro;
+        Age = p.Age;
+        ovrl = p.ovrl;
+        consistency = p.consistency;
+        awareness = p.awareness;
+        juking = p.juking;
+        control = p.control;
+        shooting = p.shooting;
+        positioning = p.positioning;
+        steal = p.steal;
+        guarding = p.guarding;
+        pressure = p.pressure;
+        inside = p.inside;
+        mid = p.mid;
+        Outside = p.Outside;
+        learning = p.learning;
+        longevity = p.longevity;
+        personality = p.personality;
+        zoneStyle = p.zoneStyle;
+        contract = p.contract;
+    }
+
+
+
+    
     // Constructor
     public PlayerPersistent(int id,
         string name, int num, int yers, int age,
-        int ovrl, ContractPersistent c)
+        int overall, ContractPersistent c)
     {
 
         this.id = id;
-        name = Name;
-        num = Number;
-        yers = YearsPro;
-        age = Age;
+        Name = name;
+        Number = num;
+        YearsPro = yers;
+        Age = age;
+        ovrl = overall;
+        Debug.Log(ovrl);
         // based on the ovrl we distribute the stats 
 
         consistency = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
@@ -158,20 +189,22 @@ public class PlayerPersistent
     };
     zoneStyle = zoneStyles[z];
 
-       //declaring the stats list
-      
-        //we calculate a new overall and adjust the stat values based on it
-        int newovrl = (consistency.value + awareness.value + juking.value + control.value +
+        //declaring the stats list
+        List < (string, Func<StatPersistent>, Action<int>) > list= getStats();
+          //we calculate a new overall and adjust the stat values based on it
+          int newovrl = (consistency.value + awareness.value + juking.value + control.value +
                        shooting.value + positioning.value + steal.value + guarding.value + pressure.value +
                                   inside.value + mid.value + Outside.value) / 12;
 
         int dif = ovrl - newovrl;
 
-        for(int i = 0; 0<dif*12; i++)
+        dif *= 12;
+        for(int i = 0; i<dif; i++)
         {
             int randomStat = UnityEngine.Random.Range(0, 12);
 
-            getStats()[randomStat].Item3(getStats()[randomStat].Item2().value + 1);
+            list[randomStat].Item3(list[randomStat].Item2().value + 1);
+           
             
         }
 
