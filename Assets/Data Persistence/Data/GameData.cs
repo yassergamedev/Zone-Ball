@@ -1,21 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 [System.Serializable]
-public class GameData 
+public class GameData
 {
-
+    public string id;
+    public DateTime date;
+    public List<Season> season;
     public string[] newGameDraftPool;
 
 
 
 
-    public GameData(string[] ids)
+    public GameData(string id, DateTime date,string[] ids)
     {
-
+        this.id = id;
+        this.date = date;
         newGameDraftPool = ids;
+        season = new List<Season>();
 
     }
 

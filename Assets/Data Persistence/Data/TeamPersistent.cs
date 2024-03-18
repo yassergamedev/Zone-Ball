@@ -26,7 +26,10 @@ public class TeamPersistent
 }
 public class MatchPlayed
 {
+    //match id
     public string id;
+    //match stats id
     public string stats;
+
 }
 

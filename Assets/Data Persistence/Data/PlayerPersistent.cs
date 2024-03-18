@@ -47,63 +47,15 @@ public class PlayerPersistent
     public int ovrl;
 
     //setters for all stats
-    public void setConsistency(int value)
-    {
-        consistency.value = value;
-    }
-    public void setAwareness(int value)
-    {
-        awareness.value = value;
-    }
-    public void setJuking(int value)
-    {
-        juking.value = value;
-    }
-    public void setControl(int value)
-    {
-        control.value = value;
-    }
-    public void setShooting(int value)
-    {
-        shooting.value = value;
-    }
-    public void setPositioning(int value)
-    {
-        positioning.value = value;
-    }
-    public void setSteal(int value)
-    {
-        steal.value = value;
-    }
-    public void setGuarding(int value)
-    {
-        guarding.value = value;
-    }
-    public void setPressure(int value)
-    {
-        pressure.value = value;
-    }
-    public void setInside(int value)
-    {
-        inside.value = value;
-    }
-    public void setMid(int value)
-    {
-        mid.value = value;
-    }
-    public void setOutside(int value)
-    {
-        Outside.value = value;
-    }
-
+ 
 
     //arrays
-    public List<(string, Func<StatPersistent>, Action<int>)> getStats() {
+    public List<(string, Func<StatPersistent>)> getStats() {
 
-        return new List<(string, Func<StatPersistent>, Action<int>)> { ("Consistency",() => consistency, setConsistency), ("Awareness",() => awareness, setAwareness), ("Juking",() => juking, setJuking),
-                  ("Control",() => control, setControl), ("Shooting",() => shooting, setShooting), ("Positioning",() => positioning, setPositioning),
-                  ("Steal", () =>steal, setSteal), ("Guarding", () =>guarding, setGuarding), ("Pressure",() => pressure, setPressure), ("Inside",() => inside, setInside),
-                  ("Mid", () =>mid, setMid), ("Outside",() => Outside, setOutside) };
+        return new List<(string, Func<StatPersistent>)> { ("Consistency",() => consistency), ("Awareness",() => awareness), ("Juking",() => juking),
+                  ("Control",() => control), ("Shooting",() => shooting), ("Positioning",() => positioning),
+                  ("Steal", () =>steal), ("Guarding", () =>guarding), ("Pressure",() => pressure), ("Inside",() => inside),
+                  ("Mid", () =>mid), ("Outside",() => Outside) };
 
 
     }
@@ -190,7 +142,7 @@ public class PlayerPersistent
     zoneStyle = zoneStyles[z];
 
         //declaring the stats list
-        List < (string, Func<StatPersistent>, Action<int>) > list= getStats();
+        List < (string, Func<StatPersistent>) > list= getStats();
           //we calculate a new overall and adjust the stat values based on it
           int newovrl = (consistency.value + awareness.value + juking.value + control.value +
                        shooting.value + positioning.value + steal.value + guarding.value + pressure.value +
@@ -203,13 +155,17 @@ public class PlayerPersistent
         {
             int randomStat = UnityEngine.Random.Range(0, 12);
 
-            list[randomStat].Item3(list[randomStat].Item2().value + 1);
-           
-            
+            list[randomStat].Item2().setValue(list[randomStat].Item2().value + 1);
+            if (list[randomStat].Item2().value > list[randomStat].Item2().potential  )
+            {
+                list[randomStat].Item2().setPotential(list[randomStat].Item2().potential + 1);
+            }
+         
+
         }
 
-       
-        
+
+
 
     }
 }
@@ -235,13 +191,21 @@ public struct StatPersistent
     public int value;
     public int potential; // Maximum value the stat can reach
 
+    public void setValue(int val)
+    {
+        value = val;
+    }
+    public void setPotential(int val)
+    {
+        potential = val;
+    }
     // Constructor
     public StatPersistent(int value)
     {
 
         this.value = value;
 
-        this.potential = UnityEngine.Random.Range(this.value, 100);
+        this.potential = UnityEngine.Random.Range(value, 100);
 
 
     }

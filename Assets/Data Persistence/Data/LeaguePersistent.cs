@@ -10,6 +10,14 @@ public class LeaguePersistent
     string date;
     List<TeamRecord> teams;
     List<MatchPersistent> matches;
+
+    public LeaguePersistent(string id, string date)
+    {
+        this.id = id;
+        this.date = date;
+        teams = new();
+        matches = new();
+    }
 }
 
 [System.Serializable]
