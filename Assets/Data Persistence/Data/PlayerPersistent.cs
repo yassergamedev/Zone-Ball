@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerPersistent 
 {
 
-    public int id;
+    public string id;
 
 
     // Player basic info
@@ -139,9 +139,9 @@ public class PlayerPersistent
 
     
     // Constructor
-    public PlayerPersistent(int id,
+    public PlayerPersistent(string id,
         string name, int num, int yers, int age,
-        int overall, ContractPersistent c)
+        int overall)
     {
 
         this.id = id;
@@ -209,7 +209,7 @@ public class PlayerPersistent
         }
 
        
-        contract = c;
+        
 
     }
 }

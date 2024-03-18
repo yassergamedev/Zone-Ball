@@ -7,12 +7,12 @@ using UnityEngine;
 public class GameData 
 {
 
-    public int[] newGameDraftPool;
+    public string[] newGameDraftPool;
 
 
 
 
-    public GameData(int[] ids)
+    public GameData(string[] ids)
     {
 
         newGameDraftPool = ids;

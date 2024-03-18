@@ -26,8 +26,13 @@ public class RandomNameGenerator : MonoBehaviour
     public string  GenerateRandomPlayerName()
     {
         firstIndex = UnityEngine.Random.Range(0, firstNames.Count);
+        //remove /r from the girst name
+        firstNames[firstIndex] = firstNames[firstIndex].Replace("\r", "");
+
         lastIndex = UnityEngine.Random.Range(0, lastNames.Count);
-        fullName = firstNames[firstIndex] + "_" + lastNames[lastIndex];
+        //remove /r from the last name
+        lastNames[lastIndex] = lastNames[lastIndex].Replace("\r", "");
+        fullName = firstNames[firstIndex] + " " + lastNames[lastIndex];
         return fullName;
     }
 

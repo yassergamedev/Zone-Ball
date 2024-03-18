@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private List<IDataPersistence> dataPersistenceObjects;
 
-    private FileDataHandler<GameData> fileDataHandler;
+    private FileDataHandler<GameData> GameDataHandler;
     // Start is called before the first frame update
     void Awake()
     {
@@ -25,31 +26,28 @@ public class DataPersistenceManager : MonoBehaviour
     }
     private void Start()
     {
-        fileDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath, fileName);
+        //fileDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath, fileName);
         dataPersistenceObjects = FindAllDataPersistenceObjects();
-        LoadGame();
+       // LoadGame();
     }
     
     public void NewGame()
     {
-        int[] newGameDraftPool = new int[90];
+        GameDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath + "/Game "+ DateTime.Now, "Game " + DateTime.Now);
+        string[] newGameDraftPool = new string[90];
         string playerName;
         for (int i = 0; i < 90; i++)
         {
             playerName = rng.GenerateRandomPlayerName();
 
-            
-
             Debug.Log("Generated player name: " + playerName);
             
-            FileDataHandler<PlayerPersistent> fileDataHandler = new(Application.persistentDataPath + "/Players/", playerName + ".json");
-            PlayerPersistent player = new((int)Time.time + i, playerName, i % 14, 0, Random.Range(18, 22), Random.Range(31, 50), new ContractPersistent(1, 10000));
+            FileDataHandler<PlayerPersistent> fileDataHandler = new(Application.persistentDataPath + "/Players/", "player" + i);
+            PlayerPersistent player = new("player"+i, playerName, i % 14, 0, UnityEngine.Random.Range(18, 22), UnityEngine.Random.Range(31, 50));
 
             fileDataHandler.Save(player);
             newGameDraftPool[i] = player.id;
         }
-       
-
 
         this.gameData = new GameData(newGameDraftPool);
     }
@@ -60,11 +58,12 @@ public class DataPersistenceManager : MonoBehaviour
             dataPersistenceObject.SaveData(ref gameData);
         }
 
-        fileDataHandler.Save(gameData);
+        GameDataHandler.Save(gameData);
     }
-    public void LoadGame()
+    public void LoadGame(string gameInfo)
     {
-        gameData = fileDataHandler.Load();
+        GameDataHandler = new(Application.persistentDataPath + "/" + gameInfo, gameInfo);
+        gameData = GameDataHandler.Load();
         if (gameData == null)
         {
             Debug.Log("no data initialized. Initalizing default new game..");

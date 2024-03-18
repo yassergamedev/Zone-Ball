@@ -1,18 +1,39 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchPersistent : MonoBehaviour
+[System.Serializable]
+public class MatchPersistent
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    string id;
+    string date;
+    bool isPlayed;
+    MatchTeam[] teams;
 
-    // Update is called once per frame
-    void Update()
+    public MatchPersistent(string id, string date, MatchTeam[] teams)
     {
-        
+        this.id = id;
+        this.date = date;
+        this.teams = teams;
+        isPlayed = false;
+    }
+    
+}
+
+[System.Serializable]
+public class MatchTeam
+{
+    public string id;
+    public int score;
+    public bool isHome;
+    public bool isWinner;
+
+    public MatchTeam(string id, int score, bool isHome, bool isWinner)
+    {
+        this.id = id;
+        this.score = score;
+        this.isHome = isHome;
+        this.isWinner = isWinner;
     }
 }
