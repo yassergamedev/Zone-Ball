@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.ConstrainedExecution;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -17,6 +18,7 @@ public class PlayerPersistent
     public int Number;
     public int Age;
     public int YearsPro;
+    public string type;
 
     public ContractPersistent contract;
 
@@ -91,14 +93,14 @@ public class PlayerPersistent
 
     
     // Constructor
-    public PlayerPersistent(string id,
-        string name, int num, int yers, int age,
+    public PlayerPersistent(string id, string name,string type,
+        int yers, int age,
         int overall)
     {
 
         this.id = id;
         Name = name;
-        Number = num;
+      this.type = type;
         YearsPro = yers;
         Age = age;
         ovrl = overall;
@@ -122,7 +124,39 @@ public class PlayerPersistent
         longevity = UnityEngine.Random.Range(1, 5);
         personality = UnityEngine.Random.Range(1, 5);
         int z = UnityEngine.Random.Range(1, 12);
+        int pay = 0;
+       if(ovrl>= 55)
+        {
+            pay = 40000;
+        }
+        else
+        {
+            if(ovrl>= 50)
+            {
+                pay = 30000;
+            } 
+            else if(ovrl>= 45)
+            {
+                pay = 20000;
+            }
+            else
+            {
+                if(ovrl>= 40)
+                {
+                    pay = 15000;
+                }else
+                {
+                    if(ovrl>= 31)
+                    {
+                        pay = 10000;
+                    }
+                    
+                }
+              
+            }
+        }
 
+       contract = new ContractPersistent(UnityEngine.Random.Range(1, 5), pay);
 
      List<int[]> zoneStyles = new List<int[]>()
     {
@@ -153,7 +187,20 @@ public class PlayerPersistent
         dif *= 12;
         for(int i = 0; i<dif; i++)
         {
-            int randomStat = UnityEngine.Random.Range(0, 12);
+            int randomStat;
+            if(type == "def")
+            {
+                randomStat = UnityEngine.Random.Range(6, 12);
+            }
+            else
+            {
+                int randomNum = UnityEngine.Random.Range(0, 2);
+                if(randomNum == 0)
+                randomStat = UnityEngine.Random.Range(3, 6);
+                else
+                randomStat = UnityEngine.Random.Range(10, 12);
+            }
+            
 
             list[randomStat].Item2().setValue(list[randomStat].Item2().value + 1);
             if (list[randomStat].Item2().value > list[randomStat].Item2().potential  )
@@ -168,6 +215,31 @@ public class PlayerPersistent
 
 
     }
+    public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)
+    {
+        // Read all lines from first names file into a list
+
+
+        // Select a random first name and remove it from the list
+        int firstNameIndex = UnityEngine.Random.Range(0, firstCount);
+        string firstName = firstNames[firstNameIndex];
+        firstNames.RemoveAt(firstNameIndex);
+
+        // Select a random last name and remove it from the list
+        int lastNameIndex = UnityEngine.Random.Range(0, lastCount);
+        string lastName = lastNames[lastNameIndex];
+        lastNames.RemoveAt(lastNameIndex);
+
+        // Combine the first and last names to create the player's name
+        string playerName = firstName + " " + lastName;
+
+        // Write back remaining names to files
+        File.WriteAllLines("first names.txt", firstNames.ToArray());
+        File.WriteAllLines("last names.txt", lastNames.ToArray());
+
+        return playerName;
+    }
+
 }
 
 

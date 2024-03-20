@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class OnClick : MonoBehaviour
 {
-
+    public string sceneName;
     public void LoadScene()
     {
-        SceneManager.LoadScene("Game Flow");
+        SceneManager.LoadScene(sceneName);
     }
 }

@@ -11,6 +11,8 @@ public class TeamPersistent
     public string Conference;
     public string[] players;
     public int salaryCap = 350000;
+    public int playstyle;
+    public string start;
     public List<MatchPlayed> matchesPlayed;
     public TeamPersistent(string id, string name, string conf, string[] plyrs)
    {
@@ -19,7 +21,8 @@ public class TeamPersistent
         this.Conference = conf;
         this.players = plyrs;
         matchesPlayed = new();
- 
+        playstyle = 5;
+        start = "Young";
     }
 
   

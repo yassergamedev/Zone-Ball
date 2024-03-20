@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class DataPersistenceManager : MonoBehaviour
 {
-    [Header ("File Configuration")]
-    [SerializeField] private string fileName;
+    [Header("File Configuration")]
+    public bool newGame = false;
     private GameData gameData;
-    public RandomNameGenerator rng;
-
+  
+    
     public static DataPersistenceManager instance { get; private set; }
 
     private List<IDataPersistence> dataPersistenceObjects;
@@ -28,7 +28,11 @@ public class DataPersistenceManager : MonoBehaviour
     {
         //fileDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath, fileName);
         dataPersistenceObjects = FindAllDataPersistenceObjects();
-        NewGame();
+        if(newGame)
+        {
+            NewGame();
+        }
+      
     }
     
     public void NewGame()
@@ -42,10 +46,10 @@ public class DataPersistenceManager : MonoBehaviour
             "Kansas Coyotes",
             "Minnesota Wolves",
             "Nevada Magic",
-            "New Mexico",
+            "New Mexico Dragons",
             "Oklahoma Stoppers",
             "Oregon Trail Makers",
-            "Texas Battlesnakes",
+            "Texas Rattlesnakes",
             "Washington Hornets"
         };
         string[] east =
@@ -61,24 +65,13 @@ public class DataPersistenceManager : MonoBehaviour
             "Virginia Bobcats",
             "Wisconsin Crows"
         };
+        //without the hour
+
         string date = dateTime.ToString().Replace("/","");
         date = date.Replace(":","");
         string gameDataId = "Game " + date;
-        
-        string[] newGameDraftPool = new string[180];
-        string playerName;
-        for (int i = 0; i < 180; i++)
-        {
-            playerName = rng.GenerateRandomPlayerName();
 
-            Debug.Log("Generated player name: " + playerName);
-            
-            FileDataHandler<PlayerPersistent> fileDataHandler = new(Application.persistentDataPath+"/" +gameDataId+ "/Players/", playerName);
-            PlayerPersistent player = new(playerName, playerName, i % 50, 0, UnityEngine.Random.Range(18, 22), UnityEngine.Random.Range(31, 50));
-
-            fileDataHandler.Save(player);
-            newGameDraftPool[i] = player.id;
-        }
+    
 
         for(int j = 0; j < west.Length; j++)
         {
@@ -103,8 +96,10 @@ public class DataPersistenceManager : MonoBehaviour
         seasonHandler.Save(season);
 
         GameDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath + "/" + gameDataId, gameDataId);
-        this.gameData = new GameData(gameDataId,dateTime, newGameDraftPool);
-        GameDataHandler.Save(gameData); 
+        this.gameData = new GameData(gameDataId,dateTime);
+        GameDataHandler.Save(gameData);
+        LoadGame(gameDataId);
+       
     }
     public void SaveGame()
     {

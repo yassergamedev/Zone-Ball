@@ -77,7 +77,7 @@ public class PlayerInfoTable : MonoBehaviour
         // Iterate through each row
         foreach (Transform row in rows)
         {
-            Debug.Log("Row: " + row.gameObject.name);
+          
             if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
             {
                
