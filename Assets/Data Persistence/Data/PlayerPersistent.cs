@@ -39,6 +39,7 @@ public class PlayerPersistent
     public StatPersistent mid;
     public StatPersistent Outside;
 
+    public string[] gameFlowStats;
     
 
     // Hidden stats
@@ -91,16 +92,17 @@ public class PlayerPersistent
 
 
 
-    
+
     // Constructor
-    public PlayerPersistent(string id, string name,string type,
+    public PlayerPersistent(string id, int num, string name, string type,
         int yers, int age,
         int overall)
     {
 
         this.id = id;
         Name = name;
-      this.type = type;
+        this.type = type;
+        Number = num;
         YearsPro = yers;
         Age = age;
         ovrl = overall;
@@ -125,40 +127,40 @@ public class PlayerPersistent
         personality = UnityEngine.Random.Range(1, 5);
         int z = UnityEngine.Random.Range(1, 12);
         int pay = 0;
-       if(ovrl>= 55)
+        if (ovrl >= 55)
         {
             pay = 40000;
         }
         else
         {
-            if(ovrl>= 50)
+            if (ovrl >= 50)
             {
                 pay = 30000;
-            } 
-            else if(ovrl>= 45)
+            }
+            else if (ovrl >= 45)
             {
                 pay = 20000;
             }
             else
             {
-                if(ovrl>= 40)
+                if (ovrl >= 40)
                 {
                     pay = 15000;
-                }else
+                } else
                 {
-                    if(ovrl>= 31)
+                    if (ovrl >= 31)
                     {
                         pay = 10000;
                     }
-                    
+
                 }
-              
+
             }
         }
 
-       contract = new ContractPersistent(UnityEngine.Random.Range(1, 5), pay);
+        contract = new ContractPersistent(UnityEngine.Random.Range(1, 5), pay);
 
-     List<int[]> zoneStyles = new List<int[]>()
+        List<int[]> zoneStyles = new List<int[]>()
     {
         new int[] {20, 30, 50},
         new int[] {20, 40, 40},
@@ -173,46 +175,46 @@ public class PlayerPersistent
         new int[] {50, 20, 30},
         new int[] {50, 30, 20},
     };
-    zoneStyle = zoneStyles[z];
+        zoneStyle = zoneStyles[z];
 
         //declaring the stats list
-        List < (string, Func<StatPersistent>) > list= getStats();
-          //we calculate a new overall and adjust the stat values based on it
-          int newovrl = (consistency.value + awareness.value + juking.value + control.value +
-                       shooting.value + positioning.value + steal.value + guarding.value + pressure.value +
-                                  inside.value + mid.value + Outside.value) / 12;
+        List<(string, Func<StatPersistent>)> list = getStats();
+        //we calculate a new overall and adjust the stat values based on it
+        int newovrl = (consistency.value + awareness.value + juking.value + control.value +
+                     shooting.value + positioning.value + steal.value + guarding.value + pressure.value +
+                                inside.value + mid.value + Outside.value) / 12;
 
         int dif = ovrl - newovrl;
 
         dif *= 12;
-        for(int i = 0; i<dif; i++)
+        for (int i = 0; i < dif; i++)
         {
             int randomStat;
-            if(type == "def")
+            if (type == "def")
             {
                 randomStat = UnityEngine.Random.Range(6, 12);
             }
             else
             {
                 int randomNum = UnityEngine.Random.Range(0, 2);
-                if(randomNum == 0)
-                randomStat = UnityEngine.Random.Range(3, 6);
+                if (randomNum == 0)
+                    randomStat = UnityEngine.Random.Range(3, 6);
                 else
-                randomStat = UnityEngine.Random.Range(10, 12);
+                    randomStat = UnityEngine.Random.Range(10, 12);
             }
-            
+
 
             list[randomStat].Item2().setValue(list[randomStat].Item2().value + 1);
-            if (list[randomStat].Item2().value > list[randomStat].Item2().potential  )
+            if (list[randomStat].Item2().value > list[randomStat].Item2().potential)
             {
                 list[randomStat].Item2().setPotential(list[randomStat].Item2().potential + 1);
             }
-         
+
 
         }
 
-
-
+        gameFlowStats = new string[] { };
+        
 
     }
     public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)

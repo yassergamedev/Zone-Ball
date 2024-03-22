@@ -118,7 +118,7 @@ public class TeamsGeneration : MonoBehaviour,IDataPersistence
                             age = Random.Range(26, 29);
                             break;
                     }
-                    PlayerPersistent player = new PlayerPersistent(playerName, playerName, type, years, age, ovrl);
+                    PlayerPersistent player = new PlayerPersistent(playerName,i, playerName, type, years, age, ovrl);
                     playerHandler.Save(player);
                     team.players[i] = playerName;
                     team.salaryCap -= (int)player.contract.salary;

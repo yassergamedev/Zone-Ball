@@ -8,9 +8,9 @@ using UnityEngine;
 public class PlayerStatsPersistent : MonoBehaviour
 {
 
-    
-    //game flow stats
 
+    //game flow stats
+    string id;
     //---------- defensive ------------
 
     public int pressures = 0;
@@ -43,8 +43,9 @@ public class PlayerStatsPersistent : MonoBehaviour
     public int outsideShotsMade = 0;
 
     // Constructor
-    public PlayerStatsPersistent(int pressures, int blocks, int steals, int fouls, int pointsAllowed, int jukes, int shots, int shotsTaken, int pointsScored, int foulShots, int foulShotsMade, int foulPointsScored, int turnovers, int plays, int maxPlays, int insideShots, int insideShotsMade, int midShots, int midShotsMade, int outsideShots, int outsideShotsMade)
+    public PlayerStatsPersistent(string id,int pressures, int blocks, int steals, int fouls, int pointsAllowed, int jukes, int shots, int shotsTaken, int pointsScored, int foulShots, int foulShotsMade, int foulPointsScored, int turnovers, int plays, int maxPlays, int insideShots, int insideShotsMade, int midShots, int midShotsMade, int outsideShots, int outsideShotsMade)
     {
+        this.id = id;
         this.pressures = pressures;
         this.blocks = blocks;
         this.steals = steals;

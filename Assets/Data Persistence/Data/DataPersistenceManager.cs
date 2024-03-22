@@ -9,7 +9,7 @@ public class DataPersistenceManager : MonoBehaviour
     [Header("File Configuration")]
     public bool newGame = false;
     private GameData gameData;
-  
+    
     
     public static DataPersistenceManager instance { get; private set; }
 
@@ -31,6 +31,11 @@ public class DataPersistenceManager : MonoBehaviour
         if(newGame)
         {
             NewGame();
+        }else
+        {
+            FileDataHandler<GameData> gameDataHandler = new(Application.persistentDataPath, "Current GameData");
+            gameData = gameDataHandler.Load();
+            LoadGame(gameData.id);
         }
       
     }
@@ -117,7 +122,7 @@ public class DataPersistenceManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("no data initialized. Initalizing default new game..");
-            NewGame();
+            //NewGame();
         }
         else
         {
