@@ -9,16 +9,17 @@ public class GameData
 {
     public string id;
     public DateTime date;
-    public List<Season> season;
-  
+    public string currentSeason;
+    public List<string> seasons;
 
 
-    public GameData(string id, DateTime date)
+    public GameData(string id, DateTime date,string crnt)
     {
         this.id = id;
         this.date = date;
+        currentSeason = crnt;
+        seasons = new List<string>();
 
-        season = new List<Season>();
 
     }
 

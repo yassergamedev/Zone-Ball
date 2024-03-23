@@ -48,7 +48,7 @@ public class PlayerPersistent
     public int personality; // Range: 1 to 5
     public int[] zoneStyle; // Range: 1 to 12
     public int ovrl;
-
+    public int plays;
     //setters for all stats
  
 
@@ -214,7 +214,7 @@ public class PlayerPersistent
         }
 
         gameFlowStats = new string[] { };
-        
+        plays = 4;
 
     }
     public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)

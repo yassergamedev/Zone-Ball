@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OnClick : MonoBehaviour
+public class SceneStuff : MonoBehaviour
 {
     public string sceneName;
     public void LoadScene()

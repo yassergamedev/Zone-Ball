@@ -29,7 +29,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
         selectedTeam = selected.name;
         FileDataHandler<TeamPersistent> _teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam);
         TeamPersistent team = _teamHandler.Load();
-        Debug.Log(Table.transform.GetComponent<RectTransform>().rect.height);
+       
 
         Vector2 sizeDelta = Table.transform.GetComponent<RectTransform>().sizeDelta;
         sizeDelta.y = team.players.Length * 100;
@@ -37,11 +37,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
 
 
-        Table.transform.GetComponent<RectTransform>().rect.Set(
-             Table.transform.GetComponent<RectTransform>().rect.x,
-             Table.transform.GetComponent<RectTransform>().rect.y,
-             Table.transform.GetComponent<RectTransform>().rect.width,
-            team.players.Length * 100);
+      
         Debug.Log(Table.transform.GetComponent<RectTransform>().rect.height);
         for (int i = 0; i < team.players.Length; i++)
         {

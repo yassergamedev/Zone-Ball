@@ -33,9 +33,10 @@ public class DataPersistenceManager : MonoBehaviour
             NewGame();
         }else
         {
-            FileDataHandler<GameData> gameDataHandler = new(Application.persistentDataPath, "Current GameData");
-            gameData = gameDataHandler.Load();
-            LoadGame(gameData.id);
+            FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
+
+           
+            LoadGame(gameDataHandler.Load().currentGame);
         }
       
     }
@@ -76,9 +77,21 @@ public class DataPersistenceManager : MonoBehaviour
         date = date.Replace(":","");
         string gameDataId = "Game " + date;
 
-    
+        FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");
+        CurrentGame current = currHandler.Load();
 
-        for(int j = 0; j < west.Length; j++)
+        if (current != null)
+        {
+           current.currentGame = gameDataId;
+
+        }
+        else
+        {
+            current = new(gameDataId);
+           
+        }
+        currHandler.Save(current);
+        for (int j = 0; j < west.Length; j++)
         {
             FileDataHandler<TeamPersistent> teamhandler = new(Application.persistentDataPath + "/" + gameDataId + "/Teams/", west[j]);
             TeamPersistent team = new(west[j], west[j], "West", new string[14]);
@@ -101,8 +114,10 @@ public class DataPersistenceManager : MonoBehaviour
         seasonHandler.Save(season);
 
         GameDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath + "/" + gameDataId, gameDataId);
-        this.gameData = new GameData(gameDataId,dateTime);
+        this.gameData = new GameData(gameDataId,dateTime, "Season "+ year);
         GameDataHandler.Save(gameData);
+
+
         LoadGame(gameDataId);
        
     }
@@ -145,5 +160,13 @@ public class DataPersistenceManager : MonoBehaviour
         IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
 
         return new List<IDataPersistence>( dataPersistenceObjects);
+    }
+}
+public class CurrentGame
+{
+    public string currentGame;
+    public CurrentGame(string currentGame)
+    {
+        this.currentGame = currentGame;
     }
 }

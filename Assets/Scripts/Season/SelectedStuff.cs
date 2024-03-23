@@ -1,58 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectedStuff : MonoBehaviour
 {
-    private GameObject selectedTeam;
-    private GameObject selectedOption;
-    private GameObject selectedOption2;
-    public ColorBlock colors;
-    private ColorBlock oldColors;
-    private ColorBlock oldColorsOptions;
-    private ColorBlock oldColorsOptions2;
+    public GameObject selectedTeam;
+    public GameObject selectedOption;
+    public GameObject selectedOption2;
 
+    public ViewRoster ViewRoster;
+    public DepthChart depthChart;
+    public TMP_Dropdown weekSelector;
+    public GameObject weekChange;
+    public int week;
+    private void Start()
+    {
+       WeekChange wek = weekChange.GetComponent<WeekChange>();
+        week = wek.currentWeek;
+        weekSelector.value = week;
+       //  SetSelectedTeam(selectedTeam);
+        SetSelectedOption(selectedOption);
+        SetSelectedOption2(selectedOption2);
+    }
 
     public void SetSelectedTeam(GameObject team)
     {
+     
         selectedTeam = team;
-        //change color of deselect button
-        oldColorsOptions = selectedOption.gameObject.GetComponent<Button>().colors;
-        oldColorsOptions2 = selectedOption2.gameObject.GetComponent<Button>().colors;
-
-        selectedOption.gameObject.GetComponent<Button>().colors= colors;
-        selectedOption2.gameObject.GetComponent<Button>().colors = colors;
-
-        selectedTeam.gameObject.GetComponent<Button>().colors = oldColors;
+        depthChart.GenerateDepthChart(team.gameObject.name);
 
        
     }
+    public void setWeek()
+    {
+        week = weekSelector.value;
+    }
     public void SetSelectedOption(GameObject option)
     {
+       
         selectedOption = option;
-        //change color of deselect button
-        oldColors = selectedTeam.gameObject.GetComponent<Button>().colors;
-        oldColorsOptions2 = selectedOption2.gameObject.GetComponent<Button>().colors;
+ 
 
-        selectedTeam.gameObject.GetComponent<Button>().colors = colors;
-        selectedOption2.gameObject.GetComponent<Button>().colors = colors;
-
-        selectedOption.gameObject.GetComponent<Button>().colors = oldColorsOptions;
+       
 
        
     }
     public void SetSelectedOption2(GameObject option)
     {
+        
         selectedOption2 = option;
-        //change color of deselect button
-        oldColorsOptions = selectedOption.gameObject.GetComponent<Button>().colors;
-        oldColors = selectedTeam.gameObject.GetComponent<Button>().colors;
+   
 
-        selectedTeam.gameObject.GetComponent<Button>().colors = colors;
-        selectedOption2.gameObject.GetComponent<Button>().colors = colors;
 
-        selectedOption2.gameObject.GetComponent<Button>().colors = oldColorsOptions2;
 
   
     }
