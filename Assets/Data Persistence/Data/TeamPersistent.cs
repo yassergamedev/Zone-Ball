@@ -13,6 +13,7 @@ public class TeamPersistent
     public int salaryCap = 350000;
     public int playstyle;
     public string start;
+    public string HC, DC, OC;
     public List<MatchPlayed> matchesPlayed;
     public TeamPersistent(string id, string name, string conf, string[] plyrs)
    {
@@ -20,19 +21,40 @@ public class TeamPersistent
         this.name = name;
         this.Conference = conf;
         this.players = plyrs;
-        matchesPlayed = new();
+        matchesPlayed = new() { };
         playstyle = 5;
         start = "Young";
+        HC = "";
+        OC = "";
+        DC = "";
     }
 
   
 }
+[System.Serializable]
 public class MatchPlayed
 {
     //match id
-    public string id;
+    public string opponent;
+    public bool isHome;
     //match stats id
-    public string stats;
-
+    public bool isPlayed;
+    public bool isReady;
+    public bool result;
+    public int score;
+    public int oppScore;
+    public int turnovers;
+    public int oppTurnovers;
+    public List<string> playersStats;
+    public MatchPlayed(string opponent, bool isHome)
+    {
+        this.opponent = opponent;
+        this.isHome = isHome;
+        isPlayed = false;
+        isReady = false;
+    }
 }
+
+
+
 

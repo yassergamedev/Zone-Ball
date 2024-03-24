@@ -142,14 +142,14 @@ PrefabInstance:
     - target: {fileID: 3450594042544771358, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1029038059}
+      objectReference: {fileID: 1029038058}
     - target: {fileID: 3450594042544771358, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetPlays
+      value: setCoaching
       objectReference: {fileID: 0}
     - target: {fileID: 3450594042544771358, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: DepthChart, Assembly-CSharp
+      value: SelectedStuff, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3450594042544771358, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -12870,6 +12870,7 @@ GameObject:
   - component: {fileID: 1029038058}
   - component: {fileID: 1029038059}
   - component: {fileID: 1029038060}
+  - component: {fileID: 1029038061}
   m_Layer: 0
   m_Name: Selection Manager
   m_TagString: Untagged
@@ -12909,7 +12910,11 @@ MonoBehaviour:
   selectedOption2: {fileID: 173511371}
   ViewRoster: {fileID: 0}
   depthChart: {fileID: 1029038059}
+  coaching: {fileID: 1029038061}
   weekSelector: {fileID: 900218236}
+  oc: {fileID: 1726566601}
+  dc: {fileID: 1069741717}
+  hc: {fileID: 113642274}
   weekChange: {fileID: 1029038056}
   week: 1
 --- !u!114 &1029038059
@@ -12939,6 +12944,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeek: 1
+--- !u!114 &1029038061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029038056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aae1cb19fa7cab42b59118abe164ce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1037316272
 PrefabInstance:
   m_ObjectHideFlags: 0
