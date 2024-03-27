@@ -11,7 +11,7 @@ public class Coaching : MonoBehaviour, IDataPersistence
     }
     public void SaveData(ref GameData data) { }
     // Update is called once per frame
-   public void setCoaching(string selectedTeam, string oc, string dc, string hc)
+   public void setCoaching(string selectedTeam, string[] oc, string[] dc, string[] hc)
     {
         FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gamedata.id + "/Teams/", selectedTeam);
         TeamPersistent team = teamHandler.Load();

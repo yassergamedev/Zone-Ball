@@ -49,6 +49,8 @@ public class PlayerPersistent
     public int[] zoneStyle; // Range: 1 to 12
     public int ovrl;
     public int plays;
+    public int defPlays;
+    public bool isJuked;
     //setters for all stats
  
 
@@ -214,7 +216,8 @@ public class PlayerPersistent
         }
 
         gameFlowStats = new string[] { };
-        plays = 4;
+        plays = 2;
+        defPlays = 2;
 
     }
     public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)

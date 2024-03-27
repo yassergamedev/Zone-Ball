@@ -32,6 +32,7 @@ TagManager:
   - TeamScore
   - OppScore
   - SoundManager
+  - Collider
   layers:
   - Default
   - TransparentFX

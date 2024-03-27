@@ -83,6 +83,7 @@ public class DataPersistenceManager : MonoBehaviour
         if (current != null)
         {
            current.currentGame = gameDataId;
+            current.week = 1;
 
         }
         else
@@ -162,11 +163,16 @@ public class DataPersistenceManager : MonoBehaviour
         return new List<IDataPersistence>( dataPersistenceObjects);
     }
 }
+[System.Serializable]
 public class CurrentGame
 {
     public string currentGame;
+    public int week;
+    public MatchPlayed game;
     public CurrentGame(string currentGame)
     {
         this.currentGame = currentGame;
+        week = 1;
+        game = null;
     }
 }

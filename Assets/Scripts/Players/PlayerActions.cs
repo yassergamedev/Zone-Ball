@@ -18,6 +18,8 @@ public class PlayerActions : MonoBehaviour
     public GameObject OppScore;
     private GameObject CommentaryObject;
     public Player player;
+    public PlayerPersistent playerPersistent;
+    private PlayerPersistent otherPlayerPersistent;
     private Player otherPlayer;
     private GameObject otherPlayerObject;
     private GameObject foulManager;
@@ -34,15 +36,16 @@ public class PlayerActions : MonoBehaviour
     private GameObject Net;
     private int zoneBonus;
     private int otherZoneBonus;
-    private int positionalBonus;
+    private int positionalBonus = 0;
     private int accuracy;
     public int zoneIndex;
     public bool hasPicked = false;
     public bool isPicking = false;
     public bool hasJuked = false;
+    public bool isGuarded = false;
     Text commentary;
-
-
+    public PlayerStatsPersistent playerStatsPersistent;
+    public PlayerStatsPersistent otherPlayerStats;
     private void Start()
     {
         
@@ -120,8 +123,8 @@ public class PlayerActions : MonoBehaviour
                 // Wait until space key is pressed
                     yield return new WaitForSeconds(1f);
                 
-                otherPlayer.fouls += 1;
-                player.foulShots += 2;
+                otherPlayerStats.fouls += 1;
+                playerStatsPersistent.foulShots += 2;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 
                 yield return  FoulShot(3);
@@ -135,8 +138,8 @@ public class PlayerActions : MonoBehaviour
                 // Wait until space key is pressed
                 yield return new WaitForSeconds(1f);
                 
-                otherPlayer.fouls += 1;
-                player.foulShots += 3;
+                otherPlayerStats.fouls += 1;
+                playerStatsPersistent.foulShots += 3;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 yield return  FoulShot(2);
                 break;
@@ -148,7 +151,7 @@ public class PlayerActions : MonoBehaviour
                     yield return new WaitForSeconds(1f);
                 
 
-                otherPlayer.steals += 1;
+                otherPlayerStats.steals += 1;
                // 
                 decPlays();
                 possessionManager.ChangePossession(otherPlayerObject);
@@ -162,15 +165,15 @@ public class PlayerActions : MonoBehaviour
         commentary.text = "";
 
     }
-    //action 2 == the player tries to shoot the ball
+    //action 2 == the playerStatsPersistent tries to shoot the ball
     public IEnumerator Shoot()
     {
         yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
         //yield return new WaitForSeconds(waitingTime);
         if (ShotCheck())
         {
-            player.isShooting = true;
-            player.shots += 1;
+            
+            playerStatsPersistent.shots += 1;
             int RandShot = UnityEngine.Random.Range(0, 100);
             int shotAccuracy = 50;
 
@@ -197,10 +200,10 @@ public class PlayerActions : MonoBehaviour
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("insideMade"));
 
-                        player.pointsScored += 4;
-                        player.insideShotsMade += 1;
-                        player.insideShots += 1;
-                        otherPlayer.pointsAllowed += 4;
+                        playerStatsPersistent.pointsScored += 4;
+                        playerStatsPersistent.insideShotsMade += 1;
+                        playerStatsPersistent.insideShots += 1;
+                        otherPlayerStats.pointsAllowed += 4;
                         AddScore(4);
                         
                             // Wait until space key is pressed
@@ -212,10 +215,10 @@ public class PlayerActions : MonoBehaviour
 
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("midMade"));
-                        player.pointsScored += 5;
-                        player.midShotsMade += 1;
-                        player.midShots += 1;
-                        otherPlayer.pointsAllowed += 5;
+                        playerStatsPersistent.pointsScored += 5;
+                        playerStatsPersistent.midShotsMade += 1;
+                        playerStatsPersistent.midShots += 1;
+                        otherPlayerStats.pointsAllowed += 5;
                         AddScore(5);
                         
                             // Wait until space key is pressed
@@ -227,10 +230,10 @@ public class PlayerActions : MonoBehaviour
 
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("outsideMade"));
-                        player.pointsScored += 6;
-                        player.outsideShotsMade += 1;
-                        player.outsideShots += 1;
-                        otherPlayer.pointsAllowed += 6;
+                        playerStatsPersistent.pointsScored += 6;
+                        playerStatsPersistent.outsideShotsMade += 1;
+                        playerStatsPersistent.outsideShots += 1;
+                        otherPlayerStats.pointsAllowed += 6;
                         AddScore(6);
                         
                             // Wait until space key is pressed
@@ -297,7 +300,7 @@ public class PlayerActions : MonoBehaviour
         {
         
             ShowFloatingTextPrefab(flTexts.chooseRandom("jukeSuccess"));
-            otherPlayer.isJuked = true;
+            otherPlayerPersistent.isJuked = true;
             
                 // Wait until space key is pressed
                 yield return new WaitForSeconds(1f);
@@ -337,8 +340,8 @@ public class PlayerActions : MonoBehaviour
     }
         public string JukeCheck()
     {
-            int playerStatSum = player.consistency.value + player.juking.value + player.shooting.value + zoneBonus + positionalBonus;
-            int otherPlayerStatSum = otherPlayer.consistency.value + otherPlayer.guarding.value + otherPlayer.steal.value + otherZoneBonus;
+            int playerStatSum = playerPersistent.consistency.value + playerPersistent.juking.value + playerPersistent.shooting.value + zoneBonus + positionalBonus;
+            int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.guarding.value + otherPlayerPersistent.steal.value + otherZoneBonus;
 
             int disparity = playerStatSum - otherPlayerStatSum;
             
@@ -368,8 +371,8 @@ public class PlayerActions : MonoBehaviour
     {
 
 
-        int playerStatSum = player.consistency.value + zoneBonus + player.personality*10 + otherPlayer.personality*10+ positionalBonus;
-        int otherPlayerStatSum = otherPlayer.consistency.value + otherPlayer.awareness.value + otherZoneBonus;
+        int playerStatSum = playerPersistent.consistency.value + zoneBonus + playerPersistent.personality*10 + otherPlayerPersistent.personality*10+ positionalBonus;
+        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.awareness.value + otherZoneBonus;
 
         int disparity = playerStatSum - otherPlayerStatSum;
         if(disparity >= 150)
@@ -408,8 +411,8 @@ public class PlayerActions : MonoBehaviour
             int RandShot = UnityEngine.Random.Range(0, 100);
             if (RandShot <= accuracy)
             {
-                player.foulShotsMade += 2;
-                player.pointsScored += 2;
+                playerStatsPersistent.foulShotsMade += 2;
+                playerStatsPersistent.pointsScored += 2;
                 AddScore(2);
                 soundManager.PlayNet();
                 ShowFloatingTextPrefab("Shot Made");
@@ -438,8 +441,8 @@ public class PlayerActions : MonoBehaviour
 
     public void FoulShotCheck()
     {
-        int offStats = player.consistency.value + player.awareness.value + player.control.value +
-                        player.shooting.value;
+        int offStats = playerPersistent.consistency.value + playerPersistent.awareness.value + playerPersistent.control.value +
+                        playerPersistent.shooting.value;
         for(int i = 40, j = 0; i<400; i+=50, j+=5)
         {
             if(i == 40)
@@ -461,30 +464,30 @@ public class PlayerActions : MonoBehaviour
     public bool ShotCheck()
     {
         int disparity;
-        int playerStatSum = player.consistency.value +
-            player.control.value +
-            player.shooting.value +
+        int playerStatSum = playerPersistent.consistency.value +
+            playerPersistent.control.value +
+            playerPersistent.shooting.value +
             zoneBonus + positionalBonus;
-        int otherPlayerStatSumw = player.consistency.value +
-           player.guarding.value +
-           player.pressure.value +
+        int otherPlayerStatSumw = otherPlayerPersistent.consistency.value +
+           otherPlayerPersistent.guarding.value +
+           otherPlayerPersistent.pressure.value +
            otherZoneBonus;
-        if(otherPlayer.isJuked)
+        if(otherPlayerPersistent.isJuked)
         {
              disparity = playerStatSum;
-            otherPlayer.isJuked = false;
+            otherPlayerPersistent.isJuked = false;
         }
         else
         {
              disparity = playerStatSum - otherPlayerStatSumw;
-            otherPlayer.isJuked = false;
+            otherPlayerPersistent.isJuked = false;
         }
         
 
         if(disparity >= 200)
         {
             accuracy += 10;
-            player.shotsTaken += 1;
+            playerStatsPersistent.shotsTaken += 1;
             return true;
         }
         else
@@ -492,7 +495,7 @@ public class PlayerActions : MonoBehaviour
             if( disparity >= 100)
             {
                 accuracy += 5;
-                player.shotsTaken += 1;
+                playerStatsPersistent.shotsTaken += 1;
                 return true;
 
             }
@@ -500,14 +503,14 @@ public class PlayerActions : MonoBehaviour
             {
                 if(disparity >=0)
                 {
-                    player.shotsTaken += 1;
+                    playerStatsPersistent.shotsTaken += 1;
                     return true;
                 }
                 else
                 {
                     if(disparity >= -50)
                     {
-                        player.shotsTaken += 1;
+                        playerStatsPersistent.shotsTaken += 1;
                         accuracy += -5;
                         return true;
                     }
@@ -515,14 +518,14 @@ public class PlayerActions : MonoBehaviour
                     {
                         if(disparity>= -100)
                         {
-                            player.shotsTaken += 1;
+                            playerStatsPersistent.shotsTaken += 1;
                             accuracy += -10;
                             return true;
                         }
                         else
                         {
-                            otherPlayer.blocks += 1;
-                            player.turnovers += 1;
+                            otherPlayerStats.blocks += 1;
+                            playerStatsPersistent.turnovers += 1;
                             return false;
                         }
                     }
@@ -533,8 +536,8 @@ public class PlayerActions : MonoBehaviour
 
     public void PositionCheck()
     {
-        int playerStatSum =100+ player.consistency.value +  zoneBonus ;
-        int otherPlayerStatSum = otherPlayer.consistency.value + otherPlayer.positioning.value + otherZoneBonus;
+        int playerStatSum =100+ playerPersistent.consistency.value +  zoneBonus ;
+        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.positioning.value + otherZoneBonus;
 
         int disparity = playerStatSum - otherPlayerStatSum;
 
@@ -598,10 +601,11 @@ public class PlayerActions : MonoBehaviour
 
    
 
-    public void SetOtherPlayer(Player player)
+    public void SetOtherPlayer(PlayerActions player)
     {
-        otherPlayer = player;
-        otherPlayerObject = otherPlayer.gameObject;
+        otherPlayerPersistent = player.playerPersistent;
+        otherPlayerStats = player.otherPlayerStats;
+        otherPlayerObject = player.gameObject;
     }
     public Player GetOtherPlayer()
     {
@@ -610,20 +614,26 @@ public class PlayerActions : MonoBehaviour
     public void SetZoneBonus(int zoneI)
     {
         zoneIndex = zoneI;
+        if(otherPlayerPersistent != null)
+        {
+       
+       
        switch (zoneIndex){
             case 0 :
-                zoneBonus = player.inside.value;
-                otherZoneBonus = otherPlayer.inside.value;
+                
+                zoneBonus = playerPersistent.inside.value;
+                otherZoneBonus = otherPlayerPersistent.inside.value;
+               
                 break;
             case 1:
-                zoneBonus = player.mid.value;
-                otherZoneBonus = otherPlayer.mid.value;
+                zoneBonus = playerPersistent.mid.value;
+                otherZoneBonus = otherPlayerPersistent.mid.value;
                 break;
             case 2:
-                  zoneBonus = player.Outside.value;
-                otherZoneBonus = otherPlayer.Outside.value;
+                  zoneBonus = playerPersistent.Outside.value;
+                otherZoneBonus = otherPlayerPersistent.Outside.value;
                 break;
-        }
+        } }
     }
 
     public void ShowFloatingTextPrefab(string text)

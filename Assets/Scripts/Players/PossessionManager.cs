@@ -10,10 +10,23 @@ public class PossessionManager : MonoBehaviour
     GameObject[] playersToPlay;
 
     public bool isFouled = false;
+    private bool ballFound = false;
     private void Start()
     {
          ball = GameObject.FindGameObjectWithTag("Ball");
 
+    }
+    private void Update()
+    {
+        if(!ballFound)
+        {
+            ball = GameObject.FindGameObjectWithTag("Ball");
+        }
+        else
+        {
+            ballFound = true;
+        }
+       
     }
     public GameObject CheckPossession()
     {
@@ -32,22 +45,27 @@ public class PossessionManager : MonoBehaviour
     {
         bool assignedPlayer = false;
         string teamTag = parent.tag;
+        string otherTeamTag = teamTag == "Player" ? "OppPlayer" : "Player";
       
        playersToPlay = GameObject.FindGameObjectsWithTag(teamTag);
-
-        Player player = parent.GetComponent<Player>();
-        if(player.maxPlays<=0)
+    
+       GameObject[] otherPlayersToPlay = GameObject.FindGameObjectsWithTag(otherTeamTag);
+        PlayerPersistent player = parent.GetComponent<PlayerActions>().playerPersistent;
+        if(player.plays<=0)
         {
             while(!assignedPlayer)
             {
              
                 int rand = Random.Range(0, playersToPlay.Length);
-                if (playersToPlay[rand].GetComponent<Player>().maxPlays >0)
+
+                if (playersToPlay[rand].GetComponent<PlayerActions>().playerPersistent.plays >0)
                 {
-                    
+             
                     ball.transform.parent = playersToPlay[rand].transform;
-                    
-                    playersToPlay[rand].GetComponent<Player>().plays -= 1;
+
+                   
+                    playersToPlay[rand].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                   
                     assignedPlayer = true;
 
                 }
@@ -65,13 +83,16 @@ public class PossessionManager : MonoBehaviour
                     ball.transform.position = parent.transform.position + new Vector3(0.3f, 0, 0);
                     break;
             }
-            parent.GetComponent<Player>().maxPlays -= 1;
+            parent.GetComponent<PlayerActions>().playerPersistent.plays -= 1;
             
             ball.transform.parent = parent.transform;
             
         }
-        
-      
+
+        int guardingNum = Random.Range(0, otherPlayersToPlay.Length);
+
+        otherPlayersToPlay[guardingNum].GetComponent<PlayerMovement>().ballHolderGuard = true;
+        otherPlayersToPlay[guardingNum].GetComponent<PlayerActions>().playerPersistent.defPlays -= 1;
     }
 
 }

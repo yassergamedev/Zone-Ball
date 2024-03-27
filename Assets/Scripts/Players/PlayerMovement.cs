@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public PossessionManager possessionManager;
+    public PlayerPersistent playerPersistent;
     public Player player;
     public PlayerActions PlayerActions;
 
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     bool setNewLocation = false;
     bool setFoulLocation = false;
     bool isMovingTowardPreferredZone = false;
+    public bool ballHolderGuard = false;
     string preferredZone;
 
     
@@ -225,8 +227,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (!isInPreferredZone)
                 {
-
-                    if (randomNumberForAwareness < player.awareness.value)
+                   
+                    if (randomNumberForAwareness < playerPersistent.awareness.value)
                     {
                         isMovingTowardPreferredZone = true;
 
@@ -333,14 +335,45 @@ public class PlayerMovement : MonoBehaviour
         playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
 
 
-        while (GuardedPlayer == null)
+        int guardIndex = Random.Range(1, 9);
+
+        if (ballHolderGuard)
         {
-            int rand = Random.Range(0, playersToBeGuarded.Length);
-            if (playersToBeGuarded[rand].GetComponent<Player>().isGuarded == false)
+            foreach (GameObject player in playersToBeGuarded)
             {
-                GuardedPlayer = playersToBeGuarded[rand];
-                PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<Player>());
-                GuardedPlayer.GetComponent<Player>().isGuarded = true;
+                if (player.transform.childCount == 3)
+                {
+                    GuardedPlayer = player;
+                    PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
+                    GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
+                }
+            }
+        }
+        else
+        {
+            int i = 0;
+            while (GuardedPlayer == null)
+            {
+                int rand = Random.Range(0, playersToBeGuarded.Length);
+
+                i++;
+
+                if (playersToBeGuarded[rand].GetComponent<PlayerActions>().isGuarded == false)
+                {
+                    if (playersToBeGuarded[rand].transform.childCount < 3)
+                    {
+
+                        GuardedPlayer = playersToBeGuarded[rand];
+                        PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
+                        GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
+
+
+
+                    }
+
+                }
+                if (i > 400)
+                    break;
             }
         }
         randomNumberForAwareness = Random.Range(1, 99);
@@ -387,13 +420,13 @@ public class PlayerMovement : MonoBehaviour
     {
 
         int maxIndex = 0;
-        int maxValue = player.zoneStyle[0];
+        int maxValue = playerPersistent.zoneStyle[0];
 
-        for (int i = 1; i < player.zoneStyle.Length; i++)
+        for (int i = 1; i < playerPersistent.zoneStyle.Length; i++)
         {
-            if (player.zoneStyle[i] > maxValue)
+            if (playerPersistent.zoneStyle[i] > maxValue)
             {
-                maxValue = player.zoneStyle[i];
+                maxValue = playerPersistent.zoneStyle[i];
                 maxIndex = i;
             }
         }
@@ -447,7 +480,7 @@ public class PlayerMovement : MonoBehaviour
             isInPreferredZone = true;
         }
 
-
+        Debug.Log(gameObject.name + " is staying in the zone: " + other.tag);
     }
     void OnTriggerEnter2D(Collider2D other)
     {

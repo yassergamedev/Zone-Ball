@@ -41,7 +41,8 @@ public class PlayerInfoTable : MonoBehaviour
             if (hit.collider != null)
             {
                 // Check if the collider belongs to a player
-                Player player = hit.transform.gameObject.GetComponent<Player>();
+                PlayerPersistent player = hit.transform.gameObject.GetComponent<PlayerActions>().playerPersistent;
+                PlayerStatsPersistent playerStats = hit.transform.gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
                 if (player != null)
                 {
                    if((hit.transform.gameObject.CompareTag( "Player" ) && name == "Player Info") ||
@@ -56,7 +57,7 @@ public class PlayerInfoTable : MonoBehaviour
                                 }
                             case "gameFlow":
                                 {
-                                    DisplayGameFlowInfo(player);
+                                    DisplayGameFlowInfo(player,playerStats);
                                     // Call the function to display game flow info
                                     break;
                                 }
@@ -71,7 +72,7 @@ public class PlayerInfoTable : MonoBehaviour
 
     }
 
-    public void DisplayPlayerInfo(Player player)
+    public void DisplayPlayerInfo(PlayerPersistent player)
     {
         tableAnimator.Play("Table Anim",0);
         // Iterate through each row
@@ -85,11 +86,11 @@ public class PlayerInfoTable : MonoBehaviour
                 {
                     Transform name = row.GetChild(0);
 
-                    name.gameObject.GetComponent<Text>().text = (player.Name ==""?  hit.transform.gameObject.name: player.name);
+                    name.gameObject.GetComponent<Text>().text = (player.Name ==""?  hit.transform.gameObject.name: player.Name);
                 }
                 else
                 {
-                    foreach((string statname, Stat stat) in player.stats)
+                    foreach((string statname, System.Func<StatPersistent> stat) in player.getStats())
                     {
                      
                         if(row.gameObject.name == statname)
@@ -97,11 +98,11 @@ public class PlayerInfoTable : MonoBehaviour
                            
                             Transform valueCell = row.GetChild(1);
                             Transform textObjV = valueCell.GetChild(0);
-                            textObjV.gameObject.GetComponent<Text>().text = stat.value.ToString();
+                            textObjV.gameObject.GetComponent<Text>().text = stat().value.ToString();
 
                             Transform potentialCell = row.GetChild(2);
                             Transform textObjP = potentialCell.GetChild(0);
-                            textObjP.gameObject.GetComponent<Text>().text = stat.potential.ToString();
+                            textObjP.gameObject.GetComponent<Text>().text = stat().potential.ToString();
 
                         }
                     }
@@ -113,7 +114,7 @@ public class PlayerInfoTable : MonoBehaviour
          
         }
     }
-    public void DisplayGameFlowInfo(Player player)
+    public void DisplayGameFlowInfo(PlayerPersistent player, PlayerStatsPersistent playerStats)
     {
         tableAnimator.Play("Table Anim", 0);
         // Iterate through each row
@@ -127,11 +128,11 @@ public class PlayerInfoTable : MonoBehaviour
                 {
                     Transform name = row.GetChild(0);
 
-                    name.gameObject.GetComponent<Text>().text = (player.Name == "" ? hit.transform.gameObject.name : player.name);
+                    name.gameObject.GetComponent<Text>().text = (player.Name == "" ? hit.transform.gameObject.name : player.Name);
                 }
                 else
                 {
-                    foreach ((string statname, System.Func<int> stat) in player.gameFlowStats)
+                    foreach ((string statname, System.Func<int> stat) in playerStats.getStats())
                     {
 
                         if (row.gameObject.name == statname)

@@ -5,7 +5,7 @@ public class PlayerManager : MonoBehaviour
     public NumberManager numberManager;
     public PossessionManager possessionManager;
     public PlayerMovement playerMovement;
-  
+    public PlayerPersistent player;
     public int number;
        private GameObject Possessor;
     void Start()

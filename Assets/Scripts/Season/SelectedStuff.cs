@@ -17,8 +17,11 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
     public TMP_Dropdown weekSelector;
     public TMP_Dropdown oc;
+    public TMP_Dropdown oc2;
     public TMP_Dropdown dc;
+    public TMP_Dropdown dc2;
     public TMP_Dropdown hc;
+    public TMP_Dropdown hc2;
     public Text teamName, marketCap;
     public Text Home, Guest;
     public GameObject weekChange;
@@ -28,9 +31,11 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Transform MatchesTable;
     public Transform StandingsTable;
     public GameObject MatchDetail;
+
     private GameData gameData;
     private Season currentSeason;
     private TeamPersistent selTeam;
+    private SceneStuff sceneStuff;
     public void LoadData(GameData go)
     {
         gameData = go;
@@ -97,7 +102,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     }
     public void setCoaching()
     {
-        coaching.setCoaching(selectedTeam.gameObject.name,oc.value.ToString(), dc.value.ToString(), hc.value.ToString());
+        coaching.setCoaching(selectedTeam.gameObject.name,new string[] { oc.value.ToString(), oc2.value.ToString() },
+            new string[] { dc.value.ToString(), dc2.value.ToString() }, new string[] { hc.value.ToString(), hc2.value.ToString() });
     }
 
     public void setGames()
@@ -189,5 +195,26 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             standing.transform.GetChild(7).GetChild(0).GetComponent<Text>().text = team.turnovers.ToString();
             k++;
         }
+    }
+    public void StartGame()
+    {
+        FileDataHandler<TeamPersistent> otherTeam = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
+        TeamPersistent other = otherTeam.Load();
+
+        if (selTeam.matchesPlayed[week].isReady && selTeam.matchesPlayed[week].isPlayed == false 
+            && other.matchesPlayed[week].isReady)
+        {
+            FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
+            CurrentGame currGame = currentGame.Load();
+            currGame.week = week;
+            currGame.game = selTeam.matchesPlayed[week];
+            currentGame.Save(currGame);
+            sceneStuff.LoadScene();
+        }
+        else
+        {
+            Debug.Log("Game not ready to start, set depth charts correctly for both teams!!");
+        }
+        
     }
 }

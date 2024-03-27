@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerStatsPersistent : MonoBehaviour
+public class PlayerStatsPersistent
 {
 
 
@@ -41,32 +41,22 @@ public class PlayerStatsPersistent : MonoBehaviour
     public int midShotsMade = 0;
     public int outsideShots = 0;
     public int outsideShotsMade = 0;
+    public List<(string, Func<int>)> getStats()
+    {
 
+       //return the list of stats
+       return new List<(string, Func<int>)> { ("Pressures", () => pressures), ("Blocks", () => blocks), ("Steals", () => steals), ("Fouls", () => fouls), ("Points Allowed", () => pointsAllowed),
+                  ("Jukes", () => jukes), ("Shots", () => shots), ("Shots Taken", () => shotsTaken), ("Points Scored", () => pointsScored), ("Foul Shots", () => foulShots), ("Foul Shots Made", () => foulShotsMade),
+                  ("Foul Points Scored", () => foulPointsScored), ("Turnovers", () => turnovers), ("Plays", () => plays), ("Inside Shots", () => insideShots), ("Inside Shots Made", () => insideShotsMade),
+                  ("Mid Shots", () => midShots), ("Mid Shots Made", () => midShotsMade), ("Outside Shots", () => outsideShots), ("Outside Shots Made", () => outsideShotsMade) };
+
+
+    }
     // Constructor
-    public PlayerStatsPersistent(string id,int pressures, int blocks, int steals, int fouls, int pointsAllowed, int jukes, int shots, int shotsTaken, int pointsScored, int foulShots, int foulShotsMade, int foulPointsScored, int turnovers, int plays, int maxPlays, int insideShots, int insideShotsMade, int midShots, int midShotsMade, int outsideShots, int outsideShotsMade)
+    public PlayerStatsPersistent(string id)
     {
         this.id = id;
-        this.pressures = pressures;
-        this.blocks = blocks;
-        this.steals = steals;
-        this.fouls = fouls;
-        this.pointsAllowed = pointsAllowed;
-        this.jukes = jukes;
-        this.shots = shots;
-        this.shotsTaken = shotsTaken;
-        this.pointsScored = pointsScored;
-        this.foulShots = foulShots;
-        this.foulShotsMade = foulShotsMade;
-        this.foulPointsScored = foulPointsScored;
-        this.turnovers = turnovers;
-        this.plays = plays;
-        this.maxPlays = maxPlays;
-        this.insideShots = insideShots;
-        this.insideShotsMade = insideShotsMade;
-        this.midShots = midShots;
-        this.midShotsMade = midShotsMade;
-        this.outsideShots = outsideShots;
-        this.outsideShotsMade = outsideShotsMade;
+     
     }
    
 }

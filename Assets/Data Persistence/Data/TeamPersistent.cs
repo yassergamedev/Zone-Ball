@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
-public class TeamPersistent 
+public class TeamPersistent
 {
     public string id;
     public string name;
@@ -13,8 +13,8 @@ public class TeamPersistent
     public int salaryCap = 350000;
     public int playstyle;
     public string start;
-    public int pointsScored,pointsAllowed, turnovers, oppTurnovers, wins, losses;
-    public string HC, DC, OC;
+    public int pointsScored, pointsAllowed, turnovers, oppTurnovers, wins, losses;
+    public string[] HC, DC, OC;
     public List<MatchPlayed> matchesPlayed;
     public TeamPersistent(string id, string name, string conf, string[] plyrs)
    {
@@ -25,9 +25,9 @@ public class TeamPersistent
         matchesPlayed = new() { };
         playstyle = 5;
         start = "Young";
-        HC = "";
-        OC = "";
-        DC = "";
+        HC = new string[]{ "","" };
+        OC = new string[] { "", "" };
+        DC = new string[] { "", "" };
     }
 
   
