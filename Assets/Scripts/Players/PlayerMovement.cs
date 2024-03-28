@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -27,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private GameObject shotPlaceL;
 
     string GuardedPlayrTag;
-   
+   int dontMoveLong = 0;
     
     GameObject[] playersToBeGuarded;
   
@@ -156,6 +157,17 @@ public class PlayerMovement : MonoBehaviour
 
      }
 
+    public bool RangeCheck()
+    {
+        if (transform.position.x <= boundXL.transform.position.x
+            || transform.position.x >= boundXR.transform.position.x
+            || transform.position.y >= boundYU.transform.position.y
+            || transform.position.y >= boundYD.transform.position.y)
+            return false;
+        else
+            return true;
+    }
+
 
     public void FoulShotFormation()
     {
@@ -225,7 +237,7 @@ public class PlayerMovement : MonoBehaviour
 
             else
             {
-                if (!isInPreferredZone)
+                if (!isInPreferredZone && RangeCheck())
                 {
                    
                     if (randomNumberForAwareness < playerPersistent.awareness.value)
@@ -339,46 +351,55 @@ public class PlayerMovement : MonoBehaviour
 
         if (ballHolderGuard)
         {
+            while(GuardedPlayer == null)
+            {
             foreach (GameObject player in playersToBeGuarded)
             {
                 if (player.transform.childCount == 3)
                 {
+                        Debug.Log(this.transform.name + " has set the guarding player");
                     GuardedPlayer = player;
                     PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
                     GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
                 }
             }
+
+            }
+            ballHolderGuard = false;
         }
         else
         {
-            int i = 0;
-            while (GuardedPlayer == null)
-            {
-                int rand = Random.Range(0, playersToBeGuarded.Length);
-
-                i++;
-
-                if (playersToBeGuarded[rand].GetComponent<PlayerActions>().isGuarded == false)
-                {
-                    if (playersToBeGuarded[rand].transform.childCount < 3)
-                    {
-
-                        GuardedPlayer = playersToBeGuarded[rand];
-                        PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
-                        GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
 
 
-
-                    }
-
-                }
-                if (i > 400)
-                    break;
-            }
+            StartCoroutine(AssignGuardCoroutine());
         }
         randomNumberForAwareness = Random.Range(1, 99);
     }
+    private IEnumerator AssignGuardCoroutine()
+    {
+        // Repeat indefinitely
+        while (true)
+        {
+            // Check each player
+            foreach (GameObject player in playersToBeGuarded)
+            {
+                // Skip this player if it's already guarded or has max children
+                if (player.GetComponent<PlayerActions>().isGuarded || player.transform.childCount >= 3)
+                    continue;
 
+                // Set this player as guarded
+                GuardedPlayer = player;
+                GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
+                PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
+
+                // Wait for a short duration before checking again
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            // Wait for the next iteration
+            yield return null;
+        }
+    }
     public Vector3 FindPreferredDirection()
     {
         int prefIndex = FindPreferredZone();

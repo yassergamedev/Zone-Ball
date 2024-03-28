@@ -60,7 +60,8 @@ public class PossessionManager : MonoBehaviour
 
                 if (playersToPlay[rand].GetComponent<PlayerActions>().playerPersistent.plays >0)
                 {
-             
+
+                    Debug.Log("Setting another player from " + parent.transform.name);
                     ball.transform.parent = playersToPlay[rand].transform;
 
                    

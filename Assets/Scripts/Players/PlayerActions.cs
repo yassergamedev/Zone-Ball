@@ -147,9 +147,9 @@ public class PlayerActions : MonoBehaviour
                
                    
                 ShowFloatingTextPrefab(flTexts.chooseRandom("stealSuccess"));
-                 // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
-                
+                // Wait until space key is pressed
+              //  yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
 
                 otherPlayerStats.steals += 1;
                // 
@@ -160,7 +160,7 @@ public class PlayerActions : MonoBehaviour
         }
         
             // Wait until space key is pressed
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+           
         
         commentary.text = "";
 
@@ -340,6 +340,7 @@ public class PlayerActions : MonoBehaviour
     }
         public string JukeCheck()
     {
+        Debug.Log("other player : "+ playerPersistent.consistency.value);
             int playerStatSum = playerPersistent.consistency.value + playerPersistent.juking.value + playerPersistent.shooting.value + zoneBonus + positionalBonus;
             int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.guarding.value + otherPlayerPersistent.steal.value + otherZoneBonus;
 
@@ -370,7 +371,7 @@ public class PlayerActions : MonoBehaviour
     public string FoulCheck()
     {
 
-
+     
         int playerStatSum = playerPersistent.consistency.value + zoneBonus + playerPersistent.personality*10 + otherPlayerPersistent.personality*10+ positionalBonus;
         int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.awareness.value + otherZoneBonus;
 
@@ -606,6 +607,7 @@ public class PlayerActions : MonoBehaviour
         otherPlayerPersistent = player.playerPersistent;
         otherPlayerStats = player.otherPlayerStats;
         otherPlayerObject = player.gameObject;
+        Debug.Log(playerPersistent.Name + " has set the other player " + otherPlayerPersistent.Name);
     }
     public Player GetOtherPlayer()
     {

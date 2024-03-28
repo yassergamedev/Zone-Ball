@@ -82,11 +82,11 @@ public class PlayerInfoTable : MonoBehaviour
             if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
             {
                
-                if(row.gameObject.name == "Player Name")
+                if(row.gameObject.name == "Name")
                 {
                     Transform name = row.GetChild(0);
 
-                    name.gameObject.GetComponent<Text>().text = (player.Name ==""?  hit.transform.gameObject.name: player.Name);
+                    name.gameObject.GetComponent<Text>().text = player.Name;
                 }
                 else
                 {

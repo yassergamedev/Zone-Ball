@@ -192,6 +192,61 @@ MonoBehaviour:
   numberManager: {fileID: 8323752013313015466}
   possessionManager: {fileID: 5245444289781073889}
   playerMovement: {fileID: 3495739315391244454}
+  player:
+    id: 
+    Name: 
+    Number: 0
+    Age: 0
+    YearsPro: 0
+    type: 
+    contract:
+      years: 0
+      salary: 0
+    consistency:
+      value: 0
+      potential: 0
+    awareness:
+      value: 0
+      potential: 0
+    juking:
+      value: 0
+      potential: 0
+    control:
+      value: 0
+      potential: 0
+    shooting:
+      value: 0
+      potential: 0
+    positioning:
+      value: 0
+      potential: 0
+    steal:
+      value: 0
+      potential: 0
+    guarding:
+      value: 0
+      potential: 0
+    pressure:
+      value: 0
+      potential: 0
+    inside:
+      value: 0
+      potential: 0
+    mid:
+      value: 0
+      potential: 0
+    Outside:
+      value: 0
+      potential: 0
+    gameFlowStats: []
+    learning: 0
+    longevity: 0
+    personality: 0
+    zoneStyle: 
+    ovrl: 0
+    plays: 0
+    defPlays: 0
+    isJuked: 0
   number: 12
 --- !u!114 &5245444289781073889
 MonoBehaviour:
@@ -340,10 +395,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possessionManager: {fileID: 5245444289781073889}
+  playerPersistent:
+    id: 
+    Name: 
+    Number: 0
+    Age: 0
+    YearsPro: 0
+    type: 
+    contract:
+      years: 0
+      salary: 0
+    consistency:
+      value: 0
+      potential: 0
+    awareness:
+      value: 0
+      potential: 0
+    juking:
+      value: 0
+      potential: 0
+    control:
+      value: 0
+      potential: 0
+    shooting:
+      value: 0
+      potential: 0
+    positioning:
+      value: 0
+      potential: 0
+    steal:
+      value: 0
+      potential: 0
+    guarding:
+      value: 0
+      potential: 0
+    pressure:
+      value: 0
+      potential: 0
+    inside:
+      value: 0
+      potential: 0
+    mid:
+      value: 0
+      potential: 0
+    Outside:
+      value: 0
+      potential: 0
+    gameFlowStats: []
+    learning: 0
+    longevity: 0
+    personality: 0
+    zoneStyle: 
+    ovrl: 0
+    plays: 0
+    defPlays: 0
+    isJuked: 0
   player: {fileID: 4839342472652246457}
   PlayerActions: {fileID: 6849713754702302580}
   timeToMove: 2
   moveTimer: 0
+  ballHolderGuard: 0
 --- !u!50 &1308741391939902101
 Rigidbody2D:
   serializedVersion: 4
@@ -384,11 +495,115 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FloatingTextPrefab: {fileID: 4576452480331502704, guid: caf077891905ada4f920eda5c918655b, type: 3}
+  TeamScore: {fileID: 0}
+  OppScore: {fileID: 0}
   player: {fileID: 4839342472652246457}
+  playerPersistent:
+    id: 
+    Name: 
+    Number: 0
+    Age: 0
+    YearsPro: 0
+    type: 
+    contract:
+      years: 0
+      salary: 0
+    consistency:
+      value: 0
+      potential: 0
+    awareness:
+      value: 0
+      potential: 0
+    juking:
+      value: 0
+      potential: 0
+    control:
+      value: 0
+      potential: 0
+    shooting:
+      value: 0
+      potential: 0
+    positioning:
+      value: 0
+      potential: 0
+    steal:
+      value: 0
+      potential: 0
+    guarding:
+      value: 0
+      potential: 0
+    pressure:
+      value: 0
+      potential: 0
+    inside:
+      value: 0
+      potential: 0
+    mid:
+      value: 0
+      potential: 0
+    Outside:
+      value: 0
+      potential: 0
+    gameFlowStats: []
+    learning: 0
+    longevity: 0
+    personality: 0
+    zoneStyle: 
+    ovrl: 0
+    plays: 0
+    defPlays: 0
+    isJuked: 0
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
   possessionManager: {fileID: 5245444289781073889}
+  zoneIndex: 0
   hasPicked: 0
   isPicking: 0
+  hasJuked: 0
+  isGuarded: 0
+  playerStatsPersistent:
+    pressures: 0
+    blocks: 0
+    steals: 0
+    fouls: 0
+    pointsAllowed: 0
+    jukes: 0
+    shots: 0
+    shotsTaken: 0
+    pointsScored: 0
+    foulShots: 0
+    foulShotsMade: 0
+    foulPointsScored: 0
+    turnovers: 0
+    plays: 0
+    maxPlays: 0
+    insideShots: 0
+    insideShotsMade: 0
+    midShots: 0
+    midShotsMade: 0
+    outsideShots: 0
+    outsideShotsMade: 0
+  otherPlayerStats:
+    pressures: 0
+    blocks: 0
+    steals: 0
+    fouls: 0
+    pointsAllowed: 0
+    jukes: 0
+    shots: 0
+    shotsTaken: 0
+    pointsScored: 0
+    foulShots: 0
+    foulShotsMade: 0
+    foulPointsScored: 0
+    turnovers: 0
+    plays: 0
+    maxPlays: 0
+    insideShots: 0
+    insideShotsMade: 0
+    midShots: 0
+    midShotsMade: 0
+    outsideShots: 0
+    outsideShotsMade: 0
 --- !u!1 &2585102181140095219
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +613,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3610849391233701864}
-  - component: {fileID: 3615155762669485759}
   m_Layer: 14
   m_Name: ShootingRange
   m_TagString: ShootingRange
@@ -421,56 +635,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4595736981918210993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
---- !u!68 &3615155762669485759
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585102181140095219}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: 0.00476954, y: -0.0044669863}
-  - {x: 0.17613468, y: 0.08933973}
-  - {x: 0.18466367, y: 0.0735444}
-  - {x: 0.18766727, y: 0.059577692}
-  - {x: 0.19075574, y: 0.03671397}
-  - {x: 0.19387342, y: 0.015915811}
-  - {x: 0.19292425, y: -0.009337982}
-  - {x: 0.18917572, y: -0.031842716}
-  - {x: 0.18840621, y: -0.04752603}
-  - {x: 0.17837447, y: -0.07084894}
-  - {x: 0.01309827, y: 0.0067005157}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
 --- !u!1 &5824290097319221151
 GameObject:
   m_ObjectHideFlags: 0
