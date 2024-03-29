@@ -31,7 +31,9 @@ public class TeamManager : MonoBehaviour,IDataPersistence
         HomeText.text = Home.name;
         GuestText.text = Guest.name;
 
-        for(int i = 0; i<Home.players.Length; i++)
+        List<GameObject> playersToPlay = new(), otherPlayersToPlay = new();
+        List<PlayerActions> playerActions = new(), otherPlayerActions = new();
+        for (int i = 0, k = 0; i<Home.players.Length; i++)
         {
             if (Home.players[i] != "")
             {
@@ -40,14 +42,19 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 Debug.Log(player.Name);
                 if (player.plays > 0)
                 {
+                   
                     GameObject playerObject = Instantiate(teamPlayer, HomeObject.transform);
                     playerObject.transform.name = player.Name;
                     playerObject.GetComponent<PlayerActions>().playerPersistent = player;
+                    playerObject.GetComponent<PlayerActions>().index = k;
                     playerObject.GetComponent<PlayerMovement>().playerPersistent = player;
+                    playersToPlay.Add(playerObject);
+                    playerActions.Add(playerObject.GetComponent<PlayerActions>());
+                    k++;
                 }
             }
         }
-        for (int i = 0; i < Guest.players.Length; i++)
+        for (int i = 0, k=0; i < Guest.players.Length; i++)
         {
             if (Guest.players[i] != "")
             {
@@ -55,19 +62,31 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 PlayerPersistent player = playerHandler.Load();
                 if (player.plays > 0)
                 {
+                 
                     GameObject playerObject = Instantiate(oppPlayer, GuestObject.transform);
                     playerObject.transform.name = player.Name;
                     playerObject.GetComponent<PlayerActions>().playerPersistent = player;
+                    playerObject.GetComponent<PlayerActions>().index = k;
                     playerObject.GetComponent<PlayerMovement>().playerPersistent = player;
-                  //  FileDataHandler<PlayerStatsPersistent> statsHandler = new(
-                      //  Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/Week " + cg.week + "/" + firstTeam.id +" Vs " + secondTeam.id + "/"
-                   //     , player.Name + " Stats");
-                   // PlayerStatsPersistent playerStats = new();
-                //  statsHandler.Save(player.stats);
 
+                    otherPlayersToPlay.Add(playerObject);
+                    otherPlayerActions.Add(playerObject.GetComponent<PlayerActions>());
+                    k++;
                 }
             }
         }
+
+        foreach(GameObject pl in playersToPlay)
+        {
+            pl.GetComponent<PossessionManager>().playersToPlay = playerActions;
+            pl.GetComponent<PossessionManager>().otherPlayersToPlay = otherPlayerActions;
+        }
+        foreach (GameObject pl in otherPlayersToPlay)
+        {
+            pl.GetComponent<PossessionManager>().playersToPlay = playerActions;
+            pl.GetComponent<PossessionManager>().otherPlayersToPlay = otherPlayerActions;
+        }
+
         int randomPlayer = Random.Range(0, GuestObject.transform.childCount);
         Instantiate(ball, GuestObject.transform.GetChild(randomPlayer));
     }

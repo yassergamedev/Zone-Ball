@@ -143,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
         if(!PlayerActions.isPicking && !foulManager.GetComponent<FoulManager>().isFouled)
         {
             setFoulLocation = false;
-             MovementLogic();
+             StartCoroutine(MovementLogic());
         }
         else
         {
@@ -221,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    public void MovementLogic()
+    public IEnumerator MovementLogic()
     {
         playMode = CheckPlay();
 
@@ -266,7 +266,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         Debug.Log(possessionManager.CheckPossession());
                 
-                        StartCoroutine(PlayerActions.PickAnAction());
+                        yield return PlayerActions.PickAnAction();
                 
 
                     }
@@ -501,7 +501,7 @@ public class PlayerMovement : MonoBehaviour
             isInPreferredZone = true;
         }
 
-        Debug.Log(gameObject.name + " is staying in the zone: " + other.tag);
+      
     }
     void OnTriggerEnter2D(Collider2D other)
     {

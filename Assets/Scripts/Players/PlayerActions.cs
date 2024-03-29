@@ -38,6 +38,7 @@ public class PlayerActions : MonoBehaviour
     private int otherZoneBonus;
     private int positionalBonus = 0;
     private int accuracy;
+    public int index;
     public int zoneIndex;
     public bool hasPicked = false;
     public bool isPicking = false;
@@ -121,7 +122,7 @@ public class PlayerActions : MonoBehaviour
                 soundManager.PlayeWhistle();
                 CommentaryObject.transform.Translate(new Vector3(0,0.5f,0));
                 // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 otherPlayerStats.fouls += 1;
                 playerStatsPersistent.foulShots += 2;
@@ -136,7 +137,7 @@ public class PlayerActions : MonoBehaviour
                 ShowFloatingTextPrefab(flTexts.chooseRandom("minorFoul"));
                 soundManager.PlayeWhistle();
                 // Wait until space key is pressed
-                yield return new WaitForSeconds(1f);
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 otherPlayerStats.fouls += 1;
                 playerStatsPersistent.foulShots += 3;
@@ -148,13 +149,13 @@ public class PlayerActions : MonoBehaviour
                    
                 ShowFloatingTextPrefab(flTexts.chooseRandom("stealSuccess"));
                 // Wait until space key is pressed
-              //  yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
 
 
                 otherPlayerStats.steals += 1;
                // 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
                 break;
 
         }
@@ -276,7 +277,7 @@ public class PlayerActions : MonoBehaviour
         else {
             soundManager.PlayBlocked();
             ShowFloatingTextPrefab("Blocked!");
-            otherPlayer.blocks += 1;
+            otherPlayerStats.blocks += 1;
                 // Wait until space key is pressed
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
             
@@ -287,23 +288,24 @@ public class PlayerActions : MonoBehaviour
         hasPicked = true;
         
         decPlays();
-        possessionManager.ChangePossession(otherPlayerObject);
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
     }
     //action 3 == the player tries to juke the other player
     public IEnumerator Juke()
     {
-        
-            // Wait until space key is pressed
-       
+        yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+        // Wait until space key is pressed
+
         hasJuked = true;
         if (JukeCheck() == "Juke")
         {
         
             ShowFloatingTextPrefab(flTexts.chooseRandom("jukeSuccess"));
             otherPlayerPersistent.isJuked = true;
+
+            // Wait until space key is pressed
             
-                // Wait until space key is pressed
-                yield return new WaitForSeconds(1f);
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
             
             commentary.text = "";
             yield return  Shoot();
@@ -316,24 +318,23 @@ public class PlayerActions : MonoBehaviour
 
                
                     // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 commentary.text = "";
-                otherPlayer.steals += 1;
+                otherPlayerStats.steals += 1;
                 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
             }
             else
             {
                 ShowFloatingTextPrefab("Juke Failed");
 
-                if (!Input.GetKeyDown(KeyCode.Space))
-                {
+               
                     // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
-                }
-                yield return PickAnAction();
+                   yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                
+                yield return Shoot();
             }
         }
 
@@ -341,8 +342,9 @@ public class PlayerActions : MonoBehaviour
         public string JukeCheck()
     {
         Debug.Log("other player : "+ playerPersistent.consistency.value);
-            int playerStatSum = playerPersistent.consistency.value + playerPersistent.juking.value + playerPersistent.shooting.value + zoneBonus + positionalBonus;
-            int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.guarding.value + otherPlayerPersistent.steal.value + otherZoneBonus;
+
+            int playerStatSum = playerPersistent.consistency.value + playerPersistent.juking.value + playerPersistent.shooting.value + zoneBonus + positionalBonus + UnityEngine.Random.Range(1,100) + UnityEngine.Random.Range(1, 100);
+            int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.guarding.value + otherPlayerPersistent.steal.value + otherZoneBonus + UnityEngine.Random.Range(1, 100) + UnityEngine.Random.Range(1, 100);
 
             int disparity = playerStatSum - otherPlayerStatSum;
             
@@ -372,8 +374,8 @@ public class PlayerActions : MonoBehaviour
     {
 
      
-        int playerStatSum = playerPersistent.consistency.value + zoneBonus + playerPersistent.personality*10 + otherPlayerPersistent.personality*10+ positionalBonus;
-        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.awareness.value + otherZoneBonus;
+        int playerStatSum = playerPersistent.consistency.value + zoneBonus + playerPersistent.personality*10 + otherPlayerPersistent.personality*10+ positionalBonus + UnityEngine.Random.Range(1, 100);
+        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.awareness.value + otherZoneBonus + UnityEngine.Random.Range(1, 100);
 
         int disparity = playerStatSum - otherPlayerStatSum;
         if(disparity >= 150)
@@ -436,7 +438,7 @@ public class PlayerActions : MonoBehaviour
         commentary.text = "";
         
         decPlays();
-        possessionManager.ChangePossession(otherPlayerObject);
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
     }
 
 
@@ -468,11 +470,11 @@ public class PlayerActions : MonoBehaviour
         int playerStatSum = playerPersistent.consistency.value +
             playerPersistent.control.value +
             playerPersistent.shooting.value +
-            zoneBonus + positionalBonus;
+            zoneBonus + positionalBonus + UnityEngine.Random.Range(1, 100);
         int otherPlayerStatSumw = otherPlayerPersistent.consistency.value +
            otherPlayerPersistent.guarding.value +
            otherPlayerPersistent.pressure.value +
-           otherZoneBonus;
+           otherZoneBonus + UnityEngine.Random.Range(1, 100);
         if(otherPlayerPersistent.isJuked)
         {
              disparity = playerStatSum;
@@ -537,8 +539,8 @@ public class PlayerActions : MonoBehaviour
 
     public void PositionCheck()
     {
-        int playerStatSum =100+ playerPersistent.consistency.value +  zoneBonus ;
-        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.positioning.value + otherZoneBonus;
+        int playerStatSum =100+ playerPersistent.consistency.value +  zoneBonus + UnityEngine.Random.Range(1, 100);
+        int otherPlayerStatSum = otherPlayerPersistent.consistency.value + otherPlayerPersistent.positioning.value + otherZoneBonus + UnityEngine.Random.Range(1, 100);
 
         int disparity = playerStatSum - otherPlayerStatSum;
 
@@ -668,10 +670,9 @@ public class PlayerActions : MonoBehaviour
                 ShowFloatingTextPrefab("Guarding Player going To Steal");
                 // Wait until space key is pressed
                 // Check if space key is not pressed
-               
-                    // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
-                
+
+                // Wait until space key is pressed
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
 
                 // Now that space key is pressed, start the coroutine
                 Debug.Log("Starting Coroutine");
@@ -691,13 +692,14 @@ public class PlayerActions : MonoBehaviour
             case 3:
                 ShowFloatingTextPrefab("Going To Juke");
                 // Wait until space key is pressed
-                
-                    // Wait until space key is pressed
-                    yield return new WaitForSeconds(1f);
-                
+
+                // Wait until space key is pressed
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
                 yield return Juke();
                 break;
         }
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         Debug.Log("Done Picking");
         isPicking = false;
     }

@@ -7,7 +7,8 @@ public class PossessionManager : MonoBehaviour
 {
     // Start is called before the first frame update
     GameObject ball;
-    GameObject[] playersToPlay;
+    public List<PlayerActions> playersToPlay;
+    public List<PlayerActions> otherPlayersToPlay;
 
     public bool isFouled = false;
     private bool ballFound = false;
@@ -41,59 +42,62 @@ public class PossessionManager : MonoBehaviour
              }
     }
 
-    public void ChangePossession(GameObject parent)
+    public void ChangePossession( int ind)
     {
-        bool assignedPlayer = false;
-        string teamTag = parent.tag;
-        string otherTeamTag = teamTag == "Player" ? "OppPlayer" : "Player";
-      
-       playersToPlay = GameObject.FindGameObjectsWithTag(teamTag);
-    
-       GameObject[] otherPlayersToPlay = GameObject.FindGameObjectsWithTag(otherTeamTag);
-        PlayerPersistent player = parent.GetComponent<PlayerActions>().playerPersistent;
-        if(player.plays<=0)
+        Debug.Log(ind);
+        Debug.Log(otherPlayersToPlay.Count);
+        if(CompareTag("Player"))
         {
-            while(!assignedPlayer)
+            if (otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays < 0)
             {
-             
-                int rand = Random.Range(0, playersToPlay.Length);
-
-                if (playersToPlay[rand].GetComponent<PlayerActions>().playerPersistent.plays >0)
+                for (int k = 0; k < otherPlayersToPlay.Count; k++)
                 {
-
-                    Debug.Log("Setting another player from " + parent.transform.name);
-                    ball.transform.parent = playersToPlay[rand].transform;
-
-                   
-                    playersToPlay[rand].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-                   
-                    assignedPlayer = true;
-
+                    if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                    {
+                        ball.transform.position = otherPlayersToPlay[k].transform.position + new Vector3(-0.3f, 0, 0);
+                        ball.transform.parent = otherPlayersToPlay[k].transform;
+                        otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        break;
+                    }
                 }
-              
             }
+            else
+            {
+                ball.transform.position = otherPlayersToPlay[ind].transform.position + new Vector3(-0.3f, 0, 0);
+                ball.transform.parent = otherPlayersToPlay[ind].transform;
+                otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+            }
+            
+           
         }
         else
         {
-            switch (teamTag)
+            if (playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays < 0)
             {
-                case "Player":
-                    ball.transform.position = parent.transform.position + new Vector3(-0.3f, 0, 0);
-                    break;
-                case "OppPlayer":
-                    ball.transform.position = parent.transform.position + new Vector3(0.3f, 0, 0);
-                    break;
+                for (int k = 0; k < playersToPlay.Count; k++)
+                {
+                    if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                    {
+                        ball.transform.position = playersToPlay[k].transform.position + new Vector3(-0.3f, 0, 0);
+                        ball.transform.parent = playersToPlay[k].transform;
+                        playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        break;
+                    }
+                }
             }
-            parent.GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-            
-            ball.transform.parent = parent.transform;
-            
+            else
+            {
+                ball.transform.position = playersToPlay[ind].transform.position + new Vector3(-0.3f, 0, 0);
+                ball.transform.parent = playersToPlay[ind].transform;
+                playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+            }
         }
 
-        int guardingNum = Random.Range(0, otherPlayersToPlay.Length);
 
-        otherPlayersToPlay[guardingNum].GetComponent<PlayerMovement>().ballHolderGuard = true;
-        otherPlayersToPlay[guardingNum].GetComponent<PlayerActions>().playerPersistent.defPlays -= 1;
+
+        
     }
+
+   
 
 }

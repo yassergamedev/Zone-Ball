@@ -31,7 +31,7 @@ public class PlayerStatsPersistent
     public int foulPointsScored = 0;
     public int turnovers = 0;
 
-    public int plays = 0;
+   // public int plays = 0;
     public int maxPlays;
 
     //---------- zone ------------
@@ -45,10 +45,10 @@ public class PlayerStatsPersistent
     {
 
        //return the list of stats
-       return new List<(string, Func<int>)> { ("Pressures", () => pressures), ("Blocks", () => blocks), ("Steals", () => steals), ("Fouls", () => fouls), ("Points Allowed", () => pointsAllowed),
-                  ("Jukes", () => jukes), ("Shots", () => shots), ("Shots Taken", () => shotsTaken), ("Points Scored", () => pointsScored), ("Foul Shots", () => foulShots), ("Foul Shots Made", () => foulShotsMade),
-                  ("Foul Points Scored", () => foulPointsScored), ("Turnovers", () => turnovers), ("Plays", () => plays), ("Inside Shots", () => insideShots), ("Inside Shots Made", () => insideShotsMade),
-                  ("Mid Shots", () => midShots), ("Mid Shots Made", () => midShotsMade), ("Outside Shots", () => outsideShots), ("Outside Shots Made", () => outsideShotsMade) };
+       return new List<(string, Func<int>)> { ("pressures", () => pressures), ("blocks", () => blocks), ("steals", () => steals), ("fouls", () => fouls), ("pointsAllowed", () => pointsAllowed),
+                  ("jukes", () => jukes), ("shots", () => shots), ("shotsTaken", () => shotsTaken), ("pointsScored", () => pointsScored), ("foulShots", () => foulShots), ("foulShotsMade", () => foulShotsMade),
+                  ("foulPointsScored", () => foulPointsScored), ("turnovers", () => turnovers), ("insideShots", () => insideShots), ("insideShotsMade", () => insideShotsMade),
+                  ("midShots", () => midShots), ("midShotsMade", () => midShotsMade), ("outsideShots", () => outsideShots), ("outsideShotsMade", () => outsideShotsMade) };
 
 
     }

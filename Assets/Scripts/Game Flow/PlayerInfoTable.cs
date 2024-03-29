@@ -81,7 +81,7 @@ public class PlayerInfoTable : MonoBehaviour
           
             if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
             {
-               
+              
                 if(row.gameObject.name == "Name")
                 {
                     Transform name = row.GetChild(0);
@@ -100,9 +100,6 @@ public class PlayerInfoTable : MonoBehaviour
                             Transform textObjV = valueCell.GetChild(0);
                             textObjV.gameObject.GetComponent<Text>().text = stat().value.ToString();
 
-                            Transform potentialCell = row.GetChild(2);
-                            Transform textObjP = potentialCell.GetChild(0);
-                            textObjP.gameObject.GetComponent<Text>().text = stat().potential.ToString();
 
                         }
                     }
@@ -120,16 +117,26 @@ public class PlayerInfoTable : MonoBehaviour
         // Iterate through each row
         foreach (Transform row in rows)
         {
-            Debug.Log("Row: " + row.gameObject.name);
+        
             if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
             {
-
-                if (row.gameObject.name == "Player Name")
+                if(row.gameObject.name == "plays")
                 {
-                    Transform name = row.GetChild(0);
-
-                    name.gameObject.GetComponent<Text>().text = (player.Name == "" ? hit.transform.gameObject.name : player.Name);
+                    Debug.Log(player.plays);
+                   row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = player.plays.ToString();
+                 
                 }
+                if(row.gameObject.name == "defPlays")
+                {
+                    row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = player.defPlays.ToString();
+                }
+                if (row.gameObject.name == "Name")
+                {
+                   
+
+                    row.GetChild(0).gameObject.GetComponent<Text>().text = player.Name;
+                }
+
                 else
                 {
                     foreach ((string statname, System.Func<int> stat) in playerStats.getStats())
@@ -141,6 +148,7 @@ public class PlayerInfoTable : MonoBehaviour
                             Transform valueCell = row.GetChild(1);
                             Transform textObjV = valueCell.GetChild(0);
                             int statN = stat();
+                            Debug.Log(statname + " " + statN);  
                             textObjV.gameObject.GetComponent<Text>().text = statN.ToString();
 
                      
