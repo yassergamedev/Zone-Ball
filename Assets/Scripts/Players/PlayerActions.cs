@@ -149,8 +149,10 @@ public class PlayerActions : MonoBehaviour
                    
                 ShowFloatingTextPrefab(flTexts.chooseRandom("stealSuccess"));
                 // Wait until space key is pressed
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
 
+                yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                
 
                 otherPlayerStats.steals += 1;
                // 
@@ -159,10 +161,10 @@ public class PlayerActions : MonoBehaviour
                 break;
 
         }
-        
-            // Wait until space key is pressed
-           
-        
+
+        // Wait until space key is pressed
+
+       
         commentary.text = "";
 
     }
@@ -431,14 +433,20 @@ public class PlayerActions : MonoBehaviour
         }
 
         foulManager.GetComponent<FoulManager>().isFouled = false;
-
+        
+        foulManager.GetComponent<FoulManager>().foulOver = true;
         // Wait until space key is pressed again
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
 
         commentary.text = "";
         
         decPlays();
         possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
+        PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
+        foreach (PlayerMovement playerMovement in playerMovements)
+        {
+            playerMovement.foulOver = true;
+        }
     }
 
 
@@ -702,6 +710,9 @@ public class PlayerActions : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         Debug.Log("Done Picking");
         isPicking = false;
+   
+   
+        
     }
 
 

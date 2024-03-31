@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private GameObject RightInside;
     private GameObject LeftMid;
     private GameObject LeftInside;
-    private GameObject GuardedPlayer;
+    public GameObject GuardedPlayer;
     private GameObject foulManager;
 
     //Bounds for the player to move
@@ -52,9 +52,10 @@ public class PlayerMovement : MonoBehaviour
     bool setFoulLocation = false;
     bool isMovingTowardPreferredZone = false;
     public bool ballHolderGuard = false;
+    public bool possessionHold = false;
     string preferredZone;
-
-    
+    public bool foulOver = false;
+    int lol = 0;
 
     
     Vector3 direction;
@@ -71,11 +72,12 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-
+    public bool fouled = false;
 
 
     void Start()
     {
+        
         int prefIndex = FindPreferredZone();
 
        boundXL = GameObject.FindGameObjectWithTag("BoundXL");
@@ -135,27 +137,54 @@ public class PlayerMovement : MonoBehaviour
         }
    
            setNewRandoms();
-       
+        StartCoroutine(RegUpdate());
     }
 
     private void Update()
     {
+        if(foulOver)
+        {
+            StopCoroutine(RegUpdate());
+                StartCoroutine(RegUpdate());
+                Debug.Log("Started The coroutine again");
+            foulOver = false;
+            
+            
+        }
+    }
+
+    private IEnumerator RegUpdate()
+    {
+        lol++;
+        Debug.Log("lol value: " + lol);
+        fouled = false;
+        while (true)
+        {
+
+        
         if(!PlayerActions.isPicking && !foulManager.GetComponent<FoulManager>().isFouled)
         {
             setFoulLocation = false;
-             StartCoroutine(MovementLogic());
+            if(!possessionHold)
+            {
+                yield return MovementLogic();
+            }
+            
         }
         else
         {
             if(foulManager.GetComponent<FoulManager>().isFouled)
             {
                 FoulShotFormation();
-            }
+                    
+                    break;
+                }
+              
         }
-       
-        
 
-     }
+        Debug.Log(gameObject.name + " still updating");
+        }
+    }
 
     public bool RangeCheck()
     {
@@ -264,10 +293,10 @@ public class PlayerMovement : MonoBehaviour
           
                     if (possessionManager.CheckPossession() == null)
                     {
-                        Debug.Log(possessionManager.CheckPossession());
+                        Debug.Log("Picked an action");
                 
                         yield return PlayerActions.PickAnAction();
-                
+                        Debug.Log("didn't pause");
 
                     }
 
@@ -384,13 +413,16 @@ public class PlayerMovement : MonoBehaviour
             foreach (GameObject player in playersToBeGuarded)
             {
                 // Skip this player if it's already guarded or has max children
-                if (player.GetComponent<PlayerActions>().isGuarded || player.transform.childCount >= 3)
-                    continue;
 
-                // Set this player as guarded
-                GuardedPlayer = player;
-                GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
-                PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
+                if (!player.GetComponent<PlayerActions>().isGuarded)
+                {
+                    // Set this player as guarded
+                    GuardedPlayer = player;
+                    player.GetComponent<PlayerActions>().isGuarded = true;
+                    PlayerActions.SetOtherPlayer(player.GetComponent<PlayerActions>());
+                    Debug.Log(gameObject.name + " is guarding " + player.gameObject.name);
+                    break;
+                }
 
                 // Wait for a short duration before checking again
                 yield return new WaitForSeconds(0.1f);

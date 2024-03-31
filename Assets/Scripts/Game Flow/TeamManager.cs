@@ -89,6 +89,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
 
         int randomPlayer = Random.Range(0, GuestObject.transform.childCount);
         Instantiate(ball, GuestObject.transform.GetChild(randomPlayer));
+       
     }
     public void SaveData(ref GameData data)
     {
