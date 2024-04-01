@@ -31,15 +31,25 @@ public class PlayerInfoTable : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            
+           
             // Cast a ray from the mouse position
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
             // Perform a 2D raycast
             hit = Physics2D.Raycast(ray.origin, ray.direction);
-
+           
             // Check if the ray hits a collider
             if (hit.collider != null)
             {
+                if (hit.transform.CompareTag("Player"))
+                {
+                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                else
+                {
+                    hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
+                }
                 // Check if the collider belongs to a player
                 PlayerPersistent player = hit.transform.gameObject.GetComponent<PlayerActions>().playerPersistent;
                 PlayerStatsPersistent playerStats = hit.transform.gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
@@ -69,7 +79,22 @@ public class PlayerInfoTable : MonoBehaviour
                 }
             }
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            // Cast a ray from the mouse position
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
+            // Perform a 2D raycast
+            hit = Physics2D.Raycast(ray.origin, ray.direction);
+            if(hit.transform.CompareTag("Player"))
+            {
+                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            }else
+            {
+                hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            }
+           
+        }
     }
 
     public void DisplayPlayerInfo(PlayerPersistent player)

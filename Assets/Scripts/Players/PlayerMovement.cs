@@ -137,22 +137,34 @@ public class PlayerMovement : MonoBehaviour
         }
    
            setNewRandoms();
-        StartCoroutine(RegUpdate());
+       // StartCoroutine(RegUpdate());
     }
 
     private void Update()
     {
-        if(foulOver)
+        if (!PlayerActions.isPicking && !foulManager.GetComponent<FoulManager>().isFouled)
         {
-            StopCoroutine(RegUpdate());
-                StartCoroutine(RegUpdate());
-                Debug.Log("Started The coroutine again");
-            foulOver = false;
-            
-            
+            setFoulLocation = false;
+            if (!possessionHold)
+            {
+                StartCoroutine(MovementLogic());
+            }else
+            {
+                Debug.Log(gameObject.name + " still holding");
+            }
+
+        }
+        else
+        {
+            if (foulManager.GetComponent<FoulManager>().isFouled)
+            {
+                StopCoroutine(MovementLogic());
+                FoulShotFormation();
+
+
+            }
         }
     }
-
     private IEnumerator RegUpdate()
     {
         lol++;
@@ -284,7 +296,7 @@ public class PlayerMovement : MonoBehaviour
                         isInPreferredZone = true;
                         Debug.Log(gameObject.name + " " + possessionManager.CheckPossession());
 
-
+                      
                     }
 
                 }
@@ -298,11 +310,14 @@ public class PlayerMovement : MonoBehaviour
                         yield return PlayerActions.PickAnAction();
                         Debug.Log("didn't pause");
 
+                    }else
+                    {
+                        possessionHold = true;
                     }
-
+                   
                 }
 
-
+               
                 // Move the player to the opposite direction (left for Offense, right for Defense)
 
             }
@@ -321,7 +336,10 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 targetPosition = GuardedPlayer.transform.position + new Vector3(guardingX, guardingY, 0.0f); // Add a small offset
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
             }
-
+            if (transform.position == targetPosition)
+            {
+                possessionHold = true;
+            }
         }
 
 

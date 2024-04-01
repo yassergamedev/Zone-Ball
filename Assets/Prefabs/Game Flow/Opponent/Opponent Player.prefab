@@ -268,7 +268,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7019215351104668879}
   - component: {fileID: 4080329452606344245}
-  - component: {fileID: 6438316986038068396}
   - component: {fileID: 1030237790027982857}
   - component: {fileID: 8557897525512321945}
   - component: {fileID: 624264053948464998}
@@ -351,77 +350,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6438316986038068396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7961882880654064167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f55d45f4baeef404fbbf73a4159be044, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberManager: {fileID: 634979254363395298}
-  possessionManager: {fileID: 1030237790027982857}
-  playerMovement: {fileID: 624264053948464998}
-  player:
-    id: 
-    Name: 
-    Number: 0
-    Age: 0
-    YearsPro: 0
-    type: 
-    contract:
-      years: 0
-      salary: 0
-    consistency:
-      value: 0
-      potential: 0
-    awareness:
-      value: 0
-      potential: 0
-    juking:
-      value: 0
-      potential: 0
-    control:
-      value: 0
-      potential: 0
-    shooting:
-      value: 0
-      potential: 0
-    positioning:
-      value: 0
-      potential: 0
-    steal:
-      value: 0
-      potential: 0
-    guarding:
-      value: 0
-      potential: 0
-    pressure:
-      value: 0
-      potential: 0
-    inside:
-      value: 0
-      potential: 0
-    mid:
-      value: 0
-      potential: 0
-    Outside:
-      value: 0
-      potential: 0
-    gameFlowStats: []
-    learning: 0
-    longevity: 0
-    personality: 0
-    zoneStyle: 
-    ovrl: 0
-    plays: 0
-    defPlays: 0
-    isJuked: 0
-  number: 0
 --- !u!114 &1030237790027982857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,6 +362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3dfd20199beb348b150f21eed3b72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersToPlay: []
+  otherPlayersToPlay: []
   isFouled: 0
 --- !u!58 &8557897525512321945
 CircleCollider2D:
@@ -540,9 +470,13 @@ MonoBehaviour:
     isJuked: 0
   player: {fileID: 8329450127982786551}
   PlayerActions: {fileID: 3951723174469918079}
+  GuardedPlayer: {fileID: 0}
   timeToMove: 2
   moveTimer: 0
   ballHolderGuard: 0
+  possessionHold: 0
+  foulOver: 0
+  fouled: 0
 --- !u!50 &9006858517967312335
 Rigidbody2D:
   serializedVersion: 4
@@ -729,6 +663,8 @@ MonoBehaviour:
     isJuked: 0
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
   possessionManager: {fileID: 1030237790027982857}
+  numberManager: {fileID: 634979254363395298}
+  index: 0
   zoneIndex: 0
   hasPicked: 0
   isPicking: 0
@@ -748,7 +684,6 @@ MonoBehaviour:
     foulShotsMade: 0
     foulPointsScored: 0
     turnovers: 0
-    plays: 0
     maxPlays: 0
     insideShots: 0
     insideShotsMade: 0
@@ -770,7 +705,6 @@ MonoBehaviour:
     foulShotsMade: 0
     foulPointsScored: 0
     turnovers: 0
-    plays: 0
     maxPlays: 0
     insideShots: 0
     insideShotsMade: 0

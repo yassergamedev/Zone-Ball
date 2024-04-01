@@ -8,11 +8,9 @@ public class SoundManager : MonoBehaviour
     public AudioSource Net;
     public AudioSource Miss;
     public AudioSource Blocked;
+    public AudioSource buzz;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+   
     public void PlayeWhistle()
     {
         whistle.Play();
@@ -30,8 +28,8 @@ public class SoundManager : MonoBehaviour
         Blocked.Play();
     }
     // Update is called once per frame
-    void Update()
+    public void PlayBuzz()
     {
-        
+        buzz.Play();
     }
 }

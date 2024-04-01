@@ -31,7 +31,7 @@ public class PlayerActions : MonoBehaviour
     private Team oppTeam;
     public PossessionManager possessionManager;
     private FlavourTexts flTexts;
-
+    public NumberManager numberManager;
     string playerTag;
     private GameObject Net;
     private int zoneBonus;
@@ -56,6 +56,7 @@ public class PlayerActions : MonoBehaviour
         TeamScore = GameObject.FindGameObjectWithTag("TeamScore");
         OppScore = GameObject.FindGameObjectWithTag("OppScore");
         soundManager = GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>();
+        numberManager.SetPlayerNumber(playerPersistent.Number);
         flTexts = CommentaryObject.GetComponent<FlavourTexts>();
         commentary.text = "";
 
@@ -124,7 +125,7 @@ public class PlayerActions : MonoBehaviour
                 // Wait until space key is pressed
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
-                otherPlayerStats.fouls += 1;
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.fouls += 1;
                 playerStatsPersistent.foulShots += 2;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 
@@ -139,7 +140,7 @@ public class PlayerActions : MonoBehaviour
                 // Wait until space key is pressed
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
-                otherPlayerStats.fouls += 1;
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.fouls += 1;
                 playerStatsPersistent.foulShots += 3;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 yield return  FoulShot(2);
@@ -154,10 +155,10 @@ public class PlayerActions : MonoBehaviour
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
 
-                otherPlayerStats.steals += 1;
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.steals += 1;
                // 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
                 break;
 
         }
@@ -206,7 +207,7 @@ public class PlayerActions : MonoBehaviour
                         playerStatsPersistent.pointsScored += 4;
                         playerStatsPersistent.insideShotsMade += 1;
                         playerStatsPersistent.insideShots += 1;
-                        otherPlayerStats.pointsAllowed += 4;
+                        otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.pointsAllowed += 4;
                         AddScore(4);
                         
                             // Wait until space key is pressed
@@ -221,7 +222,7 @@ public class PlayerActions : MonoBehaviour
                         playerStatsPersistent.pointsScored += 5;
                         playerStatsPersistent.midShotsMade += 1;
                         playerStatsPersistent.midShots += 1;
-                        otherPlayerStats.pointsAllowed += 5;
+                        otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.pointsAllowed += 5;
                         AddScore(5);
                         
                             // Wait until space key is pressed
@@ -236,7 +237,7 @@ public class PlayerActions : MonoBehaviour
                         playerStatsPersistent.pointsScored += 6;
                         playerStatsPersistent.outsideShotsMade += 1;
                         playerStatsPersistent.outsideShots += 1;
-                        otherPlayerStats.pointsAllowed += 6;
+                        otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.pointsAllowed += 6;
                         AddScore(6);
                         
                             // Wait until space key is pressed
@@ -279,7 +280,7 @@ public class PlayerActions : MonoBehaviour
         else {
             soundManager.PlayBlocked();
             ShowFloatingTextPrefab("Blocked!");
-            otherPlayerStats.blocks += 1;
+            otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.blocks += 1;
                 // Wait until space key is pressed
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
             
@@ -290,7 +291,7 @@ public class PlayerActions : MonoBehaviour
         hasPicked = true;
         
         decPlays();
-        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
     }
     //action 3 == the player tries to juke the other player
     public IEnumerator Juke()
@@ -323,10 +324,10 @@ public class PlayerActions : MonoBehaviour
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 commentary.text = "";
-                otherPlayerStats.steals += 1;
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.steals += 1;
                 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
             }
             else
             {
@@ -402,6 +403,7 @@ public class PlayerActions : MonoBehaviour
 
     public IEnumerator FoulShot(int times)
     {
+      
         // Wait until space key is pressed
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
 
@@ -431,6 +433,11 @@ public class PlayerActions : MonoBehaviour
             // Wait until space key is pressed again
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         }
+        commentary.text = "";
+
+        decPlays();
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, true);
+
 
         foulManager.GetComponent<FoulManager>().isFouled = false;
         
@@ -438,15 +445,8 @@ public class PlayerActions : MonoBehaviour
         // Wait until space key is pressed again
 
 
-        commentary.text = "";
-        
-        decPlays();
-        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index);
-        PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
-        foreach (PlayerMovement playerMovement in playerMovements)
-        {
-            playerMovement.foulOver = true;
-        }
+       
+      
     }
 
 
@@ -535,7 +535,7 @@ public class PlayerActions : MonoBehaviour
                         }
                         else
                         {
-                            otherPlayerStats.blocks += 1;
+                            otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.blocks += 1;
                             playerStatsPersistent.turnovers += 1;
                             return false;
                         }
@@ -612,10 +612,10 @@ public class PlayerActions : MonoBehaviour
 
    
 
-    public void SetOtherPlayer(PlayerActions player)
+    public void SetOtherPlayer( PlayerActions player)
     {
         otherPlayerPersistent = player.playerPersistent;
-        otherPlayerStats = player.otherPlayerStats;
+       
         otherPlayerObject = player.gameObject;
         Debug.Log(playerPersistent.Name + " has set the other player " + otherPlayerPersistent.Name);
     }
@@ -662,7 +662,10 @@ public class PlayerActions : MonoBehaviour
     }
     public IEnumerator PickAnAction()
     {
-        if(hasJuked)
+        PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
+
+        gameObject.GetComponent<PlayerMovement>().possessionHold = true;
+        if (hasJuked)
         {
             yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
             hasJuked = false;
@@ -709,10 +712,14 @@ public class PlayerActions : MonoBehaviour
         }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         Debug.Log("Done Picking");
+        foreach (PlayerMovement playerMovement in playerMovements)
+        {
+            playerMovement.possessionHold = false;
+        }
         isPicking = false;
-   
-   
+
         
+
     }
 
 

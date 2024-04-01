@@ -42,12 +42,12 @@ public class PossessionManager : MonoBehaviour
              }
     }
 
-    public void ChangePossession( int ind)
+    public void ChangePossession( int ind, bool isFoulShot)
     {
         Debug.Log(ind);
         Debug.Log(otherPlayersToPlay.Count);
-        
-        if(CompareTag("Player"))
+       
+        if (CompareTag("Player"))
         {
             Vector3 offset = new Vector3(0.3f, 0, 0);
             if (otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays == 0)
@@ -58,7 +58,10 @@ public class PossessionManager : MonoBehaviour
                     {
                         ball.transform.position = otherPlayersToPlay[k].transform.position + -1*offset;
                         ball.transform.parent = otherPlayersToPlay[k].transform;
-                        otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        if (!isFoulShot)
+                        {
+                            otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
                         break;
                     }
                 }
@@ -67,7 +70,10 @@ public class PossessionManager : MonoBehaviour
             {
                 ball.transform.position = otherPlayersToPlay[ind].transform.position +  offset; ;
                 ball.transform.parent = otherPlayersToPlay[ind].transform;
-                otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                if (!isFoulShot)
+                {
+                    otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                }
             }
             
            
@@ -83,7 +89,10 @@ public class PossessionManager : MonoBehaviour
                     {
                         ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
                         ball.transform.parent = playersToPlay[k].transform;
-                        playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        if (!isFoulShot)
+                        {
+                            playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
                         break;
                     }
                 }
@@ -92,7 +101,10 @@ public class PossessionManager : MonoBehaviour
             {
                 ball.transform.position = playersToPlay[ind].transform.position + offset;
                 ball.transform.parent = playersToPlay[ind].transform;
-                playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                if (!isFoulShot)
+                {
+                    playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                }
             }
         }
         
@@ -156,7 +168,7 @@ public class PossessionManager : MonoBehaviour
         }
         ball.transform.parent.gameObject.GetComponent<PlayerMovement>().GuardedPlayer.GetComponent<PlayerActions>().playerPersistent.defPlays -= 1;
 
-
+       
     }
 
    
