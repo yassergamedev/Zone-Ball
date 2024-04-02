@@ -16,6 +16,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
     public GameObject playerDepth;
     public GameObject ball;
     public SoundManager soundManager;
+    public SceneStuff sceneManager;
     bool isTimeFinished = true;
     public void LoadData(GameData data)
     {
@@ -184,10 +185,10 @@ public class TeamManager : MonoBehaviour,IDataPersistence
 
         }
 
-        List<PlayerStatsPersistent> HomeStats = new List<PlayerStatsPersistent>{ };
+        List<PlayerStatsPersistent> HomeStats = new List<PlayerStatsPersistent> { };
         List<PlayerStatsPersistent> GuestStats = new List<PlayerStatsPersistent> { };
 
-        for(int i = 0; i < GuestObject.transform.childCount; i++)
+        for (int i = 0; i < GuestObject.transform.childCount; i++)
         {
             PlayerStatsPersistent stats = GuestObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
             FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/" + Guest.name + "/"
@@ -207,5 +208,8 @@ public class TeamManager : MonoBehaviour,IDataPersistence
         FileDataHandler<TeamPersistent> GuestHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Guest.name);
         GuestHandler.Save(Guest);
         yield return new WaitForSeconds(2f);
+        sceneManager.LoadScene();
+
     }
+    
 }

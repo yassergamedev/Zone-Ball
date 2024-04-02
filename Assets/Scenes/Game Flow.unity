@@ -21404,7 +21404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c87bc7c499caafe41a64b649dfb28f36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: 
+  sceneName: Season
 --- !u!82 &949253659
 AudioSource:
   m_ObjectHideFlags: 0
@@ -44001,6 +44001,7 @@ MonoBehaviour:
   playerDepth: {fileID: 2921926762986614920, guid: 971309c6f14a967418688748e6021080, type: 3}
   ball: {fileID: 4799467918314088649, guid: b94c9f575c8c57141b334694125e8e7c, type: 3}
   soundManager: {fileID: 949253657}
+  sceneManager: {fileID: 949253658}
 --- !u!1 &2040028065
 GameObject:
   m_ObjectHideFlags: 0

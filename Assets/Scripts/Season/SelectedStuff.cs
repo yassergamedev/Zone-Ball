@@ -24,12 +24,15 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public TMP_Dropdown hc2;
     public Text teamName, marketCap;
     public Text Home, Guest;
+    public Text HomeMatchPlayed, GuestMatchPlayed, HomeScore,GuestScore;
+    public GameObject playerStats;
     public GameObject weekChange;
     public GameObject teamStanding;
     public int week;
 
     public Transform MatchesTable;
     public Transform StandingsTable;
+    public Transform Content;
     public GameObject MatchDetail;
 
     private GameData gameData;
@@ -49,7 +52,76 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
         Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
         Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week].opponent : team.name;
+
+        if (team.matchesPlayed[week].isPlayed)
+        {
+            HomeMatchPlayed.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
+            HomeScore.text = team.matchesPlayed[week].score.ToString();
+            GuestMatchPlayed.text = team.matchesPlayed[week].isHome? team.matchesPlayed[week].opponent : team.name;
+            GuestScore.text = team.matchesPlayed[week].oppScore.ToString();
+
+            for(int i = 0; i<team.players.Length; i ++)
+            {
+                FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + team.id + "/" + week.ToString()
+                    , team.players[i]);
+                PlayerStatsPersistent stats = statsHandler.Load();
+                if(stats !=null)
+                {
+                    GameObject statsTable = Instantiate(playerStats, Content);
+                    int rowsCount = statsTable.transform.childCount;
+                    Transform[] rows = new Transform[statsTable.transform.childCount];
+                    Transform roww;
+                    for (int k = 0; k < rowsCount; k++)
+                    {
+                        roww = statsTable.transform.GetChild(k);
+
+                        rows[k] = roww;
+                    }
+                    foreach (Transform row in rows)
+                    {
+
+                        if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
+                        {
+                          
+                            if (row.gameObject.name == "Name")
+                            {
+
+
+                                row.GetChild(0).gameObject.GetComponent<Text>().text = team.players[i];
+                            }
+
+                            else
+                            {
+                                foreach ((string statname, System.Func<int> stat) in stats.getStats())
+                                {
+
+                                    if (row.gameObject.name == statname)
+                                    {
+
+                                        Transform valueCell = row.GetChild(1);
+                                        Transform textObjV = valueCell.GetChild(0);
+                                        int statN = stat();
+                                        Debug.Log(statname + " " + statN);
+                                        textObjV.gameObject.GetComponent<Text>().text = statN.ToString();
+
+
+
+                                    }
+                                }
+
+                            }
+                        }
+
+
+
+                    }
+                }
+
+            }
+        }
+        
         setStandings();
+        StartCoroutine(stretch());
     }
     public void SaveData(ref GameData go) { }
     private void Start()
@@ -63,7 +135,13 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
    
     
     }
-
+    public IEnumerator stretch()
+    {
+        yield return new WaitForSeconds(0.2f);
+        Content.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.2f);
+        Content.gameObject.SetActive(true);
+    }
     public void SetSelectedTeam(GameObject team)
     {
         selectedTeam = team;
