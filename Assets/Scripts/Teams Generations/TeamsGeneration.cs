@@ -807,6 +807,7 @@ new("Oregon Trail Makers", false)
                             break;
                     }
                     PlayerPersistent player = new PlayerPersistent(playerName,i, playerName, type, years, age, ovrl);
+                    player.team = team.name;
                     playerHandler.Save(player);
                     team.players[i] = playerName;
                     team.salaryCap -= (int)player.contract.salary;

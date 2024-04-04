@@ -176,12 +176,16 @@ public class TeamManager : MonoBehaviour,IDataPersistence
         if (GuestObject.GetComponent<Team>().teamScore > HomeObject.GetComponent<Team>().teamScore)
         {
             Home.matchesPlayed[cg.week].result = false;
+            Home.wins += 1;
             Guest.matchesPlayed[cg.week].result = true;
+            Guest.losses += 1;
         }
         else
         {
             Home.matchesPlayed[cg.week].result = true;
+            Home.losses += 1;
             Guest.matchesPlayed[cg.week].result = false;
+            Guest.wins += 1;
 
         }
 
@@ -193,6 +197,17 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             PlayerStatsPersistent stats = GuestObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
             FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/" + Guest.name + "/"
                 + cg.week.ToString(), GuestObject.transform.GetChild(i).gameObject.name);
+            Guest.blocks += stats.blocks;
+            Guest.midPoints += stats.midShotsMade;
+            Guest.insidePoints += stats.insideShotsMade;
+            Guest.outisdePoints += stats.outsideShots;
+            Guest.pointsScored += stats.pointsScored;
+            Guest.steals += stats.steals;
+            Guest.jukes += stats.jukes;
+    Guest.fouls += stats.fouls;
+            Guest.foulShotsMade += stats.foulShotsMade;
+            Home.oppTurnovers += stats.turnovers;
+            Home.pointsAllowed += stats.pointsScored;
             statsHandler.Save(stats);
         }
         for (int i = 0; i < HomeObject.transform.childCount; i++)
@@ -200,10 +215,23 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             PlayerStatsPersistent stats = HomeObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
             FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/" + Home.name + "/"
                 + cg.week.ToString(), HomeObject.transform.GetChild(i).gameObject.name);
+            Home.blocks += stats.blocks;
+            Home.midPoints += stats.midShotsMade;
+            Home.insidePoints += stats.insideShotsMade;
+            Home.outisdePoints += stats.outsideShots;
+            Home.pointsScored += stats.pointsScored;
+            Home.steals += stats.steals;
+            Home.jukes += stats.jukes;
+            Home.fouls += stats.fouls;
+            Home.foulShotsMade += stats.foulShotsMade;
+            Guest.oppTurnovers += stats.turnovers;
+            Guest.pointsAllowed += stats.pointsScored;
+
             statsHandler.Save(stats);
         }
 
         FileDataHandler<TeamPersistent> HomeHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Home.name);
+        
         HomeHandler.Save(Home);
         FileDataHandler<TeamPersistent> GuestHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Guest.name);
         GuestHandler.Save(Guest);

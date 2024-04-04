@@ -51,6 +51,9 @@ public class PlayerPersistent
     public int plays;
     public int defPlays;
     public bool isJuked;
+    public string team, prevTeam;
+    public int OPOY, DPOY, AllStarSelections, championships, draftSelections, teamDrafted;
+
     //setters for all stats
  
 
@@ -252,8 +255,8 @@ public class PlayerPersistent
 public struct ContractPersistent
 {
     public int years;
-    public float salary; // Min: 5000, Max: 90000
-
+    public float salary;
+   
     // Constructor
     public ContractPersistent(int years, int salary)
     {
@@ -267,10 +270,14 @@ public struct StatPersistent
 {
     public int value;
     public int potential; // Maximum value the stat can reach
-
+    public int prevValue;
     public void setValue(int val)
     {
         value = val;
+    }
+    public void setPrevValue(int val)
+    {
+        prevValue = val;
     }
     public void setPotential(int val)
     {
@@ -281,7 +288,7 @@ public struct StatPersistent
     {
 
         this.value = value;
-
+        this.prevValue = value;
         this.potential = UnityEngine.Random.Range(value, 100);
 
 

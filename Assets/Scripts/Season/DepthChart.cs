@@ -13,6 +13,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
     private GameData gameData;
     private TeamPersistent team;
     public SelectedStuff selectedStuff;
+    public SceneStuff sceneStuff;
     public void LoadData(GameData data)
     {
         gameData = data;

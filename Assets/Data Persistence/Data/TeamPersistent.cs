@@ -13,7 +13,25 @@ public class TeamPersistent
     public int salaryCap = 350000;
     public int playstyle;
     public string start;
-    public int pointsScored, pointsAllowed, turnovers, oppTurnovers, wins, losses;
+    public int pointsScored,
+        pointsAllowed,
+        turnovers,
+        oppTurnovers,
+        wins,
+        losses,
+        playoffWins,
+        playoffLosses,
+        championships,
+        jukes,
+        ptsScored,
+        insidePoints,
+        midPoints,
+        outisdePoints,
+        foulShotsMade,
+        steals,
+        blocks,
+        fouls
+        ;
     public string[] HC, DC, OC;
     public List<MatchPlayed> matchesPlayed;
     public TeamPersistent(string id, string name, string conf, string[] plyrs)

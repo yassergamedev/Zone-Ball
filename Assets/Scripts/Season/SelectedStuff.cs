@@ -26,6 +26,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Text Home, Guest;
     public Text HomeMatchPlayed, GuestMatchPlayed, HomeScore,GuestScore;
     public GameObject playerStats;
+    public GameObject matchStats, matchPlayed;
     public GameObject weekChange;
     public GameObject teamStanding;
     public int week;
@@ -34,11 +35,13 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Transform StandingsTable;
     public Transform Content;
     public GameObject MatchDetail;
-
+    public bool isActiveTable = false;
+    public bool isGamePlayed =false;
     private GameData gameData;
     private Season currentSeason;
     private TeamPersistent selTeam;
-    private SceneStuff sceneStuff;
+    public SceneStuff sceneStuff;
+
     public void LoadData(GameData go)
     {
         gameData = go;
@@ -47,25 +50,35 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         teamName.text = team.name;
         marketCap.text = team.salaryCap.ToString();
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
-        Season currentSeason = seasonHandler.Load();
+         currentSeason = seasonHandler.Load();
         week = currentSeason.week;
 
         Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
         Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week].opponent : team.name;
-
-        if (team.matchesPlayed[week].isPlayed)
+        selTeam = team;
+        MatchHistory(currentSeason);
+        
+        setStandings();
+        StartCoroutine(stretch());
+    }
+    public void SaveData(ref GameData go) { }
+    public void MatchHistory(Season currentSeason)
+    {
+        if (selTeam.matchesPlayed[week].isPlayed)
         {
-            HomeMatchPlayed.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
-            HomeScore.text = team.matchesPlayed[week].score.ToString();
-            GuestMatchPlayed.text = team.matchesPlayed[week].isHome? team.matchesPlayed[week].opponent : team.name;
-            GuestScore.text = team.matchesPlayed[week].oppScore.ToString();
+            isGamePlayed = true;
+            HomeMatchPlayed.text = selTeam.matchesPlayed[week].isHome ? selTeam.name : selTeam.matchesPlayed[week].opponent;
+            HomeScore.text = selTeam.matchesPlayed[week].score.ToString();
+            GuestMatchPlayed.text = selTeam.matchesPlayed[week].isHome ? selTeam.matchesPlayed[week].opponent : selTeam.name;
+            GuestScore.text = selTeam.matchesPlayed[week].oppScore.ToString();
 
-            for(int i = 0; i<team.players.Length; i ++)
+            for (int i = 0; i < selTeam.players.Length; i++)
             {
-                FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + team.id + "/" + week.ToString()
-                    , team.players[i]);
+                FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/"
+                    + selTeam.id + "/" + week.ToString()
+                    , selTeam.players[i]);
                 PlayerStatsPersistent stats = statsHandler.Load();
-                if(stats !=null)
+                if (stats != null)
                 {
                     GameObject statsTable = Instantiate(playerStats, Content);
                     int rowsCount = statsTable.transform.childCount;
@@ -82,12 +95,12 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                         if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
                         {
-                          
+
                             if (row.gameObject.name == "Name")
                             {
 
 
-                                row.GetChild(0).gameObject.GetComponent<Text>().text = team.players[i];
+                                row.GetChild(0).gameObject.GetComponent<Text>().text = selTeam.players[i];
                             }
 
                             else
@@ -119,11 +132,35 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
             }
         }
-        
-        setStandings();
-        StartCoroutine(stretch());
+        else
+        {
+            isGamePlayed = false;
+        }
     }
-    public void SaveData(ref GameData go) { }
+    public void setTableActive()
+    {
+        if(isGamePlayed)
+        {
+            matchStats.SetActive(true);
+        }
+        else
+        {
+            matchPlayed.SetActive(true);
+        }
+    }
+    public void setTableInActive()
+    {
+
+        if (isGamePlayed)
+        {
+            matchStats.SetActive(false);
+        }
+        else
+        {
+            matchPlayed.SetActive(false);
+        }
+
+    }
     private void Start()
     {
        WeekChange wek = weekChange.GetComponent<WeekChange>();
@@ -145,6 +182,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public void SetSelectedTeam(GameObject team)
     {
         selectedTeam = team;
+        MatchHistory(currentSeason);
         depthChart.GenerateDepthChart(team.gameObject.name);
         FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
         TeamPersistent teamm = teamLoader.Load();
