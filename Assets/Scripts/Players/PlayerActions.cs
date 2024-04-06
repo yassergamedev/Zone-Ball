@@ -59,7 +59,8 @@ public class PlayerActions : MonoBehaviour
         numberManager.SetPlayerNumber(playerPersistent.Number);
         flTexts = CommentaryObject.GetComponent<FlavourTexts>();
         commentary.text = "";
-
+        playerStatsPersistent.plays = playerPersistent.plays;
+        playerStatsPersistent.defPlays = playerPersistent.defPlays;
         playerTag = gameObject.tag;
         if (playerTag == "Player")
         {
@@ -79,18 +80,7 @@ public class PlayerActions : MonoBehaviour
 
  
 
-    public IEnumerator MoveBall()
-    {
-        while(ball.transform.position != Net.transform.position )
-        {
-            ball.transform.position = Vector3.MoveTowards(ball.transform.position, Net.transform.position, 0.1f);
-          
-            yield return null;
 
-
-        }  
-  
-    }
 
     public void decPlays()
     {
@@ -156,6 +146,8 @@ public class PlayerActions : MonoBehaviour
                 
 
                 otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.steals += 1;
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.turnOn += 1;
+                playerStatsPersistent.turnovers += 1;
                // 
                 decPlays();
                 possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
@@ -281,8 +273,10 @@ public class PlayerActions : MonoBehaviour
             soundManager.PlayBlocked();
             ShowFloatingTextPrefab("Blocked!");
             otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.blocks += 1;
-                // Wait until space key is pressed
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+            otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.turnOn += 1;
+            playerStatsPersistent.turnovers += 1;
+            // Wait until space key is pressed
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
             
             
            
@@ -325,7 +319,9 @@ public class PlayerActions : MonoBehaviour
                 
                 commentary.text = "";
                 otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.steals += 1;
-                
+                otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.turnOn += 1;
+                playerStatsPersistent.turnovers += 1;
+
                 decPlays();
                 possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
             }

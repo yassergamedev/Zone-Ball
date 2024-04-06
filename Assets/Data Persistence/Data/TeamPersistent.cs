@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -19,6 +20,8 @@ public class TeamPersistent
         oppTurnovers,
         wins,
         losses,
+        otWins,
+        otLosees,
         playoffWins,
         playoffLosses,
         championships,
@@ -26,14 +29,27 @@ public class TeamPersistent
         ptsScored,
         insidePoints,
         midPoints,
-        outisdePoints,
+        outsidePoints,
         foulShotsMade,
         steals,
         blocks,
         fouls
         ;
     public string[] HC, DC, OC;
+    public List<(string, Func<int>)> getStats()
+    {
+
+        //return the list of stats
+        return new List<(string, Func<int>)> {("wins", () => wins),("losses", () => losses),("otWins", () => otWins),("otLosses", () => otLosees),
+            ("playoffWins", () => playoffWins),("playoffLosses", () => playoffLosses),("championships", () => championships),
+            ("blocks", () => blocks), ("steals", () => steals), ("fouls", () => fouls),("pointsScored", () => pointsScored), ("pointsAllowed", () => pointsAllowed),
+                  ("jukes", () => jukes),   ("foulShotsMade", () => foulShotsMade), ("turnovers", () => turnovers), ("oppTurnovers", () => oppTurnovers), ("insidePoints", () => insidePoints), 
+                  ("midPoints", () => midPoints),  ("outsidePoints", () => outsidePoints) };
+
+
+    }
     public List<MatchPlayed> matchesPlayed;
+
     public TeamPersistent(string id, string name, string conf, string[] plyrs)
    {
         this.id = id;

@@ -1,3 +1,4 @@
+using System;
 using UI.Tables;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
@@ -164,7 +165,7 @@ public class PlayerInfoTable : MonoBehaviour
 
                 else
                 {
-                    foreach ((string statname, System.Func<int> stat) in playerStats.getStats())
+                    foreach ((string statname, System.Func<int> stat, System.Action<int> b) in playerStats.getStats())
                     {
 
                         if (row.gameObject.name == statname)

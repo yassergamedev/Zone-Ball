@@ -176,16 +176,16 @@ public class TeamManager : MonoBehaviour,IDataPersistence
         if (GuestObject.GetComponent<Team>().teamScore > HomeObject.GetComponent<Team>().teamScore)
         {
             Home.matchesPlayed[cg.week].result = false;
-            Home.wins += 1;
+            Home.losses += 1;
             Guest.matchesPlayed[cg.week].result = true;
-            Guest.losses += 1;
+            Guest.wins += 1;
         }
         else
         {
             Home.matchesPlayed[cg.week].result = true;
-            Home.losses += 1;
+            Home.wins += 1;
             Guest.matchesPlayed[cg.week].result = false;
-            Guest.wins += 1;
+            Guest.losses += 1;
 
         }
 
@@ -200,7 +200,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             Guest.blocks += stats.blocks;
             Guest.midPoints += stats.midShotsMade;
             Guest.insidePoints += stats.insideShotsMade;
-            Guest.outisdePoints += stats.outsideShots;
+            Guest.outsidePoints += stats.outsideShots;
             Guest.pointsScored += stats.pointsScored;
             Guest.steals += stats.steals;
             Guest.jukes += stats.jukes;
@@ -218,7 +218,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             Home.blocks += stats.blocks;
             Home.midPoints += stats.midShotsMade;
             Home.insidePoints += stats.insideShotsMade;
-            Home.outisdePoints += stats.outsideShots;
+            Home.outsidePoints += stats.outsideShots;
             Home.pointsScored += stats.pointsScored;
             Home.steals += stats.steals;
             Home.jukes += stats.jukes;
