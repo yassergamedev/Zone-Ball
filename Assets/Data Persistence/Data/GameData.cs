@@ -18,7 +18,8 @@ public class GameData
         this.id = id;
         this.date = date;
         currentSeason = crnt;
-        seasons = new List<string>();
+        seasons = new List<string>() { crnt };
+   
 
 
     }

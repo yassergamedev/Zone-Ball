@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -48,8 +49,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     private TeamPersistent selTeam;
     public SceneStuff sceneStuff;
     public GameObject seasonRecords;
-    private List<(string, PlayerStatsPersistent)> allPlayerStats;
-
+    public GameObject careerRecords;
+    public GameObject nextWeek, prevWeek;
+    private List<(string, PlayerStatsPersistent)> allPlayerStats = new();
+    private List<(string, PlayerStatsPersistent)> allTimePlayerStats = new();
     public void LoadData(GameData go)
     {
         gameData = go;
@@ -64,12 +67,24 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
         Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week].opponent : team.name;
         selTeam = team;
+
+        List<int> option = new List<int>() { 2 };
+      if(week>1)
+        {
+            prevWeek.SetActive(true);
+        }
+        else
+        {
+
+        }
         MatchHistory(currentSeason);
         
         setStandings();
         TeamStats();
         StartCoroutine(stretch(Content));
         StartCoroutine(stretch(TeamSeasonStatsContent));
+        SeasonRecords();
+        CareerRecords();
     }
     public void SaveData(ref GameData go) { }
     public void MatchHistory(Season currentSeason)
@@ -526,14 +541,307 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                         }
                     }
                 }
-                records.Add(rec);
+               
             }
+            records.Add(rec);
         }
     
-        for(int i = 0; i< records.Count; i++)
+            int rowsCount = seasonRecords.transform.childCount;
+            Transform[] rows = new Transform[seasonRecords.transform.childCount];
+            Transform roww;
+            for (int k = 0; k < rowsCount; k++)
+            {
+                roww = seasonRecords.transform.GetChild(k);
+
+                rows[k] = roww;
+            }
+            int b = 0;
+            
+            foreach (Transform row in rows)
+            {
+               
+                if (row.gameObject.name != "Table Header" )
+                {
+               Debug.Log(records[b]+ b.ToString());
+                        row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item2.ToString();
+                    row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
+
+                    FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
+                    PlayerPersistent p = plHandler.Load();
+                    row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+                b++;
+            }
+
+            }
+        
+    }
+    public void CareerRecords()
+    {
+        string[] west =
+   {
+            "Arizona Jaguars",
+            "California Lightning",
+            "Kansas Coyotes",
+            "Minnesota Wolves",
+            "Nevada Magic",
+            "New Mexico Dragons",
+            "Oklahoma Stoppers",
+            "Oregon Trail Makers",
+            "Texas Rattlesnakes",
+            "Washington Hornets",
+
+            "Alabama Alligators",
+            "Florida Dolphins",
+            "Georgia Bears",
+            "Maryland Sharks",
+            "Michigan Warriors",
+            "New York Owls",
+            "Ohio True Frogs",
+            "Pennsylvania Rush",
+            "Virginia Bobcats",
+            "Wisconsin Crows"
+        };
+       
+        for (int i = 0; i < west.Length; i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", west[i]);
+            TeamPersistent selTeam = teamHandler.Load();
+            for (int p = 0; p < selTeam.players.Length; p++)
+            {
+                foreach (string currentSeason in gameData.seasons)
+                {
+                    List<(string, PlayerStatsPersistent)> playersAll = new List<(string, PlayerStatsPersistent)>();
+                if (selTeam.players[p] != "")
+                {
+
+                    PlayerStatsPersistent playerTotalStats = new(selTeam.players[p]);
+
+                    for (int k = 0; k < week; k++)
+                    {
+                        FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason + "/" + selTeam.name + "/" + k.ToString(),
+                            selTeam.players[p]);
+
+                        PlayerStatsPersistent stats = statsHandler.Load();
+
+                        if (stats != null)
+                        {
+                            playerTotalStats.pressures += stats.pressures;
+                            playerTotalStats.plays += stats.plays;
+                            playerTotalStats.defPlays += stats.defPlays;
+                            playerTotalStats.blocks += stats.blocks;
+                            playerTotalStats.steals += stats.steals;
+                            playerTotalStats.fouls += stats.fouls;
+                            playerTotalStats.pointsAllowed += stats.pointsAllowed;
+                            playerTotalStats.shots += stats.shots;
+                            playerTotalStats.shotsTaken += stats.shotsTaken;
+                            playerTotalStats.pointsScored += stats.pointsScored;
+                            playerTotalStats.foulShots += stats.foulShots;
+                            playerTotalStats.foulShotsMade += stats.foulShotsMade;
+                            playerTotalStats.foulPointsScored += stats.foulShotsMade;
+                            playerTotalStats.turnovers += stats.turnovers;
+                            playerTotalStats.turnOn += stats.turnOn;
+                            playerTotalStats.insideShots += stats.insideShots;
+                            playerTotalStats.insideShotsMade += stats.insideShotsMade;
+                            playerTotalStats.midShots += stats.midShots;
+                            playerTotalStats.midShotsMade += stats.midShotsMade;
+                            playerTotalStats.outsideShots += stats.outsideShots;
+                            playerTotalStats.outsideShotsMade += stats.outsideShotsMade;
+                        }
+                    }
+                    allPlayerStats.Add(new(selTeam.players[p], playerTotalStats));
+                }
+            }
+        }
+        }
+        List<(string statName, int statVal, string player)> records = new();
+        PlayerStatsPersistent record = new("record");
+        for (int i = 0; i < record.getStats().Count; i++)
+        {
+            (string statName, int statVal, string player) rec = new();
+
+            int max = 0;
+            for (int k = 1; k < allPlayerStats.Count; k++)
+            {
+                for (int l = 0; l < allPlayerStats[i].Item2.getStats().Count; l++)
+                {
+                    if (allPlayerStats[i].Item2.getStats()[l].Item1 == record.getStats()[i].Item1)
+                    {
+
+                        if (allPlayerStats[i].Item2.getStats()[l].Item2() >= max)
+                        {
+                            rec.statName = allPlayerStats[i].Item2.getStats()[l].Item1;
+                            rec.player = allPlayerStats[i].Item1;
+                            rec.statVal = allPlayerStats[i].Item2.getStats()[l].Item2();
+                        }
+                    }
+                }
+
+            }
+            records.Add(rec);
+        }
+
+        int rowsCount = careerRecords.transform.childCount;
+        Transform[] rows = new Transform[careerRecords.transform.childCount];
+        Transform roww;
+        for (int k = 0; k < rowsCount; k++)
+        {
+            roww = careerRecords.transform.GetChild(k);
+
+            rows[k] = roww;
+        }
+        int b = 0;
+
+        foreach (Transform row in rows)
         {
 
+            if (row.gameObject.name != "Table Header")
+            {
+                Debug.Log(records[b] + b.ToString());
+                row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item2.ToString();
+                row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
+
+                FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
+                PlayerPersistent p = plHandler.Load();
+                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+                b++;
+            }
+
         }
+
+    }
+    public void GameRecords()
+    {
+        string[] west =
+   {
+            "Arizona Jaguars",
+            "California Lightning",
+            "Kansas Coyotes",
+            "Minnesota Wolves",
+            "Nevada Magic",
+            "New Mexico Dragons",
+            "Oklahoma Stoppers",
+            "Oregon Trail Makers",
+            "Texas Rattlesnakes",
+            "Washington Hornets",
+
+            "Alabama Alligators",
+            "Florida Dolphins",
+            "Georgia Bears",
+            "Maryland Sharks",
+            "Michigan Warriors",
+            "New York Owls",
+            "Ohio True Frogs",
+            "Pennsylvania Rush",
+            "Virginia Bobcats",
+            "Wisconsin Crows"
+        };
+
+        for (int i = 0; i < west.Length; i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", west[i]);
+            TeamPersistent selTeam = teamHandler.Load();
+            for (int p = 0; p < selTeam.players.Length; p++)
+            {
+                foreach (string currentSeason in gameData.seasons)
+                {
+                    List<(string, PlayerStatsPersistent)> playersAll = new List<(string, PlayerStatsPersistent)>();
+                    if (selTeam.players[p] != "")
+                    {
+
+                        PlayerStatsPersistent playerTotalStats = new(selTeam.players[p]);
+
+                        for (int k = 0; k < week; k++)
+                        {
+                            FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason + "/" + selTeam.name + "/" + k.ToString(),
+                                selTeam.players[p]);
+
+                            PlayerStatsPersistent stats = statsHandler.Load();
+
+                            if (stats != null)
+                            {
+                                playerTotalStats.pressures += stats.pressures;
+                                playerTotalStats.plays += stats.plays;
+                                playerTotalStats.defPlays += stats.defPlays;
+                                playerTotalStats.blocks += stats.blocks;
+                                playerTotalStats.steals += stats.steals;
+                                playerTotalStats.fouls += stats.fouls;
+                                playerTotalStats.pointsAllowed += stats.pointsAllowed;
+                                playerTotalStats.shots += stats.shots;
+                                playerTotalStats.shotsTaken += stats.shotsTaken;
+                                playerTotalStats.pointsScored += stats.pointsScored;
+                                playerTotalStats.foulShots += stats.foulShots;
+                                playerTotalStats.foulShotsMade += stats.foulShotsMade;
+                                playerTotalStats.foulPointsScored += stats.foulShotsMade;
+                                playerTotalStats.turnovers += stats.turnovers;
+                                playerTotalStats.turnOn += stats.turnOn;
+                                playerTotalStats.insideShots += stats.insideShots;
+                                playerTotalStats.insideShotsMade += stats.insideShotsMade;
+                                playerTotalStats.midShots += stats.midShots;
+                                playerTotalStats.midShotsMade += stats.midShotsMade;
+                                playerTotalStats.outsideShots += stats.outsideShots;
+                                playerTotalStats.outsideShotsMade += stats.outsideShotsMade;
+                            }
+                        }
+                        allPlayerStats.Add(new(selTeam.players[p], playerTotalStats));
+                    }
+                }
+            }
+        }
+        List<(string statName, int statVal, string player)> records = new();
+        PlayerStatsPersistent record = new("record");
+        for (int i = 0; i < record.getStats().Count; i++)
+        {
+            (string statName, int statVal, string player) rec = new();
+
+            int max = 0;
+            for (int k = 1; k < allPlayerStats.Count; k++)
+            {
+                for (int l = 0; l < allPlayerStats[i].Item2.getStats().Count; l++)
+                {
+                    if (allPlayerStats[i].Item2.getStats()[l].Item1 == record.getStats()[i].Item1)
+                    {
+
+                        if (allPlayerStats[i].Item2.getStats()[l].Item2() >= max)
+                        {
+                            rec.statName = allPlayerStats[i].Item2.getStats()[l].Item1;
+                            rec.player = allPlayerStats[i].Item1;
+                            rec.statVal = allPlayerStats[i].Item2.getStats()[l].Item2();
+                        }
+                    }
+                }
+
+            }
+            records.Add(rec);
+        }
+
+        int rowsCount = careerRecords.transform.childCount;
+        Transform[] rows = new Transform[careerRecords.transform.childCount];
+        Transform roww;
+        for (int k = 0; k < rowsCount; k++)
+        {
+            roww = careerRecords.transform.GetChild(k);
+
+            rows[k] = roww;
+        }
+        int b = 0;
+
+        foreach (Transform row in rows)
+        {
+
+            if (row.gameObject.name != "Table Header")
+            {
+                Debug.Log(records[b] + b.ToString());
+                row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item2.ToString();
+                row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
+
+                FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
+                PlayerPersistent p = plHandler.Load();
+                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+                b++;
+            }
+
+        }
+
     }
     public void setTableActive()
     {
