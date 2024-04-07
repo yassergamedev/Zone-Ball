@@ -11,6 +11,7 @@ public class Season
     public int week;
     public string league;
     public string playOffs;
+    public (int, bool)[] progress;
     public string[] firstRoundRookieDraft;
     public string[] secondRoundRookieDraft;
     public string[] bestEastPlayers;
@@ -23,13 +24,23 @@ public class Season
     {
         this.id = id;
         this.date = date;
-        week = 1;
+        week = 0;
         this.league = league;
         this.playOffs = "";
         this.bestEastPlayers = new string[] { };
         this.bestWestPlayers = new string[] { };
         this.bestOfThreeMatches = new string[] { };
         this.winner ="";
+        progress = new[]
+        {
+            (3,false),
+            (7,false),
+            (11,false),
+            (15,false),
+            (19,false),
+            (23,false),
+            (27,false),
+        };
     }
 }
 

@@ -59,9 +59,9 @@ public class TeamPersistent
         matchesPlayed = new() { };
         playstyle = 5;
         start = "Young";
-        HC = new string[]{ "","" };
-        OC = new string[] { "", "" };
-        DC = new string[] { "", "" };
+        HC = new string[]{ "Consistency", "Awareness" };
+        OC = new string[] { "Juking", "Control" };
+        DC = new string[] { "Guarding", "Pressure" };
     }
 
   

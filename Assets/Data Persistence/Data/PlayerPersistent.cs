@@ -47,7 +47,7 @@ public class PlayerPersistent
     public int longevity; // Range: 1 to 5
     public int personality; // Range: 1 to 5
     public int[] zoneStyle; // Range: 1 to 12
-    public int ovrl;
+    public int ovrl,prevOvrl;
     public int plays;
     public int defPlays;
     public bool isJuked;
@@ -111,6 +111,7 @@ public class PlayerPersistent
         YearsPro = yers;
         Age = age;
         ovrl = overall;
+        prevOvrl = ovrl;
         Debug.Log(ovrl);
         // based on the ovrl we distribute the stats 
 
