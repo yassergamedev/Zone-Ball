@@ -48,8 +48,8 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 PlayerDepth.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
                 PlayerDepth.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
                 PlayerDepth.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
-
-
+                PlayerDepth.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.InputField>().text = player.defPlays.ToString();
+                PlayerDepth.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.InputField>().text = player.plays.ToString();
             }
         }
     }
