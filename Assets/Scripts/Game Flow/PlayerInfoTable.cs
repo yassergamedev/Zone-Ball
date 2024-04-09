@@ -116,7 +116,7 @@ public class PlayerInfoTable : MonoBehaviour
                 }
                 else
                 {
-                    foreach((string statname, System.Func<StatPersistent> stat) in player.getStats())
+                    foreach((string statname, System.Func<StatPersistent> stat, Action<int>s, Action<int>a, Action<int> v) in player.getStats())
                     {
                      
                         if(row.gameObject.name == statname)

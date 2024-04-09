@@ -80,7 +80,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             prevWeek.SetActive(false);
             
         }
-        weekText.text = "Week " + week;
+        int weekNum = week + 1;
+        weekText.text = "Week " + weekNum;
         MatchHistory(currentSeason);
         
         setStandings();
@@ -90,6 +91,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         SeasonRecords();
         CareerRecords();
         CheckWeek();
+        setProgress();
     }
     public void SaveData(ref GameData go) { }
     public void MatchHistory(Season currentSeason)
@@ -170,6 +172,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             isGamePlayed = false;
         }
+        Content.gameObject.SetActive(false);
+        Content.gameObject.SetActive(true);
     }
     public void TeamStats( )
     {
@@ -352,14 +356,19 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             ("Wisconsin Crows",false),
             ("Arizona Jaguars",false),
             ("California Lightning",false),
-            ("Kansas Coyotes",false),
+          
            ( "Minnesota Wolves",false),
-            ("Nevada Magic",false),
-           ( "New Mexico Dragons",false),
-           ( "Oklahoma Stoppers",false),
+                       ("Nevada Magic",false),
+                                  ( "New Mexico Dragons",false),
+                                             ( "Oklahoma Stoppers",false),
+                                                ( "Washington Hornets",false),
+             ("Kansas Coyotes",false),
+
+
+
            ( "Oregon Trail Makers",false),
             ("Texas Rattlesnakes",false),
-           ( "Washington Hornets",false),
+        
         };
        
         for(int i = 0; i<teamsPlay.Length;i++)
@@ -368,8 +377,12 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             TeamPersistent teamPersistent = teamHandler.Load();
             if (teamPersistent.matchesPlayed[week].isPlayed)
             {
+                Debug.Log("team " + teamPersistent.name + "'s match is played");
                 teamsPlay[i].Item2= true;
-              
+                 if(teams.transform.GetChild(i).transform.childCount == 2)
+                {
+                    Destroy(teams.transform.GetChild(i).GetChild(1).gameObject);
+                }
             }
             else
             {
@@ -382,6 +395,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             nextWeek.SetActive(false);
             startNewWeek.SetActive(true);
         }
+        StartCoroutine(stretch(teams.transform));
     }
 
   
@@ -939,8 +953,9 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     {
         if (week > 0)
         {
-            week--;
-            weekText.text = "Week " + week+1;
+            week-=1;
+            int weekNum = week + 1;
+            weekText.text = "Week " + weekNum;
             nextWeek.SetActive(true);
             if(week == 0)
             {
@@ -956,8 +971,9 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
        
        if (week < currentSeason.week)
         {
-            week++;
-            weekText.text = "Week " + week+1;
+            week+=1;
+            int weekNum = week + 1;
+            weekText.text = "Week " + weekNum;
             prevWeek.SetActive(true);
             if( week == currentSeason.week)
             {
@@ -974,7 +990,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     {
         week++;
         currentSeason.week = week;
-        weekText.text = "Week " + week + 1;
+        int weekNum = week + 1;
+        weekText.text = "Week " + weekNum;
         startNewWeek.SetActive(false);
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
        seasonHandler.Save(currentSeason);
@@ -991,12 +1008,12 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             Debug.Log("Players Progressing");
             for(int i = 0; i<currentSeason.progress.Length;i++)
             {
-                if(week == currentSeason.progress[i].Item1)
+                if(week == currentSeason.progress[i].week)
                 {
-                    if(!currentSeason.progress[i].Item2)
+                    if(!currentSeason.progress[i].hasProgressed)
                     {
                         ProgressPlayers();
-                        currentSeason.progress[i].Item2 = true;
+                        currentSeason.progress[i].setHasProgressed(true) ;
                         break;
                     }
                     else
@@ -1044,89 +1061,134 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
             for(int k = 0; k<t.players.Length; k++)
             {
+
+                if (t.players[k] != "") { 
                 FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", t.players[k]);
                 PlayerPersistent player = playerHandler.Load();
-
+                    Debug.Log(player.Name);
                 for(int j = 0; j<player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.HC[0])
                     {
                         int points = 1;
-                        while((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
+                           
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                            player.getStats()[j].Item4(player.getStats()[j].Item2().value +1);
                             points++;
-                        }   
+                            }
+                            
+                            break;
                     }
                 }
+
                 for (int j = 0; j < player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.HC[1])
                     {
-                        int points = 1;
-                        while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
-                            points++;
+                            int points = 1;
+
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                                player.getStats()[j].Item4(player.getStats()[j].Item2().value + 1);
+                                points++;
+                            }
+
+                            break;
                         }
-                    }
                 }
                 for (int j = 0; j < player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.OC[0])
                     {
-                        int points = 1;
-                        while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
-                            points++;
+                            int points = 1;
+
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                                player.getStats()[j].Item4(player.getStats()[j].Item2().value + 1);
+                                points++;
+                            }
+
+                            break;
                         }
-                    }
                 }
                 for (int j = 0; j < player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.OC[1])
                     {
-                        int points = 1;
-                        while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
-                            points++;
+                            int points = 1;
+
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                                player.getStats()[j].Item4(player.getStats()[j].Item2().value + 1);
+                                points++;
+                            }
+
+                            break;
                         }
-                    }
                 }
                 for (int j = 0; j < player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.DC[0])
                     {
-                        int points = 1;
-                        while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
-                            points++;
+                            int points = 1;
+
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                                player.getStats()[j].Item4(player.getStats()[j].Item2().value + 1);
+                                points++;
+                            }
+
+                            break;
                         }
-                    }
                 }
                 for (int j = 0; j < player.getStats().Count; j++)
                 {
                     if (player.getStats()[j].Item1 == t.DC[1])
                     {
-                        int points = 1;
-                        while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
-                        {
-                            player.getStats()[j].Item2().setPrevValue(player.getStats()[j].Item2().value);
-                            player.getStats()[j].Item2().setValue(player.getStats()[j].Item2().value + points);
-                            points++;
-                        }
-                    }
-                }
+                            int points = 1;
 
-                playerHandler.Save(player);
+                            player.getStats()[j].Item3(player.getStats()[j].Item2().value);
+                            while ((player.getStats()[j].Item2().value < player.getStats()[j].Item2().potential) && points <= player.learning)
+                            {
+
+                                player.getStats()[j].Item4(player.getStats()[j].Item2().value + 1);
+                                points++;
+                            }
+
+                            break;
+                        }
+                }
+                    player.prevOvrl = player.ovrl;
+                    player.ovrl =
+
+                             ( player.consistency.value
+                                 + player.awareness.value
+
+                                + player.juking.value
+                             + player.control.value
+                                + player.shooting.value
+
+                            + player.positioning.value
+                             + player.steal.value
+                             + player.guarding.value
+                             + player.pressure.value
+
+                                + player.inside.value
+                             + player.mid.value
+                             + player.Outside.value)/12;
+    playerHandler.Save(player);
+                }
             }
         }
     }
@@ -1134,9 +1196,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
    
     private void Start()
     {
-       WeekChange wek = weekChange.GetComponent<WeekChange>();
-        week = wek.currentWeek;
-        weekSelector.value = week;
+   
         // SetSelectedTeam(selectedTeam);
         SetSelectedOption(selectedOption);
         SetSelectedOption2(selectedOption2);
@@ -1163,7 +1223,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
         currentSeason = seasonHandler.Load();
-        week = currentSeason.week;
+        
 
         Vector2 sizeDelta = MatchesTable.transform.GetComponent<RectTransform>().sizeDelta;
         sizeDelta.y = selTeam.matchesPlayed.Count * 100;

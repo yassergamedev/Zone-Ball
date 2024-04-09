@@ -612,7 +612,7 @@ new("New Mexico Dragons", false)
 
 }),("Oregon Trail Makers", new()
 {
-    new("Oklahoma Sttoppers", false),
+    new("Oklahoma Stoppers", false),
 new("Alabama Alligators", true),
 new("Nevada Magic", true),
 new("Kansas Coyotes", false),
@@ -627,7 +627,7 @@ new("Wisconsin Crows", true),
 new("New Mexico Dragons", false),
 new("Nevada Magic", false),
 new("Ohio True Frogs", false),
-new("Oklahoma Sttoppers", true),
+new("Oklahoma Stoppers", true),
 new("Washington Hornets", false),
 new("Georgia Bears", true),
 new("Kansas Coyotes", true),
@@ -645,7 +645,7 @@ new("Washington Hornets", true)
 {
     new("Washington Hornets", true),
 new("Florida Dolphins", true),
-new("Oklahoma Sttoppers", true),
+new("Oklahoma Stoppers", true),
 new("New Mexico Dragons", false),
 new("Virginia Bobcats", false),
 new("Oregon Trail Makers", true),
@@ -656,7 +656,7 @@ new("New York Owls", false),
 new("Minnesota Wolves", false),
 new("Alabama Alligators", true),
 new("Arizona Jaguars", false),
-new("Oklahoma Sttoppers", false),
+new("Oklahoma Stoppers", false),
 new("Pennsylvania Rush", false),
 new("Washington Hornets", false),
 new("California Lightning", true),
@@ -677,7 +677,7 @@ new("California Lightning", false)
     new("Texas Rattlesnakes", false),
 new("Georgia Bears", true),
 new("Arizona Jaguars", true),
-new("Oklahoma Sttoppers", false),
+new("Oklahoma Stoppers", false),
 new("Wisconsin Crows", false),
 new("New Mexico Dragons", true),
 new("Nevada Magic", false),
@@ -692,7 +692,7 @@ new("Virginia Bobcats", false),
 new("Texas Rattlesnakes", true),
 new("Oregon Trail Makers", true),
 new("Michigan Warriors", true),
-new("Oklahoma Sttoppers", true),
+new("Oklahoma Stoppers", true),
 new("New Mexico Dragons", false),
 new("Pennsylvania Rush", false),
 new("Nevada Magic", true),
@@ -761,7 +761,7 @@ new("Oregon Trail Makers", false)
                 Transform playstyle = teamN.GetChild(1);
                 Transform playstyleSlider = playstyle.GetChild(0);
                 int playstyleValue = (int)playstyleSlider.gameObject.GetComponent<UnityEngine.UI.Slider>().value;
-                Debug.Log(playstyleValue);
+                Debug.Log("playstyle value:"+playstyleValue);
                 Transform experience = teamN.GetChild(2);
                 Transform experienceOption = experience.GetChild(0);
                 Transform experienceOptionText = experienceOption.GetChild(0);
@@ -788,6 +788,7 @@ new("Oregon Trail Makers", false)
                     {
                         type = "def";
                     }
+                    Debug.Log(playerName + " is a " + type + " player");
                     switch (experienceOptionChoice)
                     {
                         case "Young":

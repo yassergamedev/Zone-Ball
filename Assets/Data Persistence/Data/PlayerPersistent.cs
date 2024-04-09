@@ -58,12 +58,23 @@ public class PlayerPersistent
  
 
     //arrays
-    public List<(string, Func<StatPersistent>)> getStats() {
+    public List<(string, Func<StatPersistent>, Action<int>, Action<int>, Action<int>)> getStats() {
 
-        return new List<(string, Func<StatPersistent>)> { ("Consistency",() => consistency), ("Awareness",() => awareness), ("Juking",() => juking),
-                  ("Control",() => control), ("Shooting",() => shooting), ("Positioning",() => positioning),
-                  ("Steal", () =>steal), ("Guarding", () =>guarding), ("Pressure",() => pressure), ("Inside",() => inside),
-                  ("Mid", () =>mid), ("Outside",() => Outside) };
+        return new List<(string, Func<StatPersistent>, Action<int>, Action<int>, Action<int>)> { 
+            
+            ("Consistency",() => consistency,(val)=>consistency.setPrevValue(val),(val)=>consistency.setValue(val),(val)=>consistency.setPotential(val))
+            
+            , ("Awareness",() => awareness,(val)=>awareness.setPrevValue(val),(val)=>awareness.setValue(val),(val)=>awareness.setPotential(val)),
+            ("Juking",() => juking,(val) => juking.setPrevValue(val),(val) => juking.setValue(val),(val)=>juking.setPotential(val)),
+                  ("Control",() => control,(val)=>control.setPrevValue(val),(val)=>control.setValue(val),(val)=>control.setPotential(val)),
+            ("Shooting",() => shooting,(val)=>shooting.setPrevValue(val),(val)=>shooting.setValue(val),(val)=>shooting.setPotential(val)),
+            ("Positioning",() => positioning,(val)=>positioning.setPrevValue(val),(val)=>positioning.setValue(val),(val)=>positioning.setPotential(val)),
+                  ("Steal", () =>steal,(val)=>steal.setPrevValue(val),(val)=>steal.setValue(val),(val)=>steal.setPotential(val)),
+            ("Guarding", () =>guarding,(val)=>guarding.setPrevValue(val),(val)=>guarding.setValue(val),(val)=>guarding.setPotential(val)),
+            ("Pressure",() => pressure,(val)=>pressure.setPrevValue(val),(val)=>pressure.setValue(val),(val)=>pressure.setPotential(val)), 
+            ("Inside",() => inside,(val)=>inside.setPrevValue(val),(val)=>inside.setValue(val),(val)=>inside.setPotential(val)),
+                  ("Mid", () =>mid,(val)=>mid.setPrevValue(val),(val)=>mid.setValue(val),(val)=>mid.setPotential(val)),
+            ("Outside",() => Outside,(val)=>Outside.setPrevValue(val),(val)=>Outside.setValue(val),(val)=>Outside.setPotential(val)) };
 
 
     }
@@ -184,7 +195,7 @@ public class PlayerPersistent
         zoneStyle = zoneStyles[z];
 
         //declaring the stats list
-        List<(string, Func<StatPersistent>)> list = getStats();
+        List<(string, Func<StatPersistent>, Action<int>, Action<int>, Action<int>)> list = getStats();
         //we calculate a new overall and adjust the stat values based on it
         int newovrl = (consistency.value + awareness.value + juking.value + control.value +
                      shooting.value + positioning.value + steal.value + guarding.value + pressure.value +
@@ -204,16 +215,17 @@ public class PlayerPersistent
             {
                 int randomNum = UnityEngine.Random.Range(0, 2);
                 if (randomNum == 0)
-                    randomStat = UnityEngine.Random.Range(3, 6);
+                    randomStat = UnityEngine.Random.Range(2, 6);
                 else
                     randomStat = UnityEngine.Random.Range(10, 12);
             }
 
 
-            list[randomStat].Item2().setValue(list[randomStat].Item2().value + 1);
+            list[randomStat].Item4(list[randomStat].Item2().value + 1);
+            list[randomStat].Item3(list[randomStat].Item2().value );
             if (list[randomStat].Item2().value > list[randomStat].Item2().potential)
             {
-                list[randomStat].Item2().setPotential(list[randomStat].Item2().potential + 1);
+                list[randomStat].Item5(list[randomStat].Item2().potential + 1);
             }
 
 

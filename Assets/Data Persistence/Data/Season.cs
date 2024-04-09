@@ -11,7 +11,7 @@ public class Season
     public int week;
     public string league;
     public string playOffs;
-    public (int, bool)[] progress;
+    public Progress[] progress;
     public string[] firstRoundRookieDraft;
     public string[] secondRoundRookieDraft;
     public string[] bestEastPlayers;
@@ -31,16 +31,37 @@ public class Season
         this.bestWestPlayers = new string[] { };
         this.bestOfThreeMatches = new string[] { };
         this.winner ="";
-        progress = new[]
+        progress = new Progress[]
         {
-            (3,false),
-            (7,false),
-            (11,false),
-            (15,false),
-            (19,false),
-            (23,false),
-            (27,false),
+            new(3,false),
+            new(7,false),
+            new(11,false),
+            new(15, false),
+            new(19,false),
+            new(23,false),
+            new(27,false),
         };
+    }
+
+}
+
+[System.Serializable]
+public class Progress
+{
+    public int week;
+    public bool hasProgressed;
+
+
+    public void setWeek(int w)
+    { week = w; }
+    public void setHasProgressed(bool hasProgressed)
+    {
+        this.hasProgressed = hasProgressed;
+    }
+    public Progress(int w, bool h)
+    {
+        week = w;
+        hasProgressed = h;
     }
 }
 
