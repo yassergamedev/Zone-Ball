@@ -31,7 +31,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Text teamName, marketCap;
     public Text Home, Guest;
     public Text HomeMatchPlayed, GuestMatchPlayed, HomeScore,GuestScore;
-    public Text weekText;
+    public Text weekText, isGameReady;
     public GameObject playerStats;
     public GameObject TeamSeasonStats;
     public GameObject matchStats, matchPlayed;
@@ -57,6 +57,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public bool isNextWeekReady = true;
     public GameObject teams;
     public GameObject hasPlayedObj;
+    public Transform Table;
+    public GameObject PlayerDepth;
+    public TeamPersistent team;
+    public Text off, def, notice;
     private List<(string, PlayerStatsPersistent)> allPlayerStats = new();
     private List<(string, PlayerStatsPersistent)> allTimePlayerStats = new();
     public void LoadData(GameData go)
@@ -73,7 +77,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
         Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week].opponent : team.name;
         selTeam = team;
-        
+        depthChart.team = team;
+        //selectedTeam.GetComponent<Button>().onClick.Invoke();
      
       if(week==0)
         {
@@ -82,7 +87,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
         int weekNum = week + 1;
         weekText.text = "Week " + weekNum;
-        MatchHistory(currentSeason);
+        MatchHistory();
         
         setStandings();
         TeamStats();
@@ -94,7 +99,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         setProgress();
     }
     public void SaveData(ref GameData go) { }
-    public void MatchHistory(Season currentSeason)
+    public void MatchHistory()
     {
         for(int i = 0; i < Content.childCount; i++)
         {
@@ -171,6 +176,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         else
         {
             isGamePlayed = false;
+            isGameReady.text = selTeam.matchesPlayed[week].isReady ? "Ready" : "Not Ready";
         }
         Content.gameObject.SetActive(false);
         Content.gameObject.SetActive(true);
@@ -921,7 +927,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     }
     public void setTableActive()
     {
-        MatchHistory(currentSeason);
+        MatchHistory();
         if(isGamePlayed)
         {
             matchStats.SetActive(true);
@@ -1212,12 +1218,16 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public void SetSelectedTeam(GameObject team)
     {
         selectedTeam = team;
-        MatchHistory(currentSeason);
+        MatchHistory();
         setTableActive();
-        depthChart.GenerateDepthChart(team.name);
+        string teamNameString = team.name;
+ 
+       
         FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
         TeamPersistent teamm = teamLoader.Load();
+        depthChart.team = teamm;
         selTeam = teamm;
+        depthChart.GenerateDepthChart(teamNameString);
         teamName.text = teamm.name;
         marketCap.text = teamm.salaryCap.ToString();
 
@@ -1407,6 +1417,65 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             Debug.Log("Game not ready to start, set depth charts correctly for both teams!!");
         }
+        
+    }
+    public IEnumerator SetPlays()
+    {
+        
+
+
+            int totalPlays = 0, totalDefPlays = 0;
+            List<PlayerPersistent> Playerlist = new List<PlayerPersistent>(); notice.text = "trying to save";
+            off.text = Table.childCount.ToString();
+            for (int i = 0; i < Table.childCount; i++)
+            {
+                notice.text = "started at " + i;
+                string playerName = Table.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text;
+                PlayerPersistent p =new("",1,"","",1,1,1);
+               
+                    FileDataHandler<PlayerPersistent> player = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
+                    playerName);
+                     p = player.Load();
+                    yield return new WaitUntil(()=>p.Name!="");
+                
+                if (p.id!="")
+                {
+                    notice.text = p.Name;
+                    
+                    int playerDeffPlays = int.Parse(Table.GetChild(i).GetChild(3).GetChild(0).GetChild(1).GetComponent<Text>().text);
+                    notice.text = "player def plays";
+                    int playerPlays = int.Parse(Table.GetChild(i).GetChild(4).GetChild(0).GetChild(1).GetComponent<Text>().text);
+
+                    notice.text = "player off plays";
+                    p.plays = playerPlays;
+                    p.defPlays = playerDeffPlays;
+                    totalPlays += playerPlays;
+                    totalDefPlays += playerDeffPlays;
+                    Playerlist.Add(p);
+                }
+                notice.text = "stopped at " + i;
+            }
+            notice.text = "finished going through table";
+            if (totalPlays == 40 && totalDefPlays == 40)
+            {
+                foreach (PlayerPersistent player in Playerlist)
+                {
+                    FileDataHandler<PlayerPersistent> handler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
+                        player.Name);
+                    notice.text = player.Name;
+                    handler.Save(player);
+                }
+                notice.text = "Save Successful";
+                team.matchesPlayed[week].isReady = true;
+                FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", team.name);
+                teamHandler.Save(team);
+                MatchHistory();
+
+            }
+            else
+            {
+                notice.text = "Total Number of Plays for players must be 40";
+            }
         
     }
 }

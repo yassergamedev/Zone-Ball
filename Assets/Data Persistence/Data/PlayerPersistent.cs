@@ -232,8 +232,8 @@ public class PlayerPersistent
         }
 
         gameFlowStats = new string[] { };
-        plays = 2;
-        defPlays = 2;
+        plays = 4;
+        defPlays = 4;
 
     }
     public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)

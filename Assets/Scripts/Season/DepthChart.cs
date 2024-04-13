@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
 using Unity.Profiling;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +12,9 @@ public class DepthChart : MonoBehaviour, IDataPersistence
     public Transform Table;
     public GameObject PlayerDepth;
     private GameData gameData;
-    private TeamPersistent team;
+    public TeamPersistent team;
     public SelectedStuff selectedStuff;
+    public Text off, def,notice;
     public SceneStuff sceneStuff;
     public void LoadData(GameData data)
     {
@@ -23,14 +25,15 @@ public class DepthChart : MonoBehaviour, IDataPersistence
     // Start is called before the first frame update
     public void GenerateDepthChart(string selectedTeam)
     {
+        off.text = "40";
+        def.text = "40";
         for (int i = 0; i < Table.childCount; i++)
         {
-            if (Table.GetChild(i).gameObject.name != "Header")
+            
                 Destroy(Table.GetChild(i).gameObject);
         }
-  
-        FileDataHandler<TeamPersistent> _teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam);
-        team = _teamHandler.Load();
+        FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam);
+        team = teamLoader.Load();
 
         Vector2 sizeDelta = Table.transform.GetComponent<RectTransform>().sizeDelta;
         sizeDelta.y = team.players.Length * 50;
@@ -44,28 +47,38 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 PlayerPersistent player = _playerHandler.Load();
 
                 GameObject playerDepth = Instantiate(PlayerDepth, Table);
-
-                PlayerDepth.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
-                PlayerDepth.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
-                PlayerDepth.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
-                PlayerDepth.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.InputField>().text = player.defPlays.ToString();
-                PlayerDepth.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.InputField>().text = player.plays.ToString();
+                playerDepth.gameObject.name = player.Name;
+                PlayerDepth.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = player.Name;
+                PlayerDepth.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Number.ToString();
+                PlayerDepth.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.ovrl.ToString();
+                PlayerDepth.transform.GetChild(3).GetChild(0).GetComponent<InputField>().text = player.defPlays.ToString();
+                PlayerDepth.transform.GetChild(4).GetChild(0).GetComponent<InputField>().text = player.plays.ToString();
+                notice.text = player.Name;
             }
+            
         }
     }
 
     public void SetPlays()
     {
+       
+
+     
         int totalPlays = 0,totalDefPlays = 0;
-        List <PlayerPersistent > Playerlist = new List<PlayerPersistent>();   
-        for (int i = 1; i < Table.childCount; i++)
+        List <PlayerPersistent > Playerlist = new List<PlayerPersistent>(); notice.text = "trying to save";
+        for (int i = 0; i <Table.childCount; i++)
         {
-            string playerName = Table.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text;
-            Debug.Log(playerName);
-            FileDataHandler<PlayerPersistent> player = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
-                Table.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text);
+            string playerName = Table.GetChild(i).gameObject.name;
+            notice.text = playerName;
+                FileDataHandler <PlayerPersistent> player = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
+                playerName);
             PlayerPersistent p = player.Load();
-            Debug.Log(p.Name);
+               if(p==null)
+            {
+                notice.text = Application.persistentDataPath + "/" + gameData.id + "/Players/" + playerName;
+            }
+
+            if (p != null) { 
             int playerDeffPlays = int.Parse(Table.GetChild(i).GetChild(3).GetChild(0).GetChild(1).GetComponent<Text>().text);
             int playerPlays = int.Parse(Table.GetChild(i).GetChild(4).GetChild(0).GetChild(1).GetComponent<Text>().text);
           p.plays  = playerPlays;
@@ -73,22 +86,28 @@ public class DepthChart : MonoBehaviour, IDataPersistence
             totalPlays += playerPlays;
             totalDefPlays += playerDeffPlays;
             Playerlist.Add(p);
+            }
         }
-        if(totalPlays == 40 && totalDefPlays == 40) {
+        notice.text = "finished going through table";
+        if (totalPlays == 40 && totalDefPlays == 40) {
             foreach(PlayerPersistent player in Playerlist)
             {
                 FileDataHandler<PlayerPersistent> handler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
                     player.Name);
+                notice.text = player.Name;
                 handler.Save(player);
             }
-            Debug.Log("Save Successful");
+            notice.text= "Save Successful";
             team.matchesPlayed[selectedStuff.week].isReady = true;
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", team.name);
             teamHandler.Save(team);
+            selectedStuff.MatchHistory();
+
         }
         else
         {
-            Debug.Log("Total Number of Plays for players must be 40");
-        }
+            notice.text = "Total Number of Plays for players must be 40, number of off plays: "+ totalPlays+ " number of def plays: "+ totalDefPlays;
+          }
+        
     }
 }

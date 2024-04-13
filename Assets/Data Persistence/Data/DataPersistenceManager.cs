@@ -88,10 +88,23 @@ public class DataPersistenceManager : MonoBehaviour
         }
         else
         {
-            current = new(gameDataId);
+            current = new(gameDataId, "Season " + year);
            
         }
         currHandler.Save(current);
+        FileDataHandler<Games> gamesHandler = new(Application.persistentDataPath, "Games");
+        Games games = gamesHandler.Load();
+        if(games != null)
+        {
+            games.games.Add(current);
+            
+        }
+        else
+        {
+            games = new();
+            games.games.Add(current);
+        }
+        gamesHandler.Save(games);
         for (int j = 0; j < west.Length; j++)
         {
             FileDataHandler<TeamPersistent> teamhandler = new(Application.persistentDataPath + "/" + gameDataId + "/Teams/", west[j]);
@@ -167,12 +180,30 @@ public class DataPersistenceManager : MonoBehaviour
 public class CurrentGame
 {
     public string currentGame;
+    public string currentSeason;
     public int week;
+    public string day, month, year, hour, min, sec;
     public MatchPlayed game;
-    public CurrentGame(string currentGame)
+    public CurrentGame(string currentGame, string currentSeason)
     {
         this.currentGame = currentGame;
         week = 1;
         game = null;
+        day = DateTime.Now.Day.ToString();
+        month = DateTime.Now.Month.ToString();
+        year = DateTime.Now.Year.ToString();
+        hour = DateTime.Now.Hour.ToString();
+        min = DateTime.Now.Minute.ToString();
+        sec = DateTime.Now.Second.ToString();
+        this.currentSeason = currentSeason;
+    }
+}
+[System.Serializable]
+public class Games
+{
+    public List<CurrentGame> games;
+    public Games( )
+    {
+        games = new List<CurrentGame>();
     }
 }
