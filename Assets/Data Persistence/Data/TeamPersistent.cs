@@ -49,6 +49,7 @@ public class TeamPersistent
 
     }
     public List<MatchPlayed> matchesPlayed;
+    public List<MatchPlayed> playOffMatches;
 
     public TeamPersistent(string id, string name, string conf, string[] plyrs)
    {
@@ -56,7 +57,9 @@ public class TeamPersistent
         this.name = name;
         this.Conference = conf;
         this.players = plyrs;
+        
         matchesPlayed = new() { };
+        playOffMatches = new() { }; 
         playstyle = 5;
         start = "Young";
         HC = new string[]{ "Consistency", "Awareness" };
@@ -85,6 +88,13 @@ public class MatchPlayed
     {
         this.opponent = opponent;
         this.isHome = isHome;
+        isPlayed = false;
+        isReady = false;
+    }
+    public MatchPlayed()
+    {
+        this.opponent = "";
+        this.isHome = false;
         isPlayed = false;
         isReady = false;
     }

@@ -97,8 +97,16 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 notice.text = player.Name;
                 handler.Save(player);
             }
-            notice.text= "Save Successful";
-            team.matchesPlayed[selectedStuff.week].isReady = true;
+            if(selectedStuff.currentSeason.phase == "Season")
+            {
+               
+                team.matchesPlayed[selectedStuff.week].isReady = true;
+            }
+            else
+            {
+                team.playOffMatches[selectedStuff.currentSeason.PlayOffRound].isReady = true;
+            }
+            notice.text = "Save Successful";
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", team.name);
             teamHandler.Save(team);
             selectedStuff.MatchHistory();

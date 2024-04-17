@@ -31,14 +31,14 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Text teamName, marketCap;
     public Text Home, Guest;
     public Text HomeMatchPlayed, GuestMatchPlayed, HomeScore,GuestScore;
-    public Text weekText, isGameReady;
+    public Text weekText, isGameReady, SeasonPhase;
     public GameObject playerStats;
     public GameObject TeamSeasonStats;
     public GameObject matchStats, matchPlayed;
     public GameObject weekChange;
     public GameObject teamStanding;
     public int week;
-
+    public int playOffRound;
     public Transform MatchesTable;
     public Transform StandingsTable;
     public Transform Content;
@@ -47,13 +47,15 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public GameObject MatchDetail;
     public bool isActiveTable = false;
     public bool isGamePlayed =false;
+    public bool noGameToBePlayed = false;
     private GameData gameData;
-    private Season currentSeason;
+    public Season currentSeason;
     private TeamPersistent selTeam;
     public SceneStuff sceneStuff;
     public GameObject seasonRecords;
     public GameObject careerRecords;
-    public GameObject nextWeek, prevWeek, startNewWeek;
+    public GameObject nextWeek, prevWeek, startNewWeek,startNextRound,finishPlayOffs, NoGamesTab;
+    public GameObject playOffsTab,StartPlayOffs;
     public bool isNextWeekReady = true;
     public GameObject teams;
     public GameObject hasPlayedObj;
@@ -61,8 +63,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public GameObject PlayerDepth;
     public TeamPersistent team;
     public Text off, def, notice;
+    public Playfs playOffs;
     private List<(string, PlayerStatsPersistent)> allPlayerStats = new();
     private List<(string, PlayerStatsPersistent)> allTimePlayerStats = new();
+    List<TeamPersistent> orderedTeamsList;
     public void LoadData(GameData go)
     {
         gameData = go;
@@ -73,9 +77,52 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
          currentSeason = seasonHandler.Load();
         week = currentSeason.week;
-
-        Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week].opponent;
-        Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week].opponent : team.name;
+        playOffRound = currentSeason.PlayOffRound;
+        setStandings();
+        if (currentSeason.phase == "Season")
+        {
+            int weekNum = week + 1;
+            weekText.text = "Week " + weekNum;
+            Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week]?.opponent;
+            Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week]?.opponent : team.name;
+        }
+        else
+        {
+            SeasonPhase.text = "PlayOffs";
+            playOffsTab.SetActive(true);
+            switch (playOffRound)
+            {
+                case 0:
+                    {
+                        weekText.text = "Round Of 16";
+                        for (int i = 0, k = 15; i < playOffs.Round16.Length; i++, k--)
+                        {
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[i].name;
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[k].name;
+                        }
+                        break;
+                    }
+                case 1:
+                    {
+                        weekText.text = "QF";
+                        break;
+                    }
+                case 2:
+                    {
+                        weekText.text = "Semis";
+                        break;
+                    }
+                case 3:
+                    {
+                        weekText.text = "Final";
+                        break;
+                    }
+            }
+            
+        }
+            
+        
+       
         selTeam = team;
         depthChart.team = team;
         //selectedTeam.GetComponent<Button>().onClick.Invoke();
@@ -85,18 +132,20 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             prevWeek.SetActive(false);
             
         }
-        int weekNum = week + 1;
-        weekText.text = "Week " + weekNum;
-        MatchHistory();
+     
+      
+           
+            MatchHistory();
+
+     
+            TeamStats();
+            StartCoroutine(stretch(Content));
+            StartCoroutine(stretch(TeamSeasonStatsContent));
+            SeasonRecords();
+            CareerRecords();
+            CheckWeek();
+            setProgress();
         
-        setStandings();
-        TeamStats();
-        StartCoroutine(stretch(Content));
-        StartCoroutine(stretch(TeamSeasonStatsContent));
-        SeasonRecords();
-        CareerRecords();
-        CheckWeek();
-        setProgress();
     }
     public void SaveData(ref GameData go) { }
     public void MatchHistory()
@@ -105,6 +154,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             Destroy(Content.GetChild(i).gameObject);
         }
+        if(currentSeason.phase == "Season")
+        {
+
+        
         if (selTeam.matchesPlayed[week].isPlayed)
         {
             isGamePlayed = true;
@@ -177,6 +230,98 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             isGamePlayed = false;
             isGameReady.text = selTeam.matchesPlayed[week].isReady ? "Ready" : "Not Ready";
+        }
+
+        }
+        else
+        {
+            if(selTeam.playOffMatches.Count == 0)
+            {
+                Debug.Log("trying with team: " + team);
+
+                noGameToBePlayed = true;
+            }
+            else
+            {
+                if (selTeam.playOffMatches[playOffRound].isPlayed)
+                {
+                    isGamePlayed = true;
+                    HomeMatchPlayed.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.name : selTeam.playOffMatches[playOffRound].opponent;
+                    HomeScore.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound].score.ToString() : selTeam.playOffMatches[playOffRound].oppScore.ToString();
+                    GuestMatchPlayed.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound].opponent : selTeam.name;
+                    GuestScore.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound].oppScore.ToString() : selTeam.playOffMatches[playOffRound].score.ToString();
+
+                    for (int i = 0; i < selTeam.players.Length; i++)
+                    {
+                        FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/"
+                            + selTeam.id + "/" + "Round "+ playOffRound.ToString()
+                            , selTeam.players[i]);
+                        PlayerStatsPersistent stats = statsHandler.Load();
+                        if (stats != null)
+                        {
+                            GameObject statsTable = Instantiate(playerStats, Content);
+                            int rowsCount = statsTable.transform.childCount;
+                            Transform[] rows = new Transform[statsTable.transform.childCount];
+                            Transform roww;
+                            for (int k = 0; k < rowsCount; k++)
+                            {
+                                roww = statsTable.transform.GetChild(k);
+
+                                rows[k] = roww;
+                            }
+                            foreach (Transform row in rows)
+                            {
+
+                                if (row.gameObject.name != "Table Header" || row.gameObject.name != "Buttons Header")
+                                {
+
+                                    if (row.gameObject.name == "Name")
+                                    {
+
+
+                                        row.GetChild(0).gameObject.GetComponent<Text>().text = selTeam.players[i];
+                                    }
+
+                                    else
+                                    {
+                                        foreach ((string statname, System.Func<int> stat, Action<int> b) in stats.getStats())
+                                        {
+
+                                            if (row.gameObject.name == statname)
+                                            {
+
+                                                Transform valueCell = row.GetChild(1);
+                                                Transform textObjV = valueCell.GetChild(0);
+                                                int statN = stat();
+                                                Debug.Log(statname + " " + statN);
+                                                textObjV.gameObject.GetComponent<Text>().text = statN.ToString();
+
+
+
+                                            }
+                                        }
+
+                                    }
+                                }
+
+
+
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    Home.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.name : selTeam.playOffMatches[playOffRound]?.opponent;
+                    Guest.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound]?.opponent : selTeam.name;
+                    isGamePlayed = false;
+                    isGameReady.text = selTeam.playOffMatches[playOffRound].isReady ? "Ready" : "Not Ready";
+                }
+            }
+            
+
+            
         }
         Content.gameObject.SetActive(false);
         Content.gameObject.SetActive(true);
@@ -345,8 +490,6 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
     public void CheckWeek()
     {
-        
-   
 
         (string,bool)[] teamsPlay =
   {
@@ -376,30 +519,83 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             ("Texas Rattlesnakes",false),
         
         };
-       
-        for(int i = 0; i<teamsPlay.Length;i++)
+        if (currentSeason.phase == "Season")
         {
+            for (int i = 0; i<teamsPlay.Length;i++)
+            {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", teamsPlay[i].Item1);
             TeamPersistent teamPersistent = teamHandler.Load();
-            if (teamPersistent.matchesPlayed[week].isPlayed)
-            {
-                Debug.Log("team " + teamPersistent.name + "'s match is played");
-                teamsPlay[i].Item2= true;
-                 if(teams.transform.GetChild(i).transform.childCount == 2)
+            
+                if (teamPersistent.matchesPlayed[week].isPlayed)
                 {
-                    Destroy(teams.transform.GetChild(i).GetChild(1).gameObject);
+                    Debug.Log("team " + teamPersistent.name + "'s match is played");
+                    teamsPlay[i].Item2 = true;
+                    if (teams.transform.GetChild(i).transform.childCount == 2)
+                    {
+                        Destroy(teams.transform.GetChild(i).GetChild(1).gameObject);
+                    }
+                }
+                else
+                {
+                    isNextWeekReady = false;
+                    Instantiate(hasPlayedObj, teams.transform.GetChild(i).transform);
                 }
             }
-            else
+        }
+        else
+        {
+            for (int i = 0; i < teamsPlay.Length; i++)
             {
-                isNextWeekReady = false;
-                Instantiate(hasPlayedObj, teams.transform.GetChild(i).transform);
+                FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", teamsPlay[i].Item1);
+                TeamPersistent teamPersistent = teamHandler.Load();
+                if(teamPersistent.playOffMatches.Count == playOffRound+1)
+                {
+                    if (teamPersistent.playOffMatches[playOffRound].isPlayed)
+                    {
+                        Debug.Log("team " + teamPersistent.name + "'s match is played");
+                        teamsPlay[i].Item2 = true;
+                        if (teams.transform.GetChild(i).transform.childCount == 2)
+                        {
+                            Destroy(teams.transform.GetChild(i).GetChild(1).gameObject);
+                        }
+                    }
+                    else
+                    {
+                        isNextWeekReady = false;
+                        Instantiate(hasPlayedObj, teams.transform.GetChild(i).transform);
+                    }
+                }
+               
             }
         }
         if(isNextWeekReady)
         {
-            nextWeek.SetActive(false);
-            startNewWeek.SetActive(true);
+            if(currentSeason.phase == "Season")
+            {
+                Debug.Log("the wekk is :" + week);
+                nextWeek.SetActive(false);
+                if (week == 27)
+                {
+                    StartPlayOffs.SetActive(true);
+                }
+                else
+                {
+                    startNewWeek.SetActive(true);
+                }
+            }
+            else
+            {
+                if(playOffRound == 4)
+                {
+                    finishPlayOffs.SetActive(true);
+                }
+                else
+                {
+                    startNextRound.SetActive(true);
+                }
+            }
+           
+            
         }
         StartCoroutine(stretch(teams.transform));
     }
@@ -932,26 +1128,33 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             matchStats.SetActive(true);
             matchPlayed.SetActive(false);
+            NoGamesTab.SetActive(false);
         }
         else
         {
-            matchStats.SetActive(false);
-            matchPlayed.SetActive(true);
+            if(noGameToBePlayed)
+            {
+                matchStats.SetActive(false);
+                matchPlayed.SetActive(false);
+                Debug.Log("wow");
+                NoGamesTab.SetActive(true);
+            }
+            else
+            {
+                matchStats.SetActive(false);
+                matchPlayed.SetActive(true);
+                NoGamesTab.SetActive(false);
+            }
+            
         }
     }
     public void setTableInActive()
     {
 
-        if (isGamePlayed)
-        {
             matchStats.SetActive(false);
             matchPlayed.SetActive(false);
-        }
-        else
-        {
-            matchPlayed.SetActive(false);
-            matchStats.SetActive(false);
-        }
+            NoGamesTab.SetActive(false);
+       
 
     }
 
@@ -972,6 +1175,49 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
         
     }
+    public void OnClickStartPlayOffs()
+    {
+        
+        currentSeason.phase = "PlayOffs";
+        weekText.text = "Round of 16";
+        StartPlayOffs.SetActive(false);
+        prevWeek.SetActive(false);
+        SeasonPhase.text = "PlayOffs";
+        playOffsTab.SetActive(true);
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+
+        currentSeason.finalTeamStandings = orderedTeamsList;
+        for (int i = orderedTeamsList.Count-1, j = 0; i>=1;i--)
+        {
+         
+            if(j<8 && i<16)
+            {
+                 string teamName = orderedTeamsList[j].id;
+                string otherTeam = orderedTeamsList[i].id;
+                Debug.Log("the lovely team is: " + teamName);
+                FileDataHandler<TeamPersistent> anotherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", teamName);
+                FileDataHandler<TeamPersistent> otherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", otherTeam);
+                TeamPersistent anotherTeam = anotherTeamHandler.Load();
+                TeamPersistent teamm = otherTeamHandler.Load();
+                anotherTeam.playOffMatches.Add(new(teamm.name, false));
+                teamm.playOffMatches.Add(new(anotherTeam.name, true));
+
+                otherTeamHandler.Save(teamm);
+                anotherTeamHandler.Save(anotherTeam);
+
+                j++;
+            }
+
+        }
+        seasonHandler.Save(currentSeason);
+
+        for (int i = 0, k=15; i < playOffs.Round16.Length; i++,k--)
+        {
+            playOffs.Round16[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[i].name;
+            playOffs.Round16[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[k].name;
+        }
+        CheckWeek();
+    }
     public void OnClickNextWeek()
     {
        
@@ -988,10 +1234,50 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
            
           
             CheckWeek();
+            
         }
        
     }
-   
+   public void OnClickNewRound()
+    {
+        playOffRound++;
+        currentSeason.PlayOffRound = playOffRound;
+        switch (playOffRound)
+        {
+            case 1:
+                {
+                    weekText.text = "QF";
+                    for (int i = 0; i < 8; i++)
+                    {
+                        FileDataHandler<TeamPersistent> qTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.finalTeamStandings[i].id);
+                        TeamPersistent qTeam = qTeamHandler.Load();
+                        
+                        playOffs.Quarters[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = 
+                            qTeam.playOffMatches[playOffRound-1].result? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                        FileDataHandler<TeamPersistent> qTeamHandler2 = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.finalTeamStandings[i+1].id);
+                        TeamPersistent qTeam2 = qTeamHandler2.Load();
+                        playOffs.Quarters[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                           qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    weekText.text = "Semis";
+                    break;
+                }
+            case 3:
+                {
+                    weekText.text = "Final";
+                    break;
+                }
+        }
+
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+        seasonHandler.Save(currentSeason);
+
+
+    }
   public void OnClickNewWeek()
     {
         week++;
@@ -1031,6 +1317,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
             seasonHandler.Save(currentSeason);
         }
+       
     }
 
     public void ProgressPlayers()
@@ -1217,10 +1504,12 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     }
     public void SetSelectedTeam(GameObject team)
     {
+        noGameToBePlayed = false;
         selectedTeam = team;
         MatchHistory();
         setTableActive();
         string teamNameString = team.name;
+        Debug.Log(teamNameString);
  
        
         FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
@@ -1240,8 +1529,23 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         MatchesTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
 
 
-        Home.text = teamm.matchesPlayed[week].isHome ? teamm.name : teamm.matchesPlayed[week].opponent;
-        Guest.text = teamm.matchesPlayed[week].isHome ? teamm.matchesPlayed[week].opponent : teamm.name;
+        if (currentSeason.phase == "Season")
+        {
+            Home.text = teamm.matchesPlayed[week].isHome ? teamm.name : teamm.matchesPlayed[week]?.opponent;
+            Guest.text = teamm.matchesPlayed[week].isHome ? teamm.matchesPlayed[week]?.opponent : teamm.name;
+        }
+        else
+        {
+            if (teamm.playOffMatches.Count == 0)
+            {
+                noGameToBePlayed = true;
+            }
+            else
+            {
+                Home.text = teamm.playOffMatches[playOffRound].isHome ? teamm.name : teamm.playOffMatches[playOffRound]?.opponent;
+                Guest.text = teamm.playOffMatches[playOffRound].isHome ? teamm.playOffMatches[playOffRound]?.opponent : team.name;
+            }
+        }
 
         setGames();
         PlayerStatsAllTime();
@@ -1356,7 +1660,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             "Virginia Bobcats",
             "Wisconsin Crows"
         };
-        List<TeamPersistent> orderedTeamsList = new List<TeamPersistent>();
+       orderedTeamsList = new List<TeamPersistent>();
 
         for(int i = 0; i < west.Length; i++)
         {
@@ -1386,6 +1690,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         foreach(TeamPersistent team in orderedTeamsList)
         {
             GameObject standing = Instantiate(teamStanding, StandingsTable);
+            team.matchesPlayed = new();
             standing.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = (k+1).ToString();
             standing.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = team.name;
             standing.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = team.Conference;
@@ -1400,23 +1705,47 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     }
     public void StartGame()
     {
-        FileDataHandler<TeamPersistent> otherTeam = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
-        TeamPersistent other = otherTeam.Load();
-
-        if (selTeam.matchesPlayed[week].isReady && selTeam.matchesPlayed[week].isPlayed == false 
-            && other.matchesPlayed[week].isReady)
+        if(currentSeason.phase == "Season")
         {
-            FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
-            CurrentGame currGame = currentGame.Load();
-            currGame.week = week;
-            currGame.game = selTeam.matchesPlayed[week];
-            currentGame.Save(currGame);
-            sceneStuff.LoadScene();
+            FileDataHandler<TeamPersistent> otherTeam = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
+            TeamPersistent other = otherTeam.Load();
+
+            if (selTeam.matchesPlayed[week].isReady && selTeam.matchesPlayed[week].isPlayed == false
+                && other.matchesPlayed[week].isReady)
+            {
+                FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
+                CurrentGame currGame = currentGame.Load();
+                currGame.week = week;
+                currGame.game = selTeam.matchesPlayed[week];
+                currentGame.Save(currGame);
+                sceneStuff.LoadScene();
+            }
+            else
+            {
+                Debug.Log("Game not ready to start, set depth charts correctly for both teams!!");
+            }
         }
         else
         {
-            Debug.Log("Game not ready to start, set depth charts correctly for both teams!!");
+            FileDataHandler<TeamPersistent> otherTeam = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.playOffMatches[currentSeason.PlayOffRound].opponent);
+            TeamPersistent other = otherTeam.Load();
+
+            if (selTeam.playOffMatches[currentSeason.PlayOffRound].isReady && selTeam.playOffMatches[currentSeason.PlayOffRound].isPlayed == false
+                && other.playOffMatches[currentSeason.PlayOffRound].isReady)
+            {
+                FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
+                CurrentGame currGame = currentGame.Load();
+                currGame.week = week;
+                currGame.game = selTeam.playOffMatches[currentSeason.PlayOffRound];
+                currentGame.Save(currGame);
+                sceneStuff.LoadScene();
+            }
+            else
+            {
+                Debug.Log("Game not ready to start, set depth charts correctly for both teams!!");
+            }
         }
+        
         
     }
     public IEnumerator SetPlays()

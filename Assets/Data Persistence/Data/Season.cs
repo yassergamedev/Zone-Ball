@@ -9,9 +9,14 @@ public class Season
     public string id;
     public string date;
     public int week;
+    public int PlayOffRound;
     public string league;
     public string playOffs;
+    public string phase;
     public Progress[] progress;
+    public List<TeamPersistent> finalTeamStandings;
+    public List<string[]> Quarters, Semis,Final;
+
     public string[] firstRoundRookieDraft;
     public string[] secondRoundRookieDraft;
     public string[] bestEastPlayers;
@@ -31,6 +36,12 @@ public class Season
         this.bestWestPlayers = new string[] { };
         this.bestOfThreeMatches = new string[] { };
         this.winner ="";
+        Quarters = new();
+        Semis = new();
+        Final = new();
+        phase = "Season";
+        PlayOffRound = 0;
+        finalTeamStandings = new List<TeamPersistent> { };
         progress = new Progress[]
         {
             new(3,false),
@@ -64,5 +75,8 @@ public class Progress
         hasProgressed = h;
     }
 }
+
+
+
 
 
