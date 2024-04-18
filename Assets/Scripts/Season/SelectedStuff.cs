@@ -1247,16 +1247,16 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             case 1:
                 {
                     weekText.text = "QF";
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0, j=0; i < 8; i+=2,j++)
                     {
                         FileDataHandler<TeamPersistent> qTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.finalTeamStandings[i].id);
                         TeamPersistent qTeam = qTeamHandler.Load();
                         
-                        playOffs.Quarters[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = 
+                        playOffs.Quarters[j].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = 
                             qTeam.playOffMatches[playOffRound-1].result? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
                         FileDataHandler<TeamPersistent> qTeamHandler2 = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.finalTeamStandings[i+1].id);
                         TeamPersistent qTeam2 = qTeamHandler2.Load();
-                        playOffs.Quarters[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                        playOffs.Quarters[j].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
                            qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
                     }
                     break;
@@ -1274,7 +1274,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
 
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
-        seasonHandler.Save(currentSeason);
+        //seasonHandler.Save(currentSeason);
 
 
     }
