@@ -9,7 +9,7 @@ public class Playfs : MonoBehaviour
     public GameObject[] Round16;
     public GameObject[] Quarters;
     public GameObject[] Semis;
-  public GameObject[] Final;
+  public GameObject Final;
    
 
     
@@ -28,9 +28,6 @@ public class Playfs : MonoBehaviour
         {
             Semis[i].transform.GetChild(0).GetChild(0).gameObject.GetComponent <Text>().text = semis[i];
         }
-        for(int i = 0; i < Final.Length; i++)
-        {
-            Final[i].transform.GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = final[i];
-        }
+        
     }
 }

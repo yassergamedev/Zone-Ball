@@ -15,7 +15,7 @@ public class Season
     public string phase;
     public Progress[] progress;
     public List<TeamPersistent> finalTeamStandings;
-    public List<string[]> Quarters, Semis,Final;
+    public List<string> Quarters, Semis,Final;
 
     public string[] firstRoundRookieDraft;
     public string[] secondRoundRookieDraft;

@@ -105,16 +105,59 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 case 1:
                     {
                         weekText.text = "QF";
+                        for (int i = 0, k = 15; i < playOffs.Round16.Length; i++, k--)
+                        {
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[i].name;
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[k].name;
+                        }
+                        for (int i = 0, k =0; k < playOffs.Quarters.Length; i+=2, k++)
+                        {
+                            playOffs.Quarters[k].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i];
+                            playOffs.Quarters[k].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i+1];
+                        }
                         break;
                     }
                 case 2:
                     {
                         weekText.text = "Semis";
+                        for (int i = 0, k = 15; i < playOffs.Round16.Length; i++, k--)
+                        {
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[i].name;
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[k].name;
+                        }
+                        for (int i = 0; i < playOffs.Quarters.Length; i ++)
+                        {
+                            playOffs.Quarters[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i];
+                            playOffs.Quarters[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i + 1];
+                        }
+                        for (int i = 0; i < playOffs.Semis.Length; i += 2)
+                        {
+                            playOffs.Semis[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Semis[i];
+                            playOffs.Semis[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Semis[i + 1];
+                        }
                         break;
                     }
                 case 3:
                     {
                         weekText.text = "Final";
+                        for (int i = 0, k = 15; i < playOffs.Round16.Length; i++, k--)
+                        {
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[i].name;
+                            playOffs.Round16[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.finalTeamStandings[k].name;
+                        }
+                        for (int i = 0; i < playOffs.Quarters.Length; i += 2)
+                        {
+                            playOffs.Quarters[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i];
+                            playOffs.Quarters[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Quarters[i + 1];
+                        }
+                        for (int i = 0; i < playOffs.Semis.Length; i += 2)
+                        {
+                            playOffs.Semis[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Semis[i];
+                            playOffs.Semis[i].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Semis[i + 1];
+                        }
+                        playOffs.Final.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Final[0];
+                        playOffs.Final.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = currentSeason.Final[1];
+
                         break;
                     }
             }
@@ -235,7 +278,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
         else
         {
-            if(selTeam.playOffMatches.Count == 0)
+            if(selTeam.playOffMatches.Count < playOffRound+1)
             {
                 Debug.Log("trying with team: " + team);
 
@@ -1258,24 +1301,95 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                         TeamPersistent qTeam2 = qTeamHandler2.Load();
                         playOffs.Quarters[j].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
                            qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                        string firstWinner = qTeam.playOffMatches[playOffRound - 1].result ? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                        string secondWinner = qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                        FileDataHandler<TeamPersistent> firstWinnderHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", firstWinner);
+                        TeamPersistent fWinner = firstWinnderHandler.Load();
+                        FileDataHandler<TeamPersistent> secondWinnerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", secondWinner);
+                        TeamPersistent sWinner = secondWinnerHandler.Load();
+
+                        fWinner.playOffMatches.Add(new(sWinner.id, true));
+                        sWinner.playOffMatches.Add(new(fWinner.id, false));
+
+                        firstWinnderHandler.Save(fWinner);
+                        secondWinnerHandler.Save(sWinner);
+                        currentSeason.Quarters.Add(fWinner.id);
+                        currentSeason.Quarters.Add(sWinner.id);
+
                     }
+                    
                     break;
                 }
             case 2:
                 {
                     weekText.text = "Semis";
+                    for (int i = 0, j = 0; i < 4; i += 2, j++)
+                    {
+                        FileDataHandler<TeamPersistent> qTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.Quarters[i]);
+                        TeamPersistent qTeam = qTeamHandler.Load();
+
+                        playOffs.Semis[j].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                            qTeam.playOffMatches[playOffRound - 1].result ? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                        FileDataHandler<TeamPersistent> qTeamHandler2 = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.Quarters[i + 1]);
+                        TeamPersistent qTeam2 = qTeamHandler2.Load();
+                        playOffs.Semis[j].transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                           qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                        string firstWinner = qTeam.playOffMatches[playOffRound - 1].result ? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                        string secondWinner = qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                        FileDataHandler<TeamPersistent> firstWinnderHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", firstWinner);
+                        TeamPersistent fWinner = firstWinnderHandler.Load();
+                        FileDataHandler<TeamPersistent> secondWinnerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", secondWinner);
+                        TeamPersistent sWinner = secondWinnerHandler.Load();
+                       
+                        fWinner.playOffMatches.Add(new(sWinner.id, true));
+                        sWinner.playOffMatches.Add(new(fWinner.id, false));
+
+                        firstWinnderHandler.Save(fWinner);
+                        secondWinnerHandler.Save(sWinner);
+                        currentSeason.Semis.Add(fWinner.id);
+                        currentSeason.Semis.Add(sWinner.id);
+                    }
                     break;
                 }
             case 3:
                 {
-                    weekText.text = "Final";
+                    
+                        FileDataHandler<TeamPersistent> qTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.Semis[0]);
+                    TeamPersistent qTeam = qTeamHandler.Load();
+
+                    playOffs.Final.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                        qTeam.playOffMatches[playOffRound - 1].result ? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                    FileDataHandler<TeamPersistent> qTeamHandler2 = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", currentSeason.Semis[1]);
+                    TeamPersistent qTeam2 = qTeamHandler2.Load();
+                    playOffs.Final.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text =
+                       qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                    string firstWinner = qTeam.playOffMatches[playOffRound - 1].result ? qTeam.name : qTeam.playOffMatches[playOffRound - 1].opponent;
+                    string secondWinner = qTeam2.playOffMatches[playOffRound - 1].result ? qTeam2.name : qTeam2.playOffMatches[playOffRound - 1].opponent;
+
+                    FileDataHandler<TeamPersistent> firstWinnderHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", firstWinner);
+                    TeamPersistent fWinner = firstWinnderHandler.Load();
+                    FileDataHandler<TeamPersistent> secondWinnerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", secondWinner);
+                    TeamPersistent sWinner = secondWinnerHandler.Load();
+
+                    fWinner.playOffMatches.Add(new(sWinner.id, true));
+                    sWinner.playOffMatches.Add(new(fWinner.id, false));
+
+                    firstWinnderHandler.Save(fWinner);
+                    secondWinnerHandler.Save(sWinner);
+                    currentSeason.Semis.Add(fWinner.id);
+                    currentSeason.Semis.Add(sWinner.id);
                     break;
                 }
         }
 
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
-        //seasonHandler.Save(currentSeason);
-
+        seasonHandler.Save(currentSeason);
+        CheckWeek();
 
     }
   public void OnClickNewWeek()
@@ -1536,7 +1650,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
         else
         {
-            if (teamm.playOffMatches.Count == 0)
+            if (teamm.playOffMatches.Count < playOffRound+1)
             {
                 noGameToBePlayed = true;
             }
