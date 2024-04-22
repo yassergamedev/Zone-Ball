@@ -389,8 +389,6 @@ public class PlayerActions : MonoBehaviour
             }
             else
             {
-               
-              
                 return "No Foul";
             }
         }
@@ -439,10 +437,6 @@ public class PlayerActions : MonoBehaviour
         
         foulManager.GetComponent<FoulManager>().foulOver = true;
         // Wait until space key is pressed again
-
-
-       
-      
     }
 
 
@@ -713,15 +707,5 @@ public class PlayerActions : MonoBehaviour
             playerMovement.possessionHold = false;
         }
         isPicking = false;
-
-        
-
     }
-
-
-
-
-
-
-
 }
