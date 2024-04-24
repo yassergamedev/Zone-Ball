@@ -656,7 +656,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             if(currentSeason.phase == "Season")
             {
-                Debug.Log("the wekk is :" + week);
+                Debug.Log("the week is :" + week);
                 nextWeek.SetActive(false);
                 if (week == 27)
                 {
