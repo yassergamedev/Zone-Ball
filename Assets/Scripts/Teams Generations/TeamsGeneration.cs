@@ -807,7 +807,7 @@ new("Oregon Trail Makers", false)
                             age = Random.Range(26, 29);
                             break;
                     }
-                    PlayerPersistent player = new PlayerPersistent(playerName,i, playerName, type, years, age, ovrl);
+                    PlayerPersistent player = new PlayerPersistent(playerName,i, playerName, type, years, age, ovrl,"Signed");
                     player.team = team.name;
                     playerHandler.Save(player);
                     team.players[i] = playerName;

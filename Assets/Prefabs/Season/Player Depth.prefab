@@ -161,6 +161,9 @@ MonoBehaviour:
   numberInput: {fileID: 6844989238268590160}
   Num: {fileID: 0}
   isOff: 0
+  isDepthRelated: 1
+  minValue: 4
+  maxValue: 8
 --- !u!1 &793338209009769971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,6 +1011,9 @@ MonoBehaviour:
   numberInput: {fileID: 4448750498957805957}
   Num: {fileID: 0}
   isOff: 1
+  isDepthRelated: 1
+  minValue: 4
+  maxValue: 8
 --- !u!1 &8547662967115236013
 GameObject:
   m_ObjectHideFlags: 0

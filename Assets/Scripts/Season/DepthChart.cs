@@ -61,9 +61,6 @@ public class DepthChart : MonoBehaviour, IDataPersistence
 
     public void SetPlays()
     {
-       
-
-     
         int totalPlays = 0,totalDefPlays = 0;
         List <PlayerPersistent > Playerlist = new List<PlayerPersistent>(); notice.text = "trying to save";
         for (int i = 0; i <Table.childCount; i++)
@@ -74,9 +71,9 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 playerName);
             PlayerPersistent p = player.Load();
                if(p==null)
-            {
-                notice.text = Application.persistentDataPath + "/" + gameData.id + "/Players/" + playerName;
-            }
+                {
+                    notice.text = Application.persistentDataPath + "/" + gameData.id + "/Players/" + playerName;
+                }
 
             if (p != null) { 
             int playerDeffPlays = int.Parse(Table.GetChild(i).GetChild(3).GetChild(0).GetChild(1).GetComponent<Text>().text);

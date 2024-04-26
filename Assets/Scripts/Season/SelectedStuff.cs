@@ -57,7 +57,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public GameObject AgingTeams, Roster,advanceAgingPhase;
     public GameObject nextWeek, prevWeek, startNewWeek,startNextRound,finishPlayOffs, NoGamesTab;
     public GameObject playOffsTab,StartPlayOffs;
-    public bool isNextWeekReady = true;
+    public bool isNextWeekReady = true, isSeasonFinished = false;
     public GameObject teams;
     public GameObject hasPlayedObj;
     public GameObject[] tabs;
@@ -92,7 +92,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week]?.opponent;
                 Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week]?.opponent : team.name;
                 break;
-            case "Playoffs":
+            case "PlayOffs":
                 SeasonPhase.text = "PlayOffs";
                 playOffsTab.SetActive(true);
                 switch (playOffRound)
@@ -169,7 +169,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 }
                 break;
             case "Aging":
-                weekText.text = "Aging phase";
+                SeasonPhase.text = "Aging phase";
+                isSeasonFinished = true;
                 for(int i = 0; i<tabs.Length; i++)
                 {
                     tabs[i].SetActive(false);
@@ -201,9 +202,6 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             prevWeek.SetActive(false);
             
         }
-     
-      
-           
             MatchHistory();
 
      
@@ -584,10 +582,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             ("California Lightning",false),
           
            ( "Minnesota Wolves",false),
-                       ("Nevada Magic",false),
-                                  ( "New Mexico Dragons",false),
-                                             ( "Oklahoma Stoppers",false),
-                                                ( "Washington Hornets",false),
+            ("Nevada Magic",false),
+            ( "New Mexico Dragons",false),
+            ( "Oklahoma Stoppers",false),
+            ( "Washington Hornets",false),
              ("Kansas Coyotes",false),
 
 
@@ -688,16 +686,19 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
    
  public void onClickFinishPlayOffs()
     {
-        weekText.text = "Aging phase";
+        SeasonPhase.text = "Aging phase";
+        isSeasonFinished = true;
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].SetActive(false);
         }
         AgingTeams.SetActive(true);
+        prevWeek.SetActive(false);
         Roster.SetActive(true);
         advanceAgingPhase.SetActive(true);
 
     }
+    //CHANGE THIS LATER
     public void PlayerStatsAllTime()
     {
 
@@ -1790,7 +1791,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 }
                 break;
             case "Aging":
-                weekText.text = "Aging phase";
+                SeasonPhase.text = "Aging phase";
+                teamName.text = "Champions : " + currentSeason.winner;
                 break;
             case "Resign":
                 break;
@@ -2016,7 +2018,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             {
                 notice.text = "started at " + i;
                 string playerName = Table.GetChild(i).GetChild(0).GetChild(0).GetComponent<Text>().text;
-                PlayerPersistent p =new("",1,"","",1,1,1);
+                PlayerPersistent p =new("",1,"","",1,1,1,"");
                
                     FileDataHandler<PlayerPersistent> player = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
                     playerName);

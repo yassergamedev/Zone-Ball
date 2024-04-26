@@ -38,7 +38,7 @@ public class PlayerPersistent
     public StatPersistent inside;
     public StatPersistent mid;
     public StatPersistent Outside;
-
+    public PlayerStatsPersistent stats;
     public string[] gameFlowStats;
     
 
@@ -51,7 +51,9 @@ public class PlayerPersistent
     public int plays;
     public int defPlays;
     public bool isJuked;
-    public string team, prevTeam;
+    public string team, prevTeam,status;
+    public bool hasExtended = false;
+    
     public int OPOY, DPOY, AllStarSelections, championships, draftSelections, teamDrafted;
 
     //setters for all stats
@@ -112,7 +114,7 @@ public class PlayerPersistent
     // Constructor
     public PlayerPersistent(string id, int num, string name, string type,
         int yers, int age,
-        int overall)
+        int overall, string status)
     {
 
         this.id = id;
@@ -122,10 +124,11 @@ public class PlayerPersistent
         YearsPro = yers;
         Age = age;
         ovrl = overall;
+        this.status = status;
         prevOvrl = ovrl;
         Debug.Log(ovrl);
         // based on the ovrl we distribute the stats 
-
+        hasExtended = false;
         consistency = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
         awareness = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
         juking = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
@@ -138,7 +141,7 @@ public class PlayerPersistent
         inside = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
         mid = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
         Outside = new StatPersistent(UnityEngine.Random.Range(10, ovrl));
-
+        stats = new(name);
         learning = UnityEngine.Random.Range(1, 5);
         longevity = UnityEngine.Random.Range(1, 5);
         personality = UnityEngine.Random.Range(1, 5);
