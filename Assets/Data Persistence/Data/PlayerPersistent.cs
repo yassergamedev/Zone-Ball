@@ -53,6 +53,7 @@ public class PlayerPersistent
     public bool isJuked;
     public string team, prevTeam,status;
     public bool hasExtended = false;
+    public int resignNumber = 0;
     
     public int OPOY, DPOY, AllStarSelections, championships, draftSelections, teamDrafted;
 

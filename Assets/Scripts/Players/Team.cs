@@ -7,7 +7,7 @@ public class Team : MonoBehaviour
 {
     //gameflow variables
     public int teamScore = 0;
-    public int Plays = 2;
+    public int Plays = 40;
     public GameObject PlaysText;
     public enum teamType { away, home};
 

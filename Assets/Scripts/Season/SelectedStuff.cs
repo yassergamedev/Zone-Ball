@@ -9,7 +9,9 @@ using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Unity.Collections.Unicode;
 
 public class SelectedStuff : MonoBehaviour,IDataPersistence
 {
@@ -44,6 +46,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Transform Content;
     public Transform TeamSeasonStatsContent;
     public Transform PlayersStatsContent;
+    public GameObject DraftPlayer, DraftSalary, FAbid, DraftTeam, Vacancy, DraftTable,FATable;
+    public RandomNameGenerator rng;
     public GameObject MatchDetail;
     public bool isActiveTable = false;
     public bool isGamePlayed =false;
@@ -54,8 +58,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public SceneStuff sceneStuff;
     public GameObject seasonRecords;
     public GameObject careerRecords;
-    public GameObject AgingTeams, Roster,advanceAgingPhase;
-    public GameObject nextWeek, prevWeek, startNewWeek,startNextRound,finishPlayOffs, NoGamesTab;
+    public GameObject AgingTeams, Roster,advanceAgingPhase, DraftTeams,DraftRound2;
+    public GameObject nextWeek, prevWeek, startNewWeek,startNextRound,finishPlayOffs,startFAphase,startNewSeason, NoGamesTab;
     public GameObject playOffsTab,StartPlayOffs;
     public bool isNextWeekReady = true, isSeasonFinished = false;
     public GameObject teams;
@@ -88,6 +92,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             case "Season":
                 int weekNum = week + 1;
+                SeasonPhase.text = currentSeason.id;
                 weekText.text = "Week " + weekNum;
                 Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week]?.opponent;
                 Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week]?.opponent : team.name;
@@ -169,22 +174,241 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 }
                 break;
             case "Aging":
-                SeasonPhase.text = "Aging phase";
+                SeasonPhase.text = "Aging/Resign phase";
                 isSeasonFinished = true;
                 for(int i = 0; i<tabs.Length; i++)
                 {
                     tabs[i].SetActive(false);
                 }
+                prevWeek.SetActive(false);
+                finishPlayOffs.SetActive(false);
                 AgingTeams.SetActive(true);
                 Roster.SetActive(true);
                  advanceAgingPhase.SetActive(true);
 
                 break;
-            case "Resign":
+            case "Draft R1":
+                prevWeek.SetActive(false);
+                for (int i = 0; i < tabs.Length; i++)
+                {
+                    tabs[i].SetActive(false);
+                }
+                advanceAgingPhase.SetActive(false);
+                SeasonPhase.text = "Draft R1";
+                Roster.SetActive(false);
+                DraftTable.SetActive(true);
+                prevWeek.SetActive(false);
+                AgingTeams.SetActive(false);
+                DraftTeams.SetActive(true);
+                DraftRound2.SetActive(true);
+                Vector2 sizeDelta = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+                sizeDelta.y = 4000;
+                DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+                DraftTable.name = gameData.id;
+                FileDataHandler<PlayerPersistent> playerHandlerr = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", "");
+                List<string> playersDrafted = playerHandlerr.GetAllFiles();
+                for (int i = 0; i < 20; i++)
+                {
+                    FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", playersDrafted[i]);
+                    PlayerPersistent player = playerHandler.Load();
+                    GameObject playerInfo = Instantiate(DraftPlayer, DraftTable.transform);
+
+                    playerInfo.name = playersDrafted[i];
+                    playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+                    playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+                    playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                    playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
+                        + "(" + (player.consistency.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
+                          + "(" + (player.awareness.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
+                          + "(" + (player.juking.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
+                          + "(" + (player.control.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
+                          + "(" + (player.shooting.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
+                          + "(" + (player.positioning.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
+                          + "(" + (player.steal.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
+                          + "(" + (player.guarding.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
+                          + "(" + (player.pressure.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
+                          + "(" + (player.inside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
+                          + "(" + (player.mid.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
+                          + "(" + (player.Outside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+                    GameObject playerContract = Instantiate(DraftSalary, DraftTable.transform);
+                    playerContract.name = player.Name + " Draft";
+                   
+                        playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "10000";
+                    
+                     
+
+                    
+
+                    GameObject draftTeam = Instantiate(DraftTeam, DraftTable.transform);
+                  
+                }
                 break;
-            case "Draft":
+            case "Draft R2":
+                prevWeek.SetActive(false);
+                for (int i = 0; i < tabs.Length; i++)
+                {
+                    tabs[i].SetActive(false);
+                }
+                SeasonPhase.text = "Draft R2";
+                Roster.SetActive(false);
+                DraftTable.SetActive(true);
+                AgingTeams.SetActive(false);
+                DraftTeams.SetActive(true);
+                prevWeek.SetActive(false);
+                startFAphase.SetActive(true);
+                Vector2 sizeDeltaa = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+                sizeDeltaa.y = 4000;
+                DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDeltaa;
+                DraftTable.name = gameData.id;
+                FileDataHandler<PlayerPersistent> playerHandlerrr = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R2/", "");
+                List<string> playersDraftedd = playerHandlerrr.GetAllFiles();
+                for (int i = 0; i < 20; i++)
+                {
+                    FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R2/", playersDraftedd[i]);
+                    PlayerPersistent player = playerHandler.Load();
+                    GameObject playerInfo = Instantiate(DraftPlayer, DraftTable.transform);
+
+                    playerInfo.name = playersDraftedd[i];
+                    playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+                    playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+                    playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                    playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
+                        + "(" + (player.consistency.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
+                          + "(" + (player.awareness.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
+                          + "(" + (player.juking.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
+                          + "(" + (player.control.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
+                          + "(" + (player.shooting.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
+                          + "(" + (player.positioning.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
+                          + "(" + (player.steal.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
+                          + "(" + (player.guarding.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
+                          + "(" + (player.pressure.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
+                          + "(" + (player.inside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
+                          + "(" + (player.mid.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
+                          + "(" + (player.Outside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+                    GameObject playerContract = Instantiate(DraftSalary, DraftTable.transform);
+                    playerContract.name = player.Name + " Draft";
+
+                    playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "5000";
+
+                    GameObject draftTeam = Instantiate(DraftTeam, DraftTable.transform);
+                }
                 break;
             case "FA":
+                prevWeek.SetActive(false);
+                for (int i = 0; i < tabs.Length; i++)
+                {
+                    tabs[i].SetActive(false);
+                }
+                SeasonPhase.text = "FA phase";
+                startNewSeason.SetActive(true);
+                DraftTeams.SetActive(true) ;
+                FileDataHandler<PlayerPersistent> playersHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", "");
+                List<string> allPlayers = playersHandler.GetAllFiles();
+
+                Vector2 sizeDeltaaa = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+                sizeDeltaaa.y = 150* allPlayers.Count;
+                DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDeltaaa;
+                for (int i = 0; i < allPlayers.Count; i++)
+                {
+                    FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", allPlayers[i]);
+                    PlayerPersistent player = playerHandler.Load();
+                    if (player.status == "FA")
+                    {
+                        GameObject playerInfo = Instantiate(DraftPlayer, FATable.transform);
+
+
+                        playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+                        playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+                        playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                        playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString();
+
+                        playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString();
+
+                        playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString();
+
+                        playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString();
+
+                        playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString();
+
+                        playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString();
+
+                        playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString();
+
+                        playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString();
+
+                        playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString();
+
+                        playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString();
+
+                        playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString();
+
+                        playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString();
+
+                        playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+                        GameObject playerContract = Instantiate(FAbid, FATable.transform);
+                        playerContract.name = player.Name + " FA";
+
+                        playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = calcSalary(player.ovrl).ToString();
+
+
+                        GameObject draftTeam = Instantiate(DraftTeam, FATable.transform);
+                        draftTeam.name = player.Name;
+                    }
+                }
                 break;
 
         }
@@ -215,11 +439,203 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         
     }
 
-
-    public void onClickStartResignPhase()
+    public void onClickStartNewSeason()
     {
-        currentSeason.phase = "Resign";
+        FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");
+        CurrentGame current = currHandler.Load();
+       
+        current.week = 1;
 
+        int year = int.Parse(current.currentSeason.Replace("Season ", "")) + 1;
+        current.currentSeason = "Season " + year;
+        currHandler.Save(current);
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Season " + year + "/", "Season " + year);
+        Season season = new("Season " + year, year.ToString(), "League " + year);
+        seasonHandler.Save(season);
+
+        FileDataHandler<TeamPersistent> teamsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", "");
+        List<string> teams = teamsHandler.GetAllFiles();
+        FileDataHandler<GameData> gameHandler = new(Application.persistentDataPath + "/" + gameData.id, gameData.id);
+        GameData gamedata = gameHandler.Load();
+        gamedata.seasons.Add("Season " + year);
+        gamedata.currentSeason = "Season " + year;
+        gameHandler.Save(gamedata);
+        for (int i = 0;i<teams.Count;i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", teams[i]);
+            TeamPersistent team = teamHandler.Load();
+
+            for(int k = 0;k<team.matchesPlayed.Count;k++)
+            {
+                team.matchesPlayed[k].isPlayed = false;
+                team.matchesPlayed[k].isReady = false;
+
+            }
+            team.playOffMatches = new();
+            teamHandler.Save(team);
+        }
+        SceneManager.LoadScene("Season");
+    }
+    public void onClickStartFA()
+    {
+        SeasonPhase.text = "FA Phase";
+        DraftTable.SetActive(false);
+        DraftRound2.SetActive(false);
+        startFAphase.SetActive(false);
+        startNewSeason.SetActive(true);
+
+        
+        DraftTable.name = gameData.id;
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+
+        currentSeason.phase = "FA";
+        seasonHandler.Save(currentSeason);
+
+        FileDataHandler<PlayerPersistent> playersHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", "");
+        List<string> allPlayers = playersHandler.GetAllFiles();
+
+        Vector2 sizeDelta = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+        sizeDelta.y = 150* allPlayers.Count;
+        DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        for (int i = 0; i<allPlayers.Count; i++)
+        {
+            FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", allPlayers[i]);
+            PlayerPersistent player = playerHandler.Load();
+            if(player.status == "FA")
+            {
+                GameObject playerInfo = Instantiate(DraftPlayer, FATable.transform);
+
+              
+                playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+                playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+                playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString();
+
+                playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString();
+
+                playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString();
+
+                playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString();
+
+                playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString();
+
+                playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString();
+
+                playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString();
+
+                playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString();
+
+                playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString();
+
+                playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString();
+
+                playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString();
+
+                playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString();
+
+                playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+                GameObject playerContract = Instantiate(FAbid, FATable.transform);
+                playerContract.name = player.Name + " FA";
+
+                 playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = calcSalary(player.ovrl).ToString();
+
+
+                GameObject draftTeam = Instantiate(DraftTeam, FATable.transform);
+            }
+        }
+    }
+
+    public int calcSalary(int ovrl)
+    {
+        int salary = 10000;
+        if (ovrl >= 90)
+        {
+            salary = 100000;
+        }
+        else
+        {
+            if (ovrl >= 85)
+            {
+                salary = 95000;
+
+            }
+            else
+            {
+                if (ovrl >= 80)
+                {
+                    salary = 90000;
+                }
+                else
+                {
+                    if (ovrl >= 75)
+                    {
+                        salary = 80000;
+                    }
+                    else
+                    {
+                        if (ovrl >= 70)
+                        {
+                            salary = 70000;
+                        }
+                        else
+                        {
+                            if (ovrl >= 65)
+                            {
+                                salary = 60000;
+                            }
+                            else
+                            {
+                                if (ovrl >= 60)
+                                {
+                                    salary = 50000;
+                                }
+                                else
+                                {
+                                    if (ovrl >= 55)
+                                    {
+                                        salary = 40000;
+                                    }
+                                    else
+                                    {
+                                        if (ovrl >= 50)
+                                        {
+                                            salary = 30000;
+                                        }
+                                        else if (ovrl >= 45)
+                                        {
+                                            salary = 20000;
+                                        }
+                                        else
+                                        {
+                                            if (ovrl >= 40)
+                                            {
+                                                salary = 15000;
+                                            }
+                                            else
+                                            {
+                                                if (ovrl >= 31)
+                                                {
+                                                    salary = 10000;
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        return salary;
     }
     public void SaveData(ref GameData go) { }
     public void MatchHistory()
@@ -304,7 +720,35 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         else
         {
             isGamePlayed = false;
-            isGameReady.text = selTeam.matchesPlayed[week].isReady ? "Ready" : "Not Ready";
+                FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.name);
+                if (!selTeam.matchesPlayed[week].isReady)
+                {
+                    int totalPlays = 0;
+                    int totalDefPlays = 0;
+                    for (int i = 0; i < selTeam.players.Length; i++)
+                    {
+                        if(selTeam.players[i]!="")
+                        {
+                            FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", selTeam.players[i]);
+                            PlayerPersistent playerPersistent = playerHandler.Load();
+
+                            totalPlays += playerPersistent.plays;
+                            totalDefPlays += playerPersistent.defPlays;
+                        }
+                        
+                    }
+                   
+                    if (totalPlays == 40 && totalDefPlays == 40 )
+                    {
+                        selTeam.matchesPlayed[week].isReady = true;
+                        
+                        teamHandler.Save(selTeam);
+
+                    }
+                }
+               
+
+                isGameReady.text = selTeam.matchesPlayed[week].isReady ? "Ready" : "Not Ready";
         }
 
         }
@@ -391,6 +835,38 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     Home.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.name : selTeam.playOffMatches[playOffRound]?.opponent;
                     Guest.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound]?.opponent : selTeam.name;
                     isGamePlayed = false;
+                    if (!selTeam.playOffMatches[playOffRound].isReady)
+                    {
+                        FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.name);
+                        int totalPlays = 0;
+                        int totalDefPlays = 0;
+                        for (int i = 0; i < selTeam.players.Length; i++)
+                        {
+                            FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", selTeam.players[i]);
+                            PlayerPersistent playerPersistent = playerHandler.Load();
+                            totalPlays += playerPersistent.plays;
+                            totalDefPlays += playerPersistent.defPlays;
+                        }
+                        int totalOtherTeamsPlays = 0;
+                        int totalOtherTeamDefPlays = 0;
+
+                        FileDataHandler<TeamPersistent> otherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
+                        TeamPersistent otherTeam = otherTeamHandler.Load();
+                        for (int i = 0; i < otherTeam.players.Length; i++)
+                        {
+                            FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", otherTeam.players[i]);
+                            PlayerPersistent playerPersistent = playerHandler.Load();
+                            totalOtherTeamsPlays += playerPersistent.plays;
+                            totalOtherTeamDefPlays += playerPersistent.defPlays;
+                        }
+                        if (totalPlays == 40 && totalDefPlays == 40 && totalOtherTeamsPlays == 40 && totalOtherTeamDefPlays == 40)
+                        {
+                            selTeam.playOffMatches[playOffRound].isReady = true;
+                            otherTeam.playOffMatches[playOffRound].isReady = true;
+                            teamHandler.Save(selTeam);
+                            otherTeamHandler.Save(otherTeam);
+                        }
+                    }
                     isGameReady.text = selTeam.playOffMatches[playOffRound].isReady ? "Ready" : "Not Ready";
                 }
             }
@@ -580,16 +1056,12 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             ("Wisconsin Crows",false),
             ("Arizona Jaguars",false),
             ("California Lightning",false),
-          
            ( "Minnesota Wolves",false),
             ("Nevada Magic",false),
             ( "New Mexico Dragons",false),
             ( "Oklahoma Stoppers",false),
             ( "Washington Hornets",false),
              ("Kansas Coyotes",false),
-
-
-
            ( "Oregon Trail Makers",false),
             ("Texas Rattlesnakes",false),
         
@@ -598,9 +1070,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             for (int i = 0; i<teamsPlay.Length;i++)
             {
+                Debug.Log(teamsPlay[i].Item1);
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", teamsPlay[i].Item1);
             TeamPersistent teamPersistent = teamHandler.Load();
-            
+                Debug.Log("week: " + teamPersistent.name);
                 if (teamPersistent.matchesPlayed[week].isPlayed)
                 {
                     Debug.Log("team " + teamPersistent.name + "'s match is played");
@@ -682,16 +1155,190 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         StartCoroutine(stretch(teams.transform));
     }
 
+    public void onClickStartDraftingPhase(string round)
+    {
+      for(int i = 0; i < DraftTable.transform.childCount;i++)
+        {
+            if(DraftTable.transform.GetChild(i).name != "Header")
+            {
+                Destroy(DraftTable.transform.GetChild(i).gameObject);
+            }
+        }
 
+            SeasonPhase.text = round;
+        advanceAgingPhase.SetActive(false);
+        Roster.SetActive(false);
+        DraftTable.SetActive(true);
+        AgingTeams.SetActive(false);
+        DraftTeams.SetActive(true);
+        if(round == "Draft R1")
+        {
+            DraftRound2.SetActive(true);
+        }
+        else
+        {
+            startFAphase.SetActive(true) ;
+        }
+      
+        Vector2 sizeDelta = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+        sizeDelta.y = 4000;
+        DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        DraftTable.name = gameData.id;
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+        
+        currentSeason.phase = round;
+        seasonHandler.Save(currentSeason);
+       
+
+        for (int i = 0;i<20;i++)
+        {
+
+            string playerName = rng.GenerateRandomPlayerName();
+            FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/"+ currentSeason.id +"/"+round+"/", playerName);
+            string type = "";
+            int randomNum = UnityEngine.Random.Range(0, 10);
+            if (randomNum < 5)
+            {
+                type = "off";
+            }
+            else
+            {
+                type = "def";
+            }
+            int ovrl = 31;
+            if (round == "Draft R1")
+            {
+                ovrl = UnityEngine.Random.Range(35, 40);
+            }
+            else
+            {
+                 
+                ovrl = UnityEngine.Random.Range(31, 46);
+
+            }
+            
+            int age = UnityEngine.Random.Range(18, 21);
+            PlayerPersistent player = new PlayerPersistent(playerName, i, playerName, type, 0, age, ovrl, "Signed");
+
+
+
+            GameObject playerInfo = Instantiate(DraftPlayer, DraftTable.transform);
+
+            playerInfo.name = playerName;
+            playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+            playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+            playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+            playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
+                + "(" + (player.consistency.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
+                  + "(" + (player.awareness.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
+                  + "(" + (player.juking.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
+                  + "(" + (player.control.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
+                  + "(" + (player.shooting.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
+                  + "(" + (player.positioning.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
+                  + "(" + (player.steal.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
+                  + "(" + (player.guarding.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
+                  + "(" + (player.pressure.potential).ToString() + ")";
+
+            playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
+                  + "(" + (player.inside.potential ).ToString() + ")";
+
+            playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
+                  + "(" + (player.mid.potential).ToString() + ")";
+     
+            playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
+                  + "(" + (player.Outside.potential ).ToString() + ")";
+
+            playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+            GameObject playerContract = Instantiate(DraftSalary, DraftTable.transform);
+            playerContract.name = player.Name + " Draft";
+            if(round == "Draft R1")
+            {
+                playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "10000";
+            }
+            else
+            {
+                playerContract.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "5000";
+            }
+            
+            playerHandler.Save(player);
+
+            GameObject draftTeam = Instantiate(DraftTeam, DraftTable.transform);
+
+        }
+    }
    
  public void onClickFinishPlayOffs()
     {
-        SeasonPhase.text = "Aging phase";
+        string[] west =
+ {
+            "Arizona Jaguars",
+            "California Lightning",
+            "Kansas Coyotes",
+            "Minnesota Wolves",
+            "Nevada Magic",
+            "New Mexico Dragons",
+            "Oklahoma Stoppers",
+            "Oregon Trail Makers",
+            "Texas Rattlesnakes",
+            "Washington Hornets",
+
+            "Alabama Alligators",
+            "Florida Dolphins",
+            "Georgia Bears",
+            "Maryland Sharks",
+            "Michigan Warriors",
+            "New York Owls",
+            "Ohio True Frogs",
+            "Pennsylvania Rush",
+            "Virginia Bobcats",
+            "Wisconsin Crows"
+        };
+
+        for(int i =0;i<west.Length;i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", west[i]);
+            TeamPersistent team = teamHandler.Load();
+            for(int k = 0; k<team.players.Length;k++)
+            {
+                if (team.players[k]!="")
+                {
+                    FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", team.players[k]);
+                    PlayerPersistent player = playerHandler.Load();
+
+                    player.resignNumber = UnityEngine.Random.Range(1, 7) + player.personality;
+                    playerHandler.Save(player);
+                }
+            }
+        }
+        SeasonPhase.text = "Aging/Resign phase";
+        currentSeason.phase = "Aging";
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+        seasonHandler.Save(currentSeason);
         isSeasonFinished = true;
         for (int i = 0; i < tabs.Length; i++)
         {
             tabs[i].SetActive(false);
         }
+
+        finishPlayOffs.SetActive(false);
         AgingTeams.SetActive(true);
         prevWeek.SetActive(false);
         Roster.SetActive(true);
@@ -943,7 +1590,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                     FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                     PlayerPersistent p = plHandler.Load();
-                    row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+                  //  row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team!=null?p.team:"";
                 b++;
             }
 
@@ -1078,7 +1725,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                 FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                 PlayerPersistent p = plHandler.Load();
-                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+               // row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
                 b++;
             }
 
@@ -1212,7 +1859,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                 FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                 PlayerPersistent p = plHandler.Load();
-                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
+                //row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;
                 b++;
             }
 
@@ -1747,7 +2394,15 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         yield return new WaitForSeconds(0.2f);
         Content.gameObject.SetActive(true);
     }
-    public void SetSelectedTeam(GameObject team)
+    public void SetSelectedTeamName(GameObject team)
+    {
+        teamName.text = team.name;
+        selectedTeam = team;
+        FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
+        TeamPersistent teamm = teamLoader.Load();
+        marketCap.text = teamm.salaryCap.ToString();
+    }
+        public void SetSelectedTeam(GameObject team)
     {
         noGameToBePlayed = false;
         selectedTeam = team;
@@ -1759,9 +2414,23 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
        
         FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
         TeamPersistent teamm = teamLoader.Load();
+        List<PlayerPersistent> players = new();
+        for (int i = 0; i < teamm.players.Length; i++)
+        {
+            if (teamm.players[i] != "")
+            {
+                FileDataHandler<PlayerPersistent> _playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", teamm.players[i]);
+                PlayerPersistent player = _playerHandler.Load();
+                Debug.Log(player.Name);
+                players.Add(player);
+                Debug.Log(players[i].Name);
+            }
+        }
         depthChart.team = teamm;
+        depthChart.players = players;
         selTeam = teamm;
-        depthChart.GenerateDepthChart(teamNameString);
+        StartCoroutine(depthChart.GenerateDepthChart(teamNameString));
+    
         teamName.text = teamm.name;
         marketCap.text = teamm.salaryCap.ToString();
 
@@ -1776,6 +2445,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         switch (currentSeason.phase)
         {
             case "Season":
+                Debug.Log("week " + week);
                 Home.text = teamm.matchesPlayed[week].isHome ? teamm.name : teamm.matchesPlayed[week]?.opponent;
                 Guest.text = teamm.matchesPlayed[week].isHome ? teamm.matchesPlayed[week]?.opponent : teamm.name;
                 break;
@@ -1789,12 +2459,6 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     Home.text = teamm.playOffMatches[playOffRound].isHome ? teamm.name : teamm.playOffMatches[playOffRound]?.opponent;
                     Guest.text = teamm.playOffMatches[playOffRound].isHome ? teamm.playOffMatches[playOffRound]?.opponent : team.name;
                 }
-                break;
-            case "Aging":
-                SeasonPhase.text = "Aging phase";
-                teamName.text = "Champions : " + currentSeason.winner;
-                break;
-            case "Resign":
                 break;
             case "Draft":
                 break;

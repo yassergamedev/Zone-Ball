@@ -14,6 +14,7 @@ public class TeamPersistent
     public int salaryCap = 350000;
     public int playstyle;
     public string start;
+    public bool round1=false,round2=false;
     public int pointsScored,
         pointsAllowed,
         turnovers,

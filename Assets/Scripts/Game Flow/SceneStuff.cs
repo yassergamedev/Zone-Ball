@@ -55,4 +55,10 @@ public class SceneStuff : MonoBehaviour
         // Deactivate the loading UI once the scene is fully loaded
         loadingUI.SetActive(false);
     }
+    public void ExitGame()
+    {
+        
+            Application.Quit();
+        
+    }
 }

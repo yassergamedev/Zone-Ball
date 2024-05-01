@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
+
 public class FileDataHandler<T>
 {
     private string DataDirPath = "";
@@ -19,24 +19,21 @@ public class FileDataHandler<T>
     {
         string fullPath = Path.Combine(DataDirPath, DataFileName);
         T loadedData = default;
-        if(File.Exists(fullPath))
+        if (File.Exists(fullPath))
         {
-            
             try
             {
                 string dataToLoad = "";
-                
                 using (FileStream fs = new FileStream(fullPath, FileMode.Open))
                 {
-                    using(StreamReader reader = new StreamReader(fs))
+                    using (StreamReader reader = new StreamReader(fs))
                     {
                         dataToLoad = reader.ReadToEnd();
                     }
                 }
-                
                 loadedData = JsonUtility.FromJson<T>(dataToLoad);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogError("Error loading file: " + e.Message);
             }
@@ -61,9 +58,56 @@ public class FileDataHandler<T>
                     writer.Write(dataToStore);
                 }
             }
-        }catch(Exception e)
+        }
+        catch (Exception e)
         {
             Debug.LogError("Error saving file: " + e.Message);
         }
+    }
+
+    public void Delete()
+    {
+        string fullPath = Path.Combine(DataDirPath, DataFileName);
+        try
+        {
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+                Debug.Log("File deleted: " + DataFileName);
+            }
+            else
+            {
+                Debug.LogWarning("File not found: " + DataFileName);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error deleting file: " + e.Message);
+        }
+    }
+
+    public List<string> GetAllFiles()
+    {
+        List<string> files = new List<string>();
+        try
+        {
+            if (Directory.Exists(DataDirPath))
+            {
+                string[] fileEntries = Directory.GetFiles(DataDirPath);
+                foreach (string fileName in fileEntries)
+                {
+                    files.Add(Path.GetFileName(fileName));
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Directory not found: " + DataDirPath);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error getting files: " + e.Message);
+        }
+        return files;
     }
 }
