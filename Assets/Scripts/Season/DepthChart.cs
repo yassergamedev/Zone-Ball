@@ -24,7 +24,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
    
     public void SaveData(ref GameData data) { }
     // Start is called before the first frame update
-    public IEnumerator GenerateDepthChart(string selectedTeam)
+    public void GenerateDepthChart(string selectedTeam)
     {
         
         off.text = "40";
@@ -35,7 +35,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 Destroy(Table.GetChild(i).gameObject);
         }
        
-        yield return new WaitForSeconds(1f);
+       
         Vector2 sizeDelta = Table.transform.GetComponent<RectTransform>().sizeDelta;
         sizeDelta.y = (players.Count+1) * 50;
         Table.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;

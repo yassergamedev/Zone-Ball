@@ -7,6 +7,9 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Main Menu.unity
+    guid: da66df69f6cc16947b79d3d3e42dc6bc
+  - enabled: 1
+    path: Assets/Scenes/League Menu.unity
     guid: ed4722147f0d8544ab6e3a7fb6024a4b
   - enabled: 1
     path: Assets/Scenes/New Game.unity

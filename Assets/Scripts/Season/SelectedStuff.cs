@@ -2429,7 +2429,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         depthChart.team = teamm;
         depthChart.players = players;
         selTeam = teamm;
-        StartCoroutine(depthChart.GenerateDepthChart(teamNameString));
+       depthChart.GenerateDepthChart(teamNameString);
     
         teamName.text = teamm.name;
         marketCap.text = teamm.salaryCap.ToString();
