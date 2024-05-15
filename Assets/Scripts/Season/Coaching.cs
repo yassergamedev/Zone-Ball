@@ -20,6 +20,6 @@ public class Coaching : MonoBehaviour, IDataPersistence
         team.DC = dc;
         team.OC = oc;
         teamHandler.Save(team);
-        Debug.Log("Save done, presumabley");
+        Debug.Log("Save done");
     }
 }
