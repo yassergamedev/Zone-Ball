@@ -13,6 +13,7 @@ public class TeamsGeneration : MonoBehaviour,IDataPersistence
     public Transform Teamstable;
     public Transform Playerstable;
     public RandomNameGenerator rng;
+    public GameObject salCap, totalPlays, maxPlays, minPlays;
     private Transform[] TeamsRows;
     private Transform[] PlayersRows;
     private TeamPersistent selectedTeam;
@@ -881,4 +882,61 @@ new("Oregon Trail Makers", false)
         
     }
 
+    public void StartSeason()
+    {
+        FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
+        CurrentGame currGame = gameDataHandler.Load();
+
+
+        currGame.SalaryCap = int.Parse(salCap.GetComponent<InputField>().text);
+        currGame.gamePlays = int.Parse(totalPlays.GetComponent<InputField>().text);
+        currGame.maxPlays = int.Parse(maxPlays.GetComponent<InputField>().text);
+        currGame.minPlays = int.Parse(minPlays.GetComponent<InputField>().text);
+
+        gameDataHandler.Save(currGame);
+        string[] west =
+      {
+            "Arizona Jaguars",
+            "California Lightning",
+            "Kansas Coyotes",
+            "Minnesota Wolves",
+            "Nevada Magic",
+            "New Mexico Dragons",
+            "Oklahoma Stoppers",
+            "Oregon Trail Makers",
+            "Texas Rattlesnakes",
+            "Washington Hornets"
+        };
+        string[] east =
+        {
+            "Alabama Alligators",
+            "Florida Dolphins",
+            "Georgia Bears",
+            "Maryland Sharks",
+            "Michigan Warriors",
+            "New York Owls",
+            "Ohio True Frogs",
+            "Pennsylvania Rush",
+            "Virginia Bobcats",
+            "Wisconsin Crows"
+        };
+
+        for(int i =0;i<west.Length; i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath +"/"+ gameData.id+ "/Teams/" , west[i]);
+            TeamPersistent team = teamHandler.Load();
+            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            team.salaryCap += difference;
+            teamHandler.Save(team);
+        }
+        for (int i = 0; i < east.Length; i++)
+        {
+            FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", east[i]);
+            TeamPersistent team = teamHandler.Load();
+            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            team.salaryCap += difference;
+            teamHandler.Save(team);
+        }
+
+    }
 }

@@ -10,9 +10,13 @@ public class NumberValidation : MonoBehaviour
     public int minValue = 4;
     public int maxValue = 8;
     private int oldestValue = 0;
-
+    CurrentGame currGame;
     private void Start()
     {
+        FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
+        currGame = gameDataHandler.Load();
+        minValue = currGame.minPlays;
+        maxValue = currGame.maxPlays;
         // Subscribe to the onEndEdit event
         numberInput.onEndEdit.AddListener(OnEndEditHandler);
         if(isDepthRelated)

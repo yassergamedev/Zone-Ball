@@ -16,19 +16,24 @@ public class DepthChart : MonoBehaviour, IDataPersistence
     public Text off, def,notice;
     public SceneStuff sceneStuff;
     public List<PlayerPersistent> players;
+    CurrentGame currGame;
     public void LoadData(GameData data)
     {
         gameData = data;
         Table.name = gameData.id;
+        FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
+         currGame = gameDataHandler.Load();
+
+        notice.text = "Players Total of plays must equal " + currGame.maxPlays.ToString();
     }
-   
+
     public void SaveData(ref GameData data) { }
     // Start is called before the first frame update
     public void GenerateDepthChart(string selectedTeam)
     {
         
-        off.text = "40";
-        def.text = "40";
+        off.text = currGame.maxPlays.ToString();
+        def.text = currGame.maxPlays.ToString();
         for (int i = 0; i < Table.childCount; i++)
         {
             
@@ -108,7 +113,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
             }
         }
         notice.text = "finished going through table";
-        if (totalPlays == 40 && totalDefPlays == 40) {
+        if (totalPlays == currGame.maxPlays && totalDefPlays == currGame.maxPlays) {
             foreach(PlayerPersistent player in Playerlist)
             {
                 FileDataHandler<PlayerPersistent> handler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",

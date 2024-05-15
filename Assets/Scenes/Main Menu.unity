@@ -556,6 +556,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: Load Game
       objectReference: {fileID: 0}
+    - target: {fileID: 8567777072414476202, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 9117611888412566569, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_Color.b
       value: 0.057770588
@@ -610,6 +614,10 @@ MonoBehaviour:
     hour: 
     min: 
     sec: 
+    SalaryCap: 0
+    gamePlays: 0
+    minPlays: 0
+    maxPlays: 0
     game:
       opponent: 
       isHome: 0
@@ -853,6 +861,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: Exit Game
       objectReference: {fileID: 0}
+    - target: {fileID: 8567777072414476202, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 9117611888412566569, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_Color.b
       value: 0.057770588
@@ -902,6 +914,10 @@ MonoBehaviour:
     hour: 
     min: 
     sec: 
+    SalaryCap: 0
+    gamePlays: 0
+    minPlays: 0
+    maxPlays: 0
     game:
       opponent: 
       isHome: 0
@@ -1073,6 +1089,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: New Game
       objectReference: {fileID: 0}
+    - target: {fileID: 8567777072414476202, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 9117611888412566569, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_Color.b
       value: 0.057770588
@@ -1122,6 +1142,10 @@ MonoBehaviour:
     hour: 
     min: 
     sec: 
+    SalaryCap: 0
+    gamePlays: 0
+    minPlays: 0
+    maxPlays: 0
     game:
       opponent: 
       isHome: 0
@@ -1252,6 +1276,10 @@ PrefabInstance:
     - target: {fileID: 8567777072414476202, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_Text
       value: Options
+      objectReference: {fileID: 0}
+    - target: {fileID: 8567777072414476202, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 9117611888412566569, guid: 9bbc4d6985b303e4a8a00a1dc2038e78, type: 3}
       propertyPath: m_Color.b

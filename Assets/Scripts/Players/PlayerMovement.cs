@@ -150,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
                 StartCoroutine(MovementLogic());
             }else
             {
-                Debug.Log(gameObject.name + " still holding");
+               
             }
 
         }

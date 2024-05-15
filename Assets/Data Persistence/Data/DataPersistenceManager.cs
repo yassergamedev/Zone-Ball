@@ -84,7 +84,13 @@ public class DataPersistenceManager : MonoBehaviour
         {
            current.currentGame = gameDataId;
             current.week = 1;
-
+            current.game = null;
+            current.day = DateTime.Now.Day.ToString();
+            current.month = DateTime.Now.Month.ToString();
+            current.year = DateTime.Now.Year.ToString();
+            current.hour = DateTime.Now.Hour.ToString();
+            current.min = DateTime.Now.Minute.ToString();
+            current.sec = DateTime.Now.Second.ToString();
         }
         else
         {
@@ -183,6 +189,7 @@ public class CurrentGame
     public string currentSeason;
     public int week;
     public string day, month, year, hour, min, sec;
+    public int SalaryCap = 360000, gamePlays = 40, minPlays = 4, maxPlays = 8; 
     public MatchPlayed game;
     public CurrentGame(string currentGame, string currentSeason)
     {

@@ -110,7 +110,7 @@ public class PlayerActions : MonoBehaviour
             case "Major Foul":   
                 
                 ShowFloatingTextPrefab(flTexts.chooseRandom("majorFoul"));
-                soundManager.PlayeWhistle();
+                soundManager.PlayWhistle();
                 CommentaryObject.transform.Translate(new Vector3(0,0.5f,0));
                 // Wait until space key is pressed
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
@@ -126,7 +126,7 @@ public class PlayerActions : MonoBehaviour
                 
                    
                 ShowFloatingTextPrefab(flTexts.chooseRandom("minorFoul"));
-                soundManager.PlayeWhistle();
+                soundManager.PlayWhistle();
                 // Wait until space key is pressed
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
