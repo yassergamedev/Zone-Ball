@@ -793,19 +793,89 @@ new("Oregon Trail Makers", false)
                     switch (experienceOptionChoice)
                     {
                         case "Young":
-                            ovrl = Random.Range(31, 40);
-                            years = Random.Range(1, 3);
-                            age = Random.Range(18, 21);
+                            int randomGenerationNum = Random.Range(0, 10);
+                            if(randomGenerationNum <= 7)
+                            {
+                                ovrl = Random.Range(31, 40);
+                                years = Random.Range(1, 3);
+                                age = Random.Range(18, 21);
+                            }
+                            else
+                            {
+                                if(randomGenerationNum == 8)
+                                {
+                                    ovrl = Random.Range(41, 50);
+                                    years = Random.Range(3, 6);
+                                    age = Random.Range(22, 25);
+                                }
+                                else
+                                {
+                                    if(randomGenerationNum == 9)
+                                    {
+                                        ovrl = Random.Range(51, 60);
+                                        years = Random.Range(6, 9);
+                                        age = Random.Range(26, 29);
+                                    }
+                                }
+                            }
+                            
                             break;
                         case "Average":
-                            ovrl = Random.Range(41, 50);
-                            years = Random.Range(3, 6);
-                            age = Random.Range(22, 25);
+                            int randomGenerationNum1 = Random.Range(0, 10);
+                            if (randomGenerationNum1 <= 7)
+                            {
+                                
+                                ovrl = Random.Range(41, 50);
+                                years = Random.Range(3, 6);
+                                age = Random.Range(22, 25);
+                            }
+                            else
+                            {
+                                if (randomGenerationNum1 == 8)
+                                {
+                                    ovrl = Random.Range(31, 40);
+                                    years = Random.Range(1, 3);
+                                    age = Random.Range(18, 21);
+                                }
+                                else
+                                {
+                                    if (randomGenerationNum1 == 9)
+                                    {
+                                        ovrl = Random.Range(51, 60);
+                                        years = Random.Range(6, 9);
+                                        age = Random.Range(26, 29);
+                                    }
+                                }
+                            }
                             break;
                         case "Experienced":
-                            ovrl = Random.Range(51, 60);
-                            years = Random.Range(6, 9);
-                            age = Random.Range(26, 29);
+                            int randomGenerationNum2 = Random.Range(0, 10);
+                            if (randomGenerationNum2 <= 7)
+                            {
+
+                                
+                                ovrl = Random.Range(51, 60);
+                                years = Random.Range(6, 9);
+                                age = Random.Range(26, 29);
+                            }
+                            else
+                            {
+                                if (randomGenerationNum2 == 8)
+                                {
+                                    ovrl = Random.Range(31, 40);
+                                    years = Random.Range(1, 3);
+                                    age = Random.Range(18, 21);
+                                }
+                                else
+                                {
+                                    if (randomGenerationNum2 == 9)
+                                    {
+                                        ovrl = Random.Range(41, 50);
+                                        years = Random.Range(3, 6);
+                                        age = Random.Range(22, 25);
+                                    }
+                                }
+                            }
                             break;
                     }
                     PlayerPersistent player = new PlayerPersistent(playerName,i, playerName, type, years, age, ovrl,"Signed");

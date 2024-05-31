@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PossessionManager : MonoBehaviour
 {
@@ -9,13 +10,15 @@ public class PossessionManager : MonoBehaviour
     GameObject ball;
     public List<PlayerActions> playersToPlay;
     public List<PlayerActions> otherPlayersToPlay;
-
+    private GameObject holderObject;
+    private Text holderText;
     public bool isFouled = false;
     private bool ballFound = false;
     private void Start()
     {
          ball = GameObject.FindGameObjectWithTag("Ball");
-
+        holderObject = GameObject.FindGameObjectWithTag("HolderText");
+        holderText = holderObject.GetComponent<Text>();
     }
     private void Update()
     {
@@ -38,6 +41,7 @@ public class PossessionManager : MonoBehaviour
             }
          else
            {
+            holderText.text = transform.name;
                  return ball.transform.parent.gameObject; // Return the GameObject that has the ball
              }
     }

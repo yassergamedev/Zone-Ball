@@ -14,13 +14,14 @@ public class DeleteLoad : MonoBehaviour
         game = currHandler.Load();
 
       
-        games = gamesHandler.Load();
+        
     }
     public void DeleteLoadFunction(GameObject loadObj)
     {
 
         FileDataHandler<Games> gamesHandler = new(Application.persistentDataPath, "Games");
-        for(int i = 0;i<games.games.Count;i++)
+        games = gamesHandler.Load();
+        for (int i = 0;i<games.games.Count;i++)
         {
             if (games.games[i].currentGame == loadObj.name)
             {

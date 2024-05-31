@@ -210,28 +210,68 @@ public class PlayerPersistent
         dif *= 12;
         for (int i = 0; i < dif; i++)
         {
-            int randomStat;
+            int randomStat =  0;
             if (type == "def")
             {
-                randomStat = UnityEngine.Random.Range(6, 12);
+                int randomNumberForStat = UnityEngine.Random.Range(0, 10);
+
+                if(randomNumberForStat <=7)
+                {
+                    randomStat = UnityEngine.Random.Range(6, 9);
+                }
+                else
+                {
+                    if(randomNumberForStat == 8)
+                    {
+                        randomStat = UnityEngine.Random.Range(2, 6);
+                    }
+                    else
+                    {
+                        if(randomNumberForStat == 9)
+                        {
+                            randomStat = UnityEngine.Random.Range(9, 12);
+                        }
+                    }
+                }
+
+               
             }
             else
             {
-                int randomNum = UnityEngine.Random.Range(0, 2);
-                if (randomNum == 0)
+                int randomNumberForStat = UnityEngine.Random.Range(0, 10);
+
+                if (randomNumberForStat <= 7)
+                {
+                   
                     randomStat = UnityEngine.Random.Range(2, 6);
+                }
                 else
-                    randomStat = UnityEngine.Random.Range(10, 12);
+                {
+                    if (randomNumberForStat == 8)
+                    {
+                        randomStat = UnityEngine.Random.Range(6, 9);
+                    }
+                    else
+                    {
+                        if (randomNumberForStat == 9)
+                        {
+                            randomStat = UnityEngine.Random.Range(9, 12);
+                        }
+                    }
+                }
+
             }
 
-
-            list[randomStat].Item4(list[randomStat].Item2().value + 1);
-            list[randomStat].Item3(list[randomStat].Item2().value );
-            if (list[randomStat].Item2().value > list[randomStat].Item2().potential)
+            if(list[randomStat].Item2().value<89)
             {
-                list[randomStat].Item5(list[randomStat].Item2().potential + 1);
-            }
+                list[randomStat].Item4(list[randomStat].Item2().value + 1);
+                list[randomStat].Item3(list[randomStat].Item2().value);
+                if (list[randomStat].Item2().value > list[randomStat].Item2().potential)
+                {
+                    list[randomStat].Item5(list[randomStat].Item2().potential + 1);
+                }
 
+            }
 
         }
 
