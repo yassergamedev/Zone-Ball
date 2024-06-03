@@ -15,7 +15,8 @@ public class Team : MonoBehaviour
     {
         FileDataHandler<CurrentGame> currGameHandler = new(Application.persistentDataPath, "Current Game");
         CurrentGame currentGame = currGameHandler.Load();
-        Plays = currentGame.maxPlays;
+        Plays = currentGame.gamePlays;
+        PlaysText.GetComponent<Text>().text = currentGame.gamePlays.ToString();
     }
 
     // Update is called once per frame

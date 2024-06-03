@@ -40,7 +40,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
     {
         FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
         
-
+        CurrentGame currGame = gameDataHandler.Load();
 
         currGame.SalaryCap = int.Parse(salCap.GetComponent<InputField>().text);
         currGame.gamePlays = int.Parse(totalPlays.GetComponent<InputField>().text);

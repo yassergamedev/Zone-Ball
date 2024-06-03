@@ -24,7 +24,9 @@ public class DepthChart : MonoBehaviour, IDataPersistence
         FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
          currGame = gameDataHandler.Load();
 
-        notice.text = "Players Total of plays must equal " + currGame.maxPlays.ToString();
+        notice.text = "Players Total of plays must equal " + currGame.gamePlays.ToString();
+        off.text = currGame.maxPlays.ToString();
+        def.text = currGame.maxPlays.ToString();
     }
 
     public void SaveData(ref GameData data) { }
@@ -32,8 +34,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
     public void GenerateDepthChart(string selectedTeam)
     {
         
-        off.text = currGame.maxPlays.ToString();
-        def.text = currGame.maxPlays.ToString();
+        
         for (int i = 0; i < Table.childCount; i++)
         {
             
@@ -113,7 +114,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
             }
         }
         notice.text = "finished going through table";
-        if (totalPlays == currGame.maxPlays && totalDefPlays == currGame.maxPlays) {
+        if (totalPlays == currGame.gamePlays && totalDefPlays == currGame.gamePlays) {
             foreach(PlayerPersistent player in Playerlist)
             {
                 FileDataHandler<PlayerPersistent> handler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",
@@ -138,7 +139,7 @@ public class DepthChart : MonoBehaviour, IDataPersistence
         }
         else
         {
-            notice.text = "Total Number of Plays for players must be 40, number of off plays: "+ totalPlays+ " number of def plays: "+ totalDefPlays;
+            notice.text = "Total Number of Plays for players must be "+ currGame.gamePlays+", number of off plays: "+ totalPlays+ " number of def plays: "+ totalDefPlays;
           }
         
     }

@@ -47,9 +47,13 @@ public class PlayerActions : MonoBehaviour
     Text commentary;
     public PlayerStatsPersistent playerStatsPersistent;
     public PlayerStatsPersistent otherPlayerStats;
+
+    private GameObject guardObject;
+    private Text guardText;
     private void Start()
     {
-        
+        guardObject = GameObject.FindGameObjectWithTag("GuardText");
+        guardText = guardObject.GetComponent<Text>();
         CommentaryObject = GameObject.FindGameObjectWithTag("Commentary");
         commentary = CommentaryObject.GetComponent<Text>();
         foulManager = GameObject.FindGameObjectWithTag("FoulManager");
@@ -653,7 +657,7 @@ public class PlayerActions : MonoBehaviour
     public IEnumerator PickAnAction()
     {
         PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
-
+        guardText.text = otherPlayerPersistent.Name;
         gameObject.GetComponent<PlayerMovement>().possessionHold = true;
         if (hasJuked)
         {

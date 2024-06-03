@@ -37,11 +37,12 @@ public class PossessionManager : MonoBehaviour
     // Check if the ball is in possession
          if (ball.transform.IsChildOf(transform))
          {
-         return null;
+            holderText.text = transform.name;
+            return null;
             }
          else
            {
-            holderText.text = transform.name;
+           
                  return ball.transform.parent.gameObject; // Return the GameObject that has the ball
              }
     }

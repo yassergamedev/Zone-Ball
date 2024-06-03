@@ -49,36 +49,48 @@ public class NumberValidation : MonoBehaviour
         int inputValue;
         if (int.TryParse(value, out inputValue))
         {
-            // Allow 0 or clamp the input value to the desired range
-            int clampedValue = Mathf.Clamp(inputValue, 0, maxValue);
+            int clampedValue;
+
+            // Check the input value and clamp or keep it accordingly
+            if (inputValue == 0)
+            {
+                clampedValue = 0; // Allow 0
+            }
+            else if (inputValue < minValue && inputValue > 0)
+            {
+                clampedValue = minValue; // Clamp to minValue if it's lower than minValue but greater than 0
+            }
+            else
+            {
+                clampedValue = Mathf.Clamp(inputValue, minValue, maxValue); // Clamp within range minValue to maxValue
+            }
 
             // Update the input field text if the value was clamped
             if (clampedValue != inputValue)
             {
                 numberInput.text = clampedValue.ToString();
             }
-            if(isDepthRelated)
+
+            if (isDepthRelated)
             {
-                Num.text = (int.Parse(Num.text) + oldestValue - inputValue).ToString();
+                Num.text = (int.Parse(Num.text) + oldestValue - clampedValue).ToString();
             }
-            // Update the associated number text
-           
 
             // Update oldestValue
-            oldestValue = int.Parse(numberInput.text);
+            oldestValue = clampedValue;
         }
         else
         {
             // Reset the input field text to the minimum value if the input is not a valid integer
             numberInput.text = minValue.ToString();
-            if(isDepthRelated)
+            if (isDepthRelated)
             {
                 Num.text = (int.Parse(Num.text) + oldestValue - minValue).ToString();
             }
-            
 
             // Update oldestValue
-            oldestValue = int.Parse(numberInput.text);
+            oldestValue = minValue;
         }
     }
+
 }

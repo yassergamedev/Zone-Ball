@@ -189,7 +189,7 @@ public class CurrentGame
     public string currentSeason;
     public int week;
     public string day, month, year, hour, min, sec;
-    public int SalaryCap = 360000, gamePlays = 40, minPlays = 4, maxPlays = 8; 
+    public int prevSalaryCap = 360000,SalaryCap = 360000, gamePlays = 40, minPlays = 4, maxPlays = 8; 
     public MatchPlayed game;
     public CurrentGame(string currentGame, string currentSeason)
     {
@@ -209,6 +209,7 @@ public class CurrentGame
 public class Games
 {
     public List<CurrentGame> games;
+    public bool isFirstBoot = true;
     public Games( )
     {
         games = new List<CurrentGame>();
