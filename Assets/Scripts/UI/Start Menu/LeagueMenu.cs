@@ -40,9 +40,10 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
     {
         FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
         
-        CurrentGame currGame = gameDataHandler.Load();
-
+       
+        currGame.prevSalaryCap = currGame.SalaryCap;
         currGame.SalaryCap = int.Parse(salCap.GetComponent<InputField>().text);
+        
         currGame.gamePlays = int.Parse(totalPlays.GetComponent<InputField>().text);
         currGame.maxPlays = int.Parse(maxPlays.GetComponent<InputField>().text);
         currGame.minPlays = int.Parse(minPlays.GetComponent<InputField>().text);
@@ -79,7 +80,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
         {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", west[i]);
             TeamPersistent team = teamHandler.Load();
-            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            int difference =  currGame.SalaryCap - currGame.prevSalaryCap;
             team.salaryCap += difference;
             teamHandler.Save(team);
         }
@@ -87,7 +88,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
         {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", east[i]);
             TeamPersistent team = teamHandler.Load();
-            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            int difference = currGame.SalaryCap - currGame.prevSalaryCap;
             team.salaryCap += difference;
             teamHandler.Save(team);
         }

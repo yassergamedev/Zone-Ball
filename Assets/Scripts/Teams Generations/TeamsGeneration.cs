@@ -957,7 +957,7 @@ new("Oregon Trail Makers", false)
         FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
         CurrentGame currGame = gameDataHandler.Load();
 
-
+        currGame.prevSalaryCap = currGame.SalaryCap;
         currGame.SalaryCap = int.Parse(salCap.GetComponent<InputField>().text);
         currGame.gamePlays = int.Parse(totalPlays.GetComponent<InputField>().text);
         currGame.maxPlays = int.Parse(maxPlays.GetComponent<InputField>().text);
@@ -995,7 +995,7 @@ new("Oregon Trail Makers", false)
         {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath +"/"+ gameData.id+ "/Teams/" , west[i]);
             TeamPersistent team = teamHandler.Load();
-            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            int difference = currGame.SalaryCap - currGame.prevSalaryCap;
             team.salaryCap += difference;
             teamHandler.Save(team);
         }
@@ -1003,7 +1003,7 @@ new("Oregon Trail Makers", false)
         {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", east[i]);
             TeamPersistent team = teamHandler.Load();
-            int difference = int.Parse(salCap.GetComponent<InputField>().text) - team.salaryCap;
+            int difference = currGame.SalaryCap - currGame.prevSalaryCap;
             team.salaryCap += difference;
             teamHandler.Save(team);
         }

@@ -32,7 +32,8 @@ public class NumberValidation : MonoBehaviour
 
             // Initialize oldestValue to the default input value
             oldestValue = int.Parse(numberInput.text);
-            Num.text = (int.Parse(Num.text) - int.Parse(numberInput.text)).ToString();
+           
+            //Num.text = (int.Parse(Num.text) - int.Parse(numberInput.text)).ToString();
         }
       
     }

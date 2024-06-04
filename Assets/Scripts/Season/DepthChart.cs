@@ -25,16 +25,16 @@ public class DepthChart : MonoBehaviour, IDataPersistence
          currGame = gameDataHandler.Load();
 
         notice.text = "Players Total of plays must equal " + currGame.gamePlays.ToString();
-        off.text = currGame.maxPlays.ToString();
-        def.text = currGame.maxPlays.ToString();
+        off.text = currGame.gamePlays.ToString();
+        def.text = currGame.gamePlays.ToString();
+
     }
 
     public void SaveData(ref GameData data) { }
     // Start is called before the first frame update
     public void GenerateDepthChart(string selectedTeam)
     {
-        
-        
+       int defPlays = currGame.gamePlays, offPlays = currGame.gamePlays;
         for (int i = 0; i < Table.childCount; i++)
         {
             
@@ -73,17 +73,20 @@ public class DepthChart : MonoBehaviour, IDataPersistence
                 Transform p7 = p6.GetChild(0);
                 InputField name3 = p7.gameObject.GetComponent<InputField>();
                 name3.text = players[i].defPlays.ToString();
+                defPlays -= players[i].defPlays;
 
                 Transform p8 = playerDepth.transform.GetChild(4);
                 Transform p9 = p8.GetChild(0);
                 InputField name4 = p9.gameObject.GetComponent<InputField>();
                 name4.text = players[i].plays.ToString();
-
+                offPlays -= players[i].plays;
                 
               
             }
             
         }
+        off.text = offPlays.ToString();
+        def.text = defPlays.ToString();
     }
 
     public void SetPlays()

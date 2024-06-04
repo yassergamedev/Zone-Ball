@@ -84,6 +84,7 @@ public class MatchPlayed
     public int oppScore;
     public int turnovers;
     public int oppTurnovers;
+    public int extraTime;
     public List<string> playersStats;
     public MatchPlayed(string opponent, bool isHome)
     {
