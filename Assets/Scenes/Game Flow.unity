@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Shots Taken
+      value: Shots Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -4563,7 +4563,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Inside Shots Made
+      value: In Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -9595,7 +9595,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Inside Shots
+      value: In Taken
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -9705,7 +9705,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Mid Shots
+      value: Mid Taken
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -21824,6 +21824,7 @@ MonoBehaviour:
     hour: 
     min: 
     sec: 
+    prevSalaryCap: 0
     SalaryCap: 0
     gamePlays: 0
     minPlays: 0
@@ -21838,6 +21839,7 @@ MonoBehaviour:
       oppScore: 0
       turnovers: 0
       oppTurnovers: 0
+      extraTime: 0
       playersStats: []
 --- !u!82 &949253659
 AudioSource:
@@ -25430,7 +25432,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Mid Shots Made
+      value: Mid Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -29559,7 +29561,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Outside Shots Made
+      value: Out Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -35842,7 +35844,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Outside Shots
+      value: Out Taken
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -38566,7 +38568,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Shots Taken
+      value: Shots Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment

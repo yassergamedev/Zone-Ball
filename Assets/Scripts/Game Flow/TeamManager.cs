@@ -239,6 +239,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.jukes += stats.jukes;
                 player.stats.fouls += stats.fouls;
                 player.stats.foulShotsMade += stats.foulShotsMade;
+                player.stats.foulPointsScored += stats.foulPointsScored;
                 player.stats.turnovers += stats.turnovers;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);
@@ -272,6 +273,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.jukes += stats.jukes;
                 player.stats.fouls += stats.fouls;
                 player.stats.foulShotsMade += stats.foulShotsMade;
+                player.stats.foulPointsScored += stats.foulPointsScored;
                 player.stats.turnovers += stats.turnovers;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);

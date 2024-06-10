@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -519,6 +518,7 @@ MonoBehaviour:
     hour: 
     min: 
     sec: 
+    prevSalaryCap: 0
     SalaryCap: 0
     gamePlays: 0
     minPlays: 0
@@ -533,6 +533,7 @@ MonoBehaviour:
       oppScore: 0
       turnovers: 0
       oppTurnovers: 0
+      extraTime: 0
       playersStats: []
 --- !u!114 &1126519473
 MonoBehaviour:

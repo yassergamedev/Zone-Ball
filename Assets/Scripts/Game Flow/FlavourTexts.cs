@@ -77,7 +77,7 @@ using UnityEngine;
         minorFouls = new string[]
         {
           "A bit too physical, minor foul!",
-        "The ref called it, a minour foul!",
+        "The ref called it, a minor foul!",
         "That's a foul and two chances!",
         "Lack of awareness, foul!"
         };

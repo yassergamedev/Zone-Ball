@@ -21,9 +21,10 @@ public class LoadGame : MonoBehaviour, IDataPersistence
         {
             Debug.Log(games.games[i].currentGame);
             GameObject loadedGame = Instantiate(LoadedGame, Content.transform);
-            loadedGame.transform.GetChild(2).GetComponent<Text>().text = games.games[i].year + "-" + games.games[i].month + "-" + games.games[i].day + " " + games.games[i].hour + ":" + games.games[i].min + ":" + games.games[i].sec;
-            loadedGame.transform.GetChild(3).GetComponent<Text>().text = games.games[i].currentSeason;
-            loadedGame.transform.GetChild(4).GetComponent<Text>().text = games.games[i].week.ToString();
+
+            loadedGame.transform.GetChild(1).GetChild(2).GetComponent<Text>().text = games.games[i].year + "-" + games.games[i].month + "-" + games.games[i].day + " " + games.games[i].hour + ":" + games.games[i].min + ":" + games.games[i].sec;
+            loadedGame.transform.GetChild(1).GetChild(3).GetComponent<Text>().text = games.games[i].currentSeason;
+            loadedGame.transform.GetChild(1).GetChild(5).GetComponent<Text>().text = games.games[i].week.ToString();
             loadedGame.name = games.games[i].currentGame;
             loadedGame.GetComponent<SceneStuff>().game = games.games[i];
         }

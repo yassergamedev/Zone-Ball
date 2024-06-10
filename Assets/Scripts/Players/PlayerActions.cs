@@ -199,7 +199,7 @@ public class PlayerActions : MonoBehaviour
 
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("insideMade"));
-
+                        playerStatsPersistent.shotsTaken += 1;
                         playerStatsPersistent.pointsScored += 4;
                         playerStatsPersistent.insideShotsMade += 1;
                         playerStatsPersistent.insideShots += 1;
@@ -215,6 +215,7 @@ public class PlayerActions : MonoBehaviour
 
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("midMade"));
+                        playerStatsPersistent.shotsTaken += 1;
                         playerStatsPersistent.pointsScored += 5;
                         playerStatsPersistent.midShotsMade += 1;
                         playerStatsPersistent.midShots += 1;
@@ -230,6 +231,7 @@ public class PlayerActions : MonoBehaviour
 
                         soundManager.PlayNet();
                         ShowFloatingTextPrefab(flTexts.chooseRandom("outsideMade"));
+                        playerStatsPersistent.shotsTaken += 1;
                         playerStatsPersistent.pointsScored += 6;
                         playerStatsPersistent.outsideShotsMade += 1;
                         playerStatsPersistent.outsideShots += 1;
@@ -417,6 +419,7 @@ public class PlayerActions : MonoBehaviour
             if (RandShot <= accuracy)
             {
                 playerStatsPersistent.foulShotsMade += 2;
+                playerStatsPersistent.foulPointsScored += 2;
                 playerStatsPersistent.pointsScored += 2;
                 AddScore(2);
                 soundManager.PlayNet();
@@ -492,7 +495,7 @@ public class PlayerActions : MonoBehaviour
         if(disparity >= 200)
         {
             accuracy += 10;
-            playerStatsPersistent.shotsTaken += 1;
+            
             return true;
         }
         else
@@ -500,7 +503,7 @@ public class PlayerActions : MonoBehaviour
             if( disparity >= 100)
             {
                 accuracy += 5;
-                playerStatsPersistent.shotsTaken += 1;
+                
                 return true;
 
             }
@@ -508,14 +511,14 @@ public class PlayerActions : MonoBehaviour
             {
                 if(disparity >=0)
                 {
-                    playerStatsPersistent.shotsTaken += 1;
+                    
                     return true;
                 }
                 else
                 {
                     if(disparity >= -50)
                     {
-                        playerStatsPersistent.shotsTaken += 1;
+                        
                         accuracy += -5;
                         return true;
                     }
@@ -523,7 +526,7 @@ public class PlayerActions : MonoBehaviour
                     {
                         if(disparity>= -100)
                         {
-                            playerStatsPersistent.shotsTaken += 1;
+                            
                             accuracy += -10;
                             return true;
                         }
