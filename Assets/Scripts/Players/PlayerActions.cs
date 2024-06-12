@@ -436,7 +436,7 @@ public class PlayerActions : MonoBehaviour
         }
         commentary.text = "";
 
-        decPlays();
+        //decPlays();
         possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, true);
 
 

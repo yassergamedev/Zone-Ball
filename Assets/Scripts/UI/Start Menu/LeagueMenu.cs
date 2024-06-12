@@ -161,7 +161,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
             standing.transform.GetChild(5).GetChild(0).GetComponent<Text>().text = team.pointsScored.ToString();
             standing.transform.GetChild(6).GetChild(0).GetComponent<Text>().text = team.pointsAllowed.ToString();
             standing.transform.GetChild(7).GetChild(0).GetComponent<Text>().text = team.oppTurnovers.ToString();
-            standing.transform.GetChild(7).GetChild(0).GetComponent<Text>().text = team.turnovers.ToString();
+            standing.transform.GetChild(8).GetChild(0).GetComponent<Text>().text = team.turnovers.ToString();
             k++;
         }
     }

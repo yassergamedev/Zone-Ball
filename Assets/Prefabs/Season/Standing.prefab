@@ -1208,7 +1208,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Truned Overs
+      value: Trnvrs Against
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Color.b
