@@ -47,7 +47,7 @@ public class PlayerPersistent
     public int longevity; // Range: 1 to 5
     public int personality; // Range: 1 to 5
     public int[] zoneStyle; // Range: 1 to 12
-    public int ovrl,prevOvrl;
+    public int potOvrl,ovrl,prevOvrl;
     public int plays;
     public int defPlays;
     public bool isJuked;
@@ -278,7 +278,12 @@ public class PlayerPersistent
         gameFlowStats = new string[] { };
         plays = 4;
         defPlays = 4;
-
+        int prv = 0;
+        for(int i = 0; i< list.Count; i++)
+        {
+            prv += list[i].Item2().potential;
+        }
+        potOvrl = (int)prv / 12;
     }
     public string GenerateRandomPlayerName(List<string> firstNames, List<string> lastNames, int firstCount, int lastCount)
     {

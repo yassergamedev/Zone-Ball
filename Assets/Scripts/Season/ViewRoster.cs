@@ -122,7 +122,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
                 playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString()
                       + "(" + (player.ovrl - player.prevOvrl).ToString() + ")";
                 playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().color =
-                     player.ovrl - player.prevOvrl > 0 ? Color.green : (player.ovrl - player.prevOvrl == 0 ? Color.red : Color.red);
+                     player.ovrl - player.prevOvrl > 0 ? Color.green : (player.ovrl - player.prevOvrl == 0 ? Color.white : Color.red);
 
                 GameObject playerContract = Instantiate(Contract, Table);
                 playerContract.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
@@ -132,6 +132,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
                 playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.contract.years.ToString();
 
+                playerContract.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
 
             }
         }
