@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static Unity.Collections.Unicode;
 
 public class TeamsGeneration : MonoBehaviour,IDataPersistence
 {
@@ -888,6 +889,33 @@ new("Oregon Trail Makers", false)
 
 
             }
+        }
+        for (int i = 0; i < 20; i++)
+        {
+
+            string playerName = rng.GenerateRandomPlayerName();
+            FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + round + "/", playerName);
+            string type = "";
+            int randomNum = UnityEngine.Random.Range(0, 10);
+            if (randomNum < 5)
+            {
+                type = "off";
+            }
+            else
+            {
+                type = "def";
+            }
+           
+              int   ovrl = UnityEngine.Random.Range(35, 40);
+            
+
+            int age = UnityEngine.Random.Range(18, 21);
+            PlayerPersistent player = new PlayerPersistent(playerName, i, playerName, type, 0, age, ovrl, "Signed");
+
+
+            playerHandler.Save(player);
+
+
         }
     }
 

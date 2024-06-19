@@ -52,13 +52,7 @@ public class PlayerStatsPersistent
         return new List<(string, Func<int>, Action<int>)> {
     ("plays", () => plays, (value) => plays = value),
     ("defPlays", () => defPlays, (value) => defPlays = value),
-    ("pressures", () => pressures, (value) => pressures = value),
-    ("blocks", () => blocks, (value) => blocks = value),
-    ("steals", () => steals, (value) => steals = value),
-    ("fouls", () => fouls, (value) => fouls = value),
-    ("pointsAllowed", () => pointsAllowed, (value) => pointsAllowed = value),
-    ("jukes", () => jukes, (value) => jukes = value),
-    ("shots", () => shots, (value) => shots = value),
+       ("shots", () => shots, (value) => shots = value),
     ("shotsTaken", () => shotsTaken, (value) => shotsTaken = value),
     ("pointsScored", () => pointsScored, (value) => pointsScored = value),
     ("foulShots", () => foulShots, (value) => foulShots = value),
@@ -70,8 +64,14 @@ public class PlayerStatsPersistent
     ("midShots", () => midShots, (value) => midShots = value),
     ("midShotsMade", () => midShotsMade, (value) => midShotsMade = value),
     ("outsideShots", () => outsideShots, (value) => outsideShots = value),
-    ("outsideShotsMade", () => outsideShotsMade, (value) => outsideShotsMade = value)
-};
+    ("outsideShotsMade", () => outsideShotsMade, (value) => outsideShotsMade = value),
+    ("jukes", () => jukes, (value) => jukes = value),
+     ("pressures", () => pressures, (value) => pressures = value),
+    ("blocks", () => blocks, (value) => blocks = value),
+    ("steals", () => steals, (value) => steals = value),
+    ("fouls", () => fouls, (value) => fouls = value),
+    ("pointsAllowed", () => pointsAllowed, (value) => pointsAllowed = value),
+ };
 
 
     }
