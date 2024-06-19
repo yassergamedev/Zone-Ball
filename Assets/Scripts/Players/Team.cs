@@ -15,7 +15,8 @@ public class Team : MonoBehaviour
     {
         FileDataHandler<CurrentGame> currGameHandler = new(Application.persistentDataPath, "Current Game");
         CurrentGame currentGame = currGameHandler.Load();
-        Plays = currentGame.gamePlays;
+        //Plays = currentGame.gamePlays;
+        Plays = 10;
         PlaysText.GetComponent<Text>().text = currentGame.gamePlays.ToString();
     }
 

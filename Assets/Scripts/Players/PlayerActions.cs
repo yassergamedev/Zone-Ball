@@ -88,8 +88,11 @@ public class PlayerActions : MonoBehaviour
 
     public void decPlays()
     {
-        teamObject.GetComponent<Team>().Plays -=1;
-        teamObject.GetComponent<Team>().decreasePlays();
+       
+            teamObject.GetComponent<Team>().Plays -= 1;
+            teamObject.GetComponent<Team>().decreasePlays();
+       
+           
     }
 
     public void AddScore(int score)
@@ -120,11 +123,10 @@ public class PlayerActions : MonoBehaviour
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.fouls += 1;
-                playerStatsPersistent.foulShots += 2;
+                playerStatsPersistent.foulShots += 3;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 
                 yield return  FoulShot(3);
-                
                 break;
             case "Minor Foul":
                 
@@ -135,7 +137,7 @@ public class PlayerActions : MonoBehaviour
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 
                 otherPlayerObject.GetComponent<PlayerActions>().playerStatsPersistent.fouls += 1;
-                playerStatsPersistent.foulShots += 3;
+                playerStatsPersistent.foulShots += 2;
                 foulManager.GetComponent<FoulManager>().isFouled = true;
                 yield return  FoulShot(2);
                 break;
@@ -305,7 +307,7 @@ public class PlayerActions : MonoBehaviour
         
             ShowFloatingTextPrefab(flTexts.chooseRandom("jukeSuccess"));
             otherPlayerPersistent.isJuked = true;
-
+            playerStatsPersistent.jukes += 1;
             // Wait until space key is pressed
             
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
@@ -659,60 +661,67 @@ public class PlayerActions : MonoBehaviour
     }
     public IEnumerator PickAnAction()
     {
-        PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
-        guardText.text = otherPlayerPersistent.Name;
-        gameObject.GetComponent<PlayerMovement>().possessionHold = true;
-        if (hasJuked)
+        if(teamObject.GetComponent<Team>().Plays >0)
         {
-            yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
-            hasJuked = false;
-        }
-     
-        isPicking = true;
-        int action = UnityEngine.Random.Range(1, 4);
-        Debug.Log(action);
-        commentary.text = "";
-        switch (action)
-        {
-            case 1:
-                ShowFloatingTextPrefab("Guarding Player going To Steal");
-                // Wait until space key is pressed
-                // Check if space key is not pressed
+            PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
+            guardText.text = otherPlayerPersistent.Name;
+            gameObject.GetComponent<PlayerMovement>().possessionHold = true;
+            if (hasJuked)
+            {
+                yield return new WaitUntil(() => Input.GetKeyUp(KeyCode.Space));
+                hasJuked = false;
+            }
 
-                // Wait until space key is pressed
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+            isPicking = true;
+            int action = UnityEngine.Random.Range(1, 4);
+            action = 1;
+            commentary.text = "";
+            switch (action)
+            {
+                case 1:
+                    ShowFloatingTextPrefab("Guarding Player going To Steal");
+                    // Wait until space key is pressed
+                    // Check if space key is not pressed
 
-                // Now that space key is pressed, start the coroutine
-                Debug.Log("Starting Coroutine");
-                yield return Steal();
-
-
-                break;
-            case 2:
-                ShowFloatingTextPrefab("Going To Shoot");
-                // Wait until space key is pressed
-               
                     // Wait until space key is pressed
                     yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                
-                yield return Shoot();
-                break;
-            case 3:
-                ShowFloatingTextPrefab("Going To Juke");
-                // Wait until space key is pressed
 
-                // Wait until space key is pressed
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                    // Now that space key is pressed, start the coroutine
+                    Debug.Log("Starting Coroutine");
+                    yield return Steal();
 
-                yield return Juke();
-                break;
+
+                    break;
+                case 2:
+                    ShowFloatingTextPrefab("Going To Shoot");
+                    // Wait until space key is pressed
+
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
+                    yield return Shoot();
+                    break;
+                case 3:
+                    ShowFloatingTextPrefab("Going To Juke");
+                    // Wait until space key is pressed
+
+                    // Wait until space key is pressed
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+
+                    yield return Juke();
+                    break;
+            }
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+            foreach (PlayerMovement playerMovement in playerMovements)
+            {
+                playerMovement.possessionHold = false;
+            }
+            isPicking = false;
         }
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-        Debug.Log("Done Picking");
-        foreach (PlayerMovement playerMovement in playerMovements)
+        else
         {
-            playerMovement.possessionHold = false;
+            possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
         }
-        isPicking = false;
+          
     }
 }

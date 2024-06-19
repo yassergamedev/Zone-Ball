@@ -123,11 +123,11 @@ public class TeamsGeneration : MonoBehaviour,IDataPersistence
                 new("Pennsylvania Rush", true),
                 new("Kansas Coyotes", true),
                 new("Ohio True Frogs", false),
-                new("Virginia Dolphins",true),
+                new("Virginia Bobcats",true),
                 new("California Lightning", false),
                 new("Wisconsin Crows", false),
                  new("New Mexico Dragons", true),
-                new("Ney York Owls",true),
+                new("New York Owls",true),
                 new("Arizona Jaguars", false),
                 new("Michigan Warriors",true),
 

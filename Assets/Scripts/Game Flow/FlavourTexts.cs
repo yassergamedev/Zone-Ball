@@ -22,7 +22,7 @@ using UnityEngine;
 
         insideShots = new string[] {
             "Drops a 4 like nothing!",
-        "Lobs that 3 in with ease!",
+        "Lobs that 4 in with ease!",
         "Powerful Inside Shot! 4 points!",
         "It's up and in for 4!" };
         midShots = new string[]

@@ -86,6 +86,8 @@ public class MatchPlayed
     public int oppTurnovers;
     public int extraTime;
     public List<string> playersStats;
+    public List<PlayerStatsPersistent> homeStatsPersistent;
+    public List<PlayerStatsPersistent> guestStatsPersistent;
     public MatchPlayed(string opponent, bool isHome)
     {
         this.opponent = opponent;

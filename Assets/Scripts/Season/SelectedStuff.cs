@@ -73,7 +73,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Playfs playOffs;
     private bool isClickedBack = false, isComing = false;
     private List<(string, PlayerStatsPersistent)> allPlayerStats = new();
-    private List<(string, PlayerStatsPersistent)> allTimePlayerStats = new();
+    private List<(string,string, PlayerStatsPersistent)> allTimePlayerStats = new();
     private List<(string, int)> teamsStats = new();
     List<TeamPersistent> orderedTeamsList;
     public void LoadData(GameData go)
@@ -1500,16 +1500,18 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 {
 
                     PlayerStatsPersistent playerTotalStats = new(selTeam.players[p]);
-
+                    
                     for (int k = 0; k <= week; k++)
                     {
                         FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + selTeam.name + "/" + k.ToString(),
                             selTeam.players[p]);
 
                         PlayerStatsPersistent stats = statsHandler.Load();
-
+                        
                         if (stats != null)
                         {
+                            playerTotalStats.id = stats.id;
+                            playerTotalStats.team = stats.team;
                             playerTotalStats.pressures += stats.pressures;
                             playerTotalStats.plays += stats.plays;
                             
@@ -1540,11 +1542,11 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             }
         }
 
-        List<(string statName, int statVal, string player)> records = new();
+        List<(string statName, int statVal, string player,string team)> records = new();
         PlayerStatsPersistent record = new("record");
         for(int i = 0; i< record.getStats().Count; i++)
         {
-            (string statName, int statVal,string player) rec = new();
+            (string statName, int statVal,string player,string team) rec = new();
           
 
            int max = 0;
@@ -1561,6 +1563,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                             rec.statName = allPlayerStats[k].Item2.getStats()[l].Item1;
                             rec.player = allPlayerStats[k].Item1;
                             rec.statVal = allPlayerStats[k].Item2.getStats()[l].Item2();
+                            
+                            rec.team = allPlayerStats[k].Item2.team;
                         }
                     }
                 }
@@ -1588,8 +1592,9 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                Debug.Log(records[b]+ b.ToString());
                         row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item2.ToString();
                     row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
-
-                    FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
+                Debug.Log("some team : " +records[b].Item4);
+                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item4;
+                FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                     PlayerPersistent p = plHandler.Load();
                   //  row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team!=null?p.team:"";
                 b++;
@@ -1642,8 +1647,9 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     PlayerPersistent selPlayer = playerHandler.Load();
                     teamMemebers++;
                     ovrlTotal += selPlayer.ovrl;
-
-                    allPlayerStats.Add(new(selTeam.players[p], selPlayer.stats));
+                    selPlayer.stats.team = selPlayer.team;
+                    Debug.Log(selPlayer.stats.id + " " + selPlayer.stats.fouls);
+                    allTimePlayerStats.Add(new(selTeam.players[p],selTeam.id, selPlayer.stats));
                 }
 
             }
@@ -1651,25 +1657,34 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
             teamsStats.Add((selTeam.name, teamOvrl));
         }
-        List<(string statName, int statVal, string player)> records = new();
+        List<(string statName, int statVal, string player,string team)> records = new();
         PlayerStatsPersistent record = new("record");
         for (int i = 0; i < record.getStats().Count; i++)
         {
-            (string statName, int statVal, string player) rec = new();
+            (string statName, int statVal, string player,string team) rec = new();
 
             int max = 0;
-            for (int k = 1; k < allPlayerStats.Count; k++)
+            for (int k = 1; k < allTimePlayerStats.Count; k++)
             {
-                for (int l = 0; l < allPlayerStats[i].Item2.getStats().Count; l++)
+               
+                for (int l = 0; l < allTimePlayerStats[k].Item3.getStats().Count; l++)
                 {
-                    if (allPlayerStats[i].Item2.getStats()[l].Item1 == record.getStats()[i].Item1)
+                    if (allTimePlayerStats[k].Item3.getStats()[l].Item1 == record.getStats()[i].Item1)
                     {
 
-                        if (allPlayerStats[i].Item2.getStats()[l].Item2() >= max)
+                        if (allTimePlayerStats[k].Item3.getStats()[l].Item2() >= max)
                         {
-                            rec.statName = allPlayerStats[i].Item2.getStats()[l].Item1;
-                            rec.player = allPlayerStats[i].Item1;
-                            rec.statVal = allPlayerStats[i].Item2.getStats()[l].Item2();
+                            
+
+                            max = allTimePlayerStats[k].Item3.getStats()[l].Item2();
+                            if(max != 0)
+                            {
+                                Debug.Log("current max  of " + allTimePlayerStats[k].Item3.getStats()[l].Item1 + ": " + max);
+                            }
+                            rec.statName = allTimePlayerStats[k].Item3.getStats()[l].Item1;
+                            rec.player = allTimePlayerStats[k].Item1;
+                            rec.statVal = allTimePlayerStats[k].Item3.getStats()[l].Item2();
+                            rec.team = allTimePlayerStats[k].Item3.team;
                         }
                     }
                 }
@@ -1697,7 +1712,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 Debug.Log(records[b] + b.ToString());
                 row.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item2.ToString();
                 row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
-
+                row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item4;
                 FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                 PlayerPersistent p = plHandler.Load();
                 //row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team;

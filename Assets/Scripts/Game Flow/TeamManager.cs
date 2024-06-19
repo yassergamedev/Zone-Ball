@@ -227,12 +227,18 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 Guest.jukes += stats.jukes;
                 Guest.fouls += stats.fouls;
                 Guest.foulShotsMade += stats.foulShotsMade;
+                Guest.turnovers += stats.turnovers;
                 Home.oppTurnovers += stats.turnovers;
                 Home.pointsAllowed += stats.pointsScored;
+                stats.id = player.id;
+                stats.team = player.team;
                 statsHandler.Save(stats);
+
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.insideShotsMade += stats.insideShotsMade;
+                player.stats.plays += stats.plays;
+                player.stats.defPlays += stats.defPlays;
                 player.stats.outsideShots += stats.outsideShots;
                 player.stats.pointsScored += stats.pointsScored;
                 player.stats.steals += stats.steals;
@@ -241,12 +247,15 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.foulShotsMade += stats.foulShotsMade;
                 player.stats.foulPointsScored += stats.foulPointsScored;
                 player.stats.turnovers += stats.turnovers;
+                player.stats.turnOn += stats.turnOn;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);
+                GuestStats.Add(stats);
+
             }
             for (int i = 0; i < HomeObject.transform.childCount; i++)
             {
-                FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", GuestObject.transform.GetChild(i).gameObject.name);
+                FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/",HomeObject.transform.GetChild(i).gameObject.name);
                 PlayerPersistent player = playerHandler.Load();
                 PlayerStatsPersistent stats = HomeObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
                 FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/" + Home.name + "/"
@@ -259,14 +268,18 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 Home.steals += stats.steals;
                 Home.jukes += stats.jukes;
                 Home.fouls += stats.fouls;
+                Home.turnovers += stats.turnovers;
                 Home.foulShotsMade += stats.foulShotsMade;
                 Guest.oppTurnovers += stats.turnovers;
                 Guest.pointsAllowed += stats.pointsScored;
-
+                stats.id = player.id;
+                stats.team = Home.id;
                 statsHandler.Save(stats);
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.insideShotsMade += stats.insideShotsMade;
+                player.stats.plays += stats.plays;
+                player.stats.defPlays += stats.defPlays;
                 player.stats.outsideShots += stats.outsideShots;
                 player.stats.pointsScored += stats.pointsScored;
                 player.stats.steals += stats.steals;
@@ -275,8 +288,10 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.foulShotsMade += stats.foulShotsMade;
                 player.stats.foulPointsScored += stats.foulPointsScored;
                 player.stats.turnovers += stats.turnovers;
+                player.stats.turnOn += stats.turnOn;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);
+                HomeStats.Add(stats);
             }
 
             FileDataHandler<TeamPersistent> HomeHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Home.name);
@@ -284,6 +299,14 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             HomeHandler.Save(Home);
             FileDataHandler<TeamPersistent> GuestHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Guest.name);
             GuestHandler.Save(Guest);
+
+            MatchPlayed matchPlayed;
+            matchPlayed = Home.matchesPlayed[cg.week];
+            matchPlayed.homeStatsPersistent = HomeStats;
+            matchPlayed.guestStatsPersistent = GuestStats;
+
+            FileDataHandler<MatchPlayed> matchHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Matches Played/" + cg.week.ToString(), Home.id + " vs " + Guest.id);
+            matchHandler.Save(matchPlayed);
             yield return new WaitForSeconds(2f);
             sceneManager.LoadScene();
 
@@ -357,11 +380,17 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 Guest.jukes += stats.jukes;
                 Guest.fouls += stats.fouls;
                 Guest.foulShotsMade += stats.foulShotsMade;
+                Guest.turnovers += stats.turnovers;
                 Home.oppTurnovers += stats.turnovers;
                 Home.pointsAllowed += stats.pointsScored;
+                stats.id = player.id;
+                stats.team = player.team;
+                statsHandler.Save(stats);
 
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
+                player.stats.plays += stats.plays;
+                player.stats.defPlays += stats.defPlays;
                 player.stats.insideShotsMade += stats.insideShotsMade;
                 player.stats.outsideShots += stats.outsideShots;
                 player.stats.pointsScored += stats.pointsScored;
@@ -370,12 +399,14 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.fouls += stats.fouls;
                 player.stats.foulShotsMade += stats.foulShotsMade;
                 player.stats.turnovers += stats.turnovers;
+                player.stats.turnOn += stats.turnOn;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);
+                GuestStats.Add(stats);
             }
             for (int i = 0; i < HomeObject.transform.childCount; i++)
             {
-                FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", GuestObject.transform.GetChild(i).gameObject.name);
+                FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", HomeObject.transform.GetChild(i).gameObject.name);
                 PlayerPersistent player = playerHandler.Load();
                 PlayerStatsPersistent stats = HomeObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerStatsPersistent;
                 FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/" + Home.name + "/"
@@ -389,12 +420,16 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 Home.jukes += stats.jukes;
                 Home.fouls += stats.fouls;
                 Home.foulShotsMade += stats.foulShotsMade;
+                Home.turnovers += stats.turnovers;
                 Guest.oppTurnovers += stats.turnovers;
                 Guest.pointsAllowed += stats.pointsScored;
-
+                stats.id = player.id;
+                stats.team = player.team;
                 statsHandler.Save(stats);
 
                 player.stats.blocks += stats.blocks;
+                player.stats.plays += stats.plays;
+                player.stats.defPlays += stats.defPlays;    
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.insideShotsMade += stats.insideShotsMade;
                 player.stats.outsideShots += stats.outsideShots;
@@ -404,16 +439,19 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 player.stats.fouls += stats.fouls;
                 player.stats.foulShotsMade += stats.foulShotsMade;
                 player.stats.turnovers += stats.turnovers;
+                player.stats.turnOn += stats.turnOn;
                 player.stats.pointsAllowed += stats.pointsScored;
                 playerHandler.Save(player);
+                HomeStats.Add(stats);
             }
 
 
             FileDataHandler<TeamPersistent> HomeHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Home.name);
-
             HomeHandler.Save(Home);
             FileDataHandler<TeamPersistent> GuestHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", Guest.name);
             GuestHandler.Save(Guest);
+
+           
             yield return new WaitForSeconds(2f);
             sceneManager.LoadScene();
         }

@@ -11,7 +11,8 @@ public class PlayerStatsPersistent
 
 
     //game flow stats
-    string id;
+    public string id;
+    public string team;
     //---------- defensive ------------
 
     public int pressures = 0;
