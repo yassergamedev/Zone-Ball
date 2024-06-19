@@ -46,7 +46,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Transform Content;
     public Transform TeamSeasonStatsContent;
     public Transform PlayersStatsContent;
-    public GameObject DraftPlayer, DraftSalary, FAbid, DraftTeam, Vacancy, DraftTable,FATable;
+    public GameObject DraftPlayer, DraftSalary, FAbid, DraftTeam, Vacancy, DraftTable,SeasonDraft,FATable;
+    public GameObject Contract;
     public RandomNameGenerator rng;
     public GameObject MatchDetail;
     public bool isActiveTable = false;
@@ -98,6 +99,76 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 weekText.text = "Week " + weekNum;
                 Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week]?.opponent;
                 Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week]?.opponent : team.name;
+                Vector2 sizeDelta = SeasonDraft.transform.GetComponent<RectTransform>().sizeDelta;
+                sizeDelta.y = 4000;
+                SeasonDraft.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+                SeasonDraft.name = gameData.id;
+                FileDataHandler<PlayerPersistent> playerHandlerr = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", "");
+                List<string> playersDrafted = playerHandlerr.GetAllFiles();
+                for (int i = 0; i < 20; i++)
+                {
+                    FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", playersDrafted[i]);
+                    PlayerPersistent player = playerHandler.Load();
+                    GameObject playerInfo = Instantiate(DraftPlayer, SeasonDraft.transform);
+
+                    playerInfo.name = playersDrafted[i];
+                    playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
+                    //playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+                    playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                    playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
+                        + "(" + (player.consistency.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
+                          + "(" + (player.awareness.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
+                          + "(" + (player.juking.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
+                          + "(" + (player.control.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
+                          + "(" + (player.shooting.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
+                          + "(" + (player.positioning.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
+                          + "(" + (player.steal.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
+                          + "(" + (player.guarding.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
+                          + "(" + (player.pressure.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
+                          + "(" + (player.inside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
+                          + "(" + (player.mid.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
+                          + "(" + (player.Outside.potential).ToString() + ")";
+
+                    playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
+
+                    GameObject playerContract = Instantiate(Contract, SeasonDraft.transform);
+                    playerContract.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+
+
+                    playerContract.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.contract.salary.ToString();
+
+                    playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "0";
+
+                    playerContract.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
+
+
+
+                   // GameObject draftTeam = Instantiate(DraftTeam, SeasonDraft.transform);
+
+                }
                 break;
             case "PlayOffs":
                 SeasonPhase.text = "PlayOffs";
@@ -203,19 +274,19 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 AgingTeams.SetActive(false);
                 DraftTeams.SetActive(true);
                 DraftRound2.SetActive(true);
-                Vector2 sizeDelta = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
+                Vector2 sizeDelta1 = DraftTable.transform.GetComponent<RectTransform>().sizeDelta;
                 sizeDelta.y = 4000;
-                DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+                DraftTable.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta1;
                 DraftTable.name = gameData.id;
-                FileDataHandler<PlayerPersistent> playerHandlerr = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", "");
-                List<string> playersDrafted = playerHandlerr.GetAllFiles();
+                FileDataHandler<PlayerPersistent> playerHandlerr1 = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", "");
+                List<string> playersDrafted1 = playerHandlerr1.GetAllFiles();
                 for (int i = 0; i < 20; i++)
                 {
-                    FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", playersDrafted[i]);
+                    FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", playersDrafted1[i]);
                     PlayerPersistent player = playerHandler.Load();
                     GameObject playerInfo = Instantiate(DraftPlayer, DraftTable.transform);
 
-                    playerInfo.name = playersDrafted[i];
+                    playerInfo.name = playersDrafted1[i];
                     playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
                     playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
                     playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();

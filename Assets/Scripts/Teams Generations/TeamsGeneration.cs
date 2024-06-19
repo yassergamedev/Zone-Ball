@@ -894,7 +894,7 @@ new("Oregon Trail Makers", false)
         {
 
             string playerName = rng.GenerateRandomPlayerName();
-            FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + round + "/", playerName);
+            FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/Draft R1/", playerName);
             string type = "";
             int randomNum = UnityEngine.Random.Range(0, 10);
             if (randomNum < 5)
