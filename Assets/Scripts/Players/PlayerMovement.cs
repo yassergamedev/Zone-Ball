@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -30,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     string GuardedPlayrTag;
    int dontMoveLong = 0;
     
-    GameObject[] playersToBeGuarded;
+    List<GameObject> playersToBeGuarded;
   
 
     private string playerTag;
@@ -365,7 +366,7 @@ public class PlayerMovement : MonoBehaviour
         targetPosition = new Vector3(randomX, randomY, 0);
 
     }
-    public void setNewRandoms()
+     public void setNewRandoms()
     {
         timeToMove = Random.Range(1, 3);
         playerTag = transform.gameObject.tag;
@@ -375,79 +376,78 @@ public class PlayerMovement : MonoBehaviour
             Half = "RightHalf";
             otherHalf = "LeftHalf";
             GuardedPlayrTag = "OppPlayer";
-        
             guardingX = .3f;
-          
-          
         }
         else
         {
             Half = "LeftHalf";
             otherHalf = "RightHalf";
             GuardedPlayrTag = "Player";
-       
             guardingX = -.3f;
-      
-          
         }
 
-        playersToBeGuarded = GameObject.FindGameObjectsWithTag(GuardedPlayrTag);
-
-
-        int guardIndex = Random.Range(1, 9);
+        playersToBeGuarded = new List<GameObject>(GameObject.FindGameObjectsWithTag(GuardedPlayrTag));
+        ShuffleList(playersToBeGuarded);  // Shuffle the list of players to be guarded
 
         if (ballHolderGuard)
         {
-            while(GuardedPlayer == null)
-            {
-            foreach (GameObject player in playersToBeGuarded)
-            {
-                if (player.transform.childCount == 3)
-                {
-                        Debug.Log(this.transform.name + " has set the guarding player");
-                    GuardedPlayer = player;
-                    PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
-                    GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
-                }
-            }
-
-            }
+            AssignBallHolderGuard();
             ballHolderGuard = false;
         }
         else
         {
-
-
             StartCoroutine(AssignGuardCoroutine());
         }
         randomNumberForAwareness = Random.Range(1, 99);
     }
+
+    private void AssignBallHolderGuard()
+    {
+        foreach (GameObject player in playersToBeGuarded)
+        {
+            if (player.transform.childCount == 3)
+            {
+                Debug.Log(this.transform.name + " has set the guarding player");
+                GuardedPlayer = player;
+                PlayerActions.SetOtherPlayer(GuardedPlayer.GetComponent<PlayerActions>());
+                GuardedPlayer.GetComponent<PlayerActions>().isGuarded = true;
+                playersToBeGuarded.Remove(player);
+                break;
+            }
+        }
+    }
+
     private IEnumerator AssignGuardCoroutine()
     {
-        // Repeat indefinitely
-        while (true)
+        while (GuardedPlayer == null && playersToBeGuarded.Count > 0)
         {
-            // Check each player
             foreach (GameObject player in playersToBeGuarded)
             {
-                // Skip this player if it's already guarded or has max children
-
                 if (!player.GetComponent<PlayerActions>().isGuarded)
                 {
-                    // Set this player as guarded
                     GuardedPlayer = player;
                     player.GetComponent<PlayerActions>().isGuarded = true;
                     PlayerActions.SetOtherPlayer(player.GetComponent<PlayerActions>());
                     Debug.Log(gameObject.name + " is guarding " + player.gameObject.name);
+                    playersToBeGuarded.Remove(player);
                     break;
                 }
 
-                // Wait for a short duration before checking again
                 yield return new WaitForSeconds(0.1f);
             }
 
-            // Wait for the next iteration
             yield return null;
+        }
+    }
+
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(i, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
     }
     public Vector3 FindPreferredDirection()

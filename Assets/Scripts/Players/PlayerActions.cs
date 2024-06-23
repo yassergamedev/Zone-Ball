@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
@@ -674,7 +676,7 @@ public class PlayerActions : MonoBehaviour
 
             isPicking = true;
             int action = UnityEngine.Random.Range(1, 4);
-            action = 1;
+            
             commentary.text = "";
             switch (action)
             {

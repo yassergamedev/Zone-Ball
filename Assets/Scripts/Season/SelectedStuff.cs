@@ -70,6 +70,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     
     public Transform Table;
     public GameObject PlayerDepth;
+    public GameObject coachingTable;
     public TeamPersistent team;
     public Text off, def, notice;
     public Playfs playOffs;
@@ -117,40 +118,40 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
 
                     playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
-                        + "(" + (player.consistency.potential).ToString() + ")";
+                    ;
 
                     playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
-                          + "(" + (player.awareness.potential).ToString() + ")";
+                    ;
 
                     playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
-                          + "(" + (player.juking.potential).ToString() + ")";
+                 ;
 
                     playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
-                          + "(" + (player.control.potential).ToString() + ")";
+                  ;
 
                     playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
-                          + "(" + (player.shooting.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
-                          + "(" + (player.positioning.potential).ToString() + ")";
+                      ;
 
                     playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
-                          + "(" + (player.steal.potential).ToString() + ")";
+                ;
 
                     playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
-                          + "(" + (player.guarding.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
-                          + "(" + (player.pressure.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
-                          + "(" + (player.inside.potential).ToString() + ")";
+                 ;
 
                     playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
-                          + "(" + (player.mid.potential).ToString() + ")";
+              ;
 
                     playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
-                          + "(" + (player.Outside.potential).ToString() + ")";
+                  ;
 
                     playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
 
@@ -162,7 +163,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                     playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "0";
 
-                    playerContract.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
+                   
 
 
 
@@ -292,40 +293,40 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
 
                     playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
-                        + "(" + (player.consistency.potential).ToString() + ")";
+                       ;
 
                     playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
-                          + "(" + (player.awareness.potential).ToString() + ")";
+                       ;
 
                     playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
-                          + "(" + (player.juking.potential).ToString() + ")";
+                    ;
 
                     playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
-                          + "(" + (player.control.potential).ToString() + ")";
+                     ;
 
                     playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
-                          + "(" + (player.shooting.potential).ToString() + ")";
+                      ;
 
                     playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
-                          + "(" + (player.positioning.potential).ToString() + ")";
+                         ;
 
                     playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
-                          + "(" + (player.steal.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
-                          + "(" + (player.guarding.potential).ToString() + ")";
+                      ;
 
                     playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
-                          + "(" + (player.pressure.potential).ToString() + ")";
+                      ;
 
                     playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
-                          + "(" + (player.inside.potential).ToString() + ")";
+                    ;
 
                     playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
-                          + "(" + (player.mid.potential).ToString() + ")";
+                 ;
 
                     playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
-                          + "(" + (player.Outside.potential).ToString() + ")";
+                     ;
 
                     playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
 
@@ -373,40 +374,40 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
 
                     playerInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.value.ToString()
-                        + "(" + (player.consistency.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.value.ToString()
-                          + "(" + (player.awareness.potential).ToString() + ")";
+                   ;
 
                     playerInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.value.ToString()
-                          + "(" + (player.juking.potential).ToString() + ")";
+                ;
 
                     playerInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.value.ToString()
-                          + "(" + (player.control.potential).ToString() + ")";
+                 ;
 
                     playerInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.value.ToString()
-                          + "(" + (player.shooting.potential).ToString() + ")";
+                  ;
 
                     playerInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.value.ToString()
-                          + "(" + (player.positioning.potential).ToString() + ")";
+                     ;
 
                     playerInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.value.ToString()
-                          + "(" + (player.steal.potential).ToString() + ")";
+               ;
 
                     playerInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.value.ToString()
-                          + "(" + (player.guarding.potential).ToString() + ")";
+                  ;
 
                     playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.value.ToString()
-                          + "(" + (player.pressure.potential).ToString() + ")";
+                  ;
 
                     playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
-                          + "(" + (player.inside.potential).ToString() + ")";
+                ;
 
                     playerInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
-                          + "(" + (player.mid.potential).ToString() + ")";
+             ;
 
                     playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.value.ToString()
-                          + "(" + (player.Outside.potential).ToString() + ")";
+                 ;
 
                     playerInfo.transform.GetChild(15).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
 
@@ -549,6 +550,81 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             teamHandler.Save(team);
         }
         SceneManager.LoadScene("Season");
+    }
+
+    public void LoadCoaching()
+    {
+        string[] OC =
+        {
+                        "Juking",
+                  "Control",
+            "Shooting",
+                        "Inside",
+                  "Mid",
+            "Outside",
+        };
+        string[] DC =
+        {
+                        "Positioning",
+                  "Steal",
+            "Guarding",
+            "Pressure",
+            "Inside",
+                  "Mid",
+            "Outside",
+
+    };
+    int hc1=0, hc2 = 0, oc1 = 0, oc2 = 0, dc1 = 0, dc2 = 0;
+        PlayerPersistent player = new();
+        for(int i =0;i<player.getStats().Count; i++)
+        {
+            if (selTeam.HC[0] == player.getStats()[i].Item1)
+            {
+                hc1 = i;
+            }
+        }
+        for (int i = 0; i < player.getStats().Count; i++)
+        {
+            if (selTeam.HC[1] == player.getStats()[i].Item1)
+            {
+                hc2 = i;
+            }
+        }
+        for (int i = 0; i < DC.Length; i++)
+        {
+            if (selTeam.DC[0] == DC[i])
+            {
+                dc1 = i;
+            }
+        }
+        for (int i = 0; i < DC.Length; i++)
+        {
+            if (selTeam.DC[1] == DC[i])
+            {
+                dc2 = i;
+            }
+        }
+        for (int i = 0; i < OC.Length; i++)
+        {
+            if (selTeam.OC[0] == OC[i])
+            {
+                oc1 = i;
+            }
+        }
+        for (int i = 0; i < OC.Length; i++)
+        {
+            if (selTeam.OC[1] == OC[i])
+            {
+                oc2 = i;
+            }
+        }
+
+        coachingTable.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<TMP_Dropdown>().value = hc1;
+        coachingTable.transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<TMP_Dropdown>().value = hc2;
+        coachingTable.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<TMP_Dropdown>().value = oc1;
+        coachingTable.transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_Dropdown>().value = oc2;
+        coachingTable.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Dropdown>().value = dc1;
+        coachingTable.transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Dropdown>().value = dc2;
     }
     public void onClickStartFA()
     {
@@ -2567,6 +2643,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
         setGames();
         PlayerStatsAllTime();
+        LoadCoaching();
     }
     public void setWeek()
     {
@@ -2611,7 +2688,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             
             "Positioning",
-            "Steals",
+            "Steal",
             "Guarding",
             "Pressure",
             "Inside",

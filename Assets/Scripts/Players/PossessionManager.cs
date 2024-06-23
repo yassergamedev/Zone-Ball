@@ -46,73 +46,60 @@ public class PossessionManager : MonoBehaviour
                  return ball.transform.parent.gameObject; // Return the GameObject that has the ball
              }
     }
-
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(i, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
     public void ChangePossession( int ind, bool isFoulShot)
     {
         Debug.Log(ind);
         Debug.Log(otherPlayersToPlay.Count);
-       
+
         if (CompareTag("Player"))
         {
-            Vector3 offset = new Vector3(0.3f, 0, 0);
-            if (otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays == 0)
+            Vector3 offset = new Vector3(-0.3f, 0, 0);
+            ShuffleList(otherPlayersToPlay);  // Shuffle the list
+
+            for (int k = 0; k < otherPlayersToPlay.Count; k++)
             {
-                for (int k = 0; k < otherPlayersToPlay.Count; k++)
+                if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
                 {
-                    if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                    ball.transform.position = otherPlayersToPlay[k].transform.position + -1 * offset;
+                    ball.transform.parent = otherPlayersToPlay[k].transform;
+                    if (!isFoulShot)
                     {
-                        ball.transform.position = otherPlayersToPlay[k].transform.position + -1*offset;
-                        ball.transform.parent = otherPlayersToPlay[k].transform;
-                        if (!isFoulShot)
-                        {
-                            otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-                        }
-                        break;
+                        otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
                     }
+                    break;
                 }
             }
-            else
-            {
-                ball.transform.position = otherPlayersToPlay[ind].transform.position +  offset; ;
-                ball.transform.parent = otherPlayersToPlay[ind].transform;
-                if (!isFoulShot)
-                {
-                    otherPlayersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-                }
-            }
-            
-           
         }
         else
         {
-            Vector3 offset = new Vector3(-0.3f, 0, 0);
-            if (playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays == 0)
+            Vector3 offset = new Vector3(0.3f, 0, 0);
+            ShuffleList(playersToPlay);  // Shuffle the list
+
+            for (int k = 0; k < playersToPlay.Count; k++)
             {
-                for (int k = 0; k < playersToPlay.Count; k++)
+                if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
                 {
-                    if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                    ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
+                    ball.transform.parent = playersToPlay[k].transform;
+                    if (!isFoulShot)
                     {
-                        ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
-                        ball.transform.parent = playersToPlay[k].transform;
-                        if (!isFoulShot)
-                        {
-                            playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-                        }
-                        break;
+                        playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
                     }
-                }
-            }
-            else
-            {
-                ball.transform.position = playersToPlay[ind].transform.position + offset;
-                ball.transform.parent = playersToPlay[ind].transform;
-                if (!isFoulShot)
-                {
-                    playersToPlay[ind].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                    break;
                 }
             }
         }
-        
+
         if (CompareTag("Player"))
         {
             if (ball.transform.parent.gameObject.GetComponent<PlayerMovement>().GuardedPlayer.GetComponent<PlayerActions>().playerPersistent.defPlays == 0)

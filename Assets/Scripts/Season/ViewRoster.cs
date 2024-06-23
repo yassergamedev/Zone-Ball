@@ -38,7 +38,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
 
         Vector2 sizeDelta = Table.transform.GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.y = team.players.Length * 100;
+        sizeDelta.y = team.players.Length * 150;
         Table.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
 
 
@@ -124,6 +124,48 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
                 playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().color =
                      player.ovrl - player.prevOvrl > 0 ? Color.green : (player.ovrl - player.prevOvrl == 0 ? Color.white : Color.red);
 
+
+
+
+
+                GameObject playerPotInfo = Instantiate(PlayerInfo, Table);
+
+                playerPotInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Potentials";
+                //playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
+
+                playerPotInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
+
+                playerPotInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.potential.ToString();
+                 
+                playerPotInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.potential.ToString();
+
+                playerPotInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.potential.ToString();
+                   
+                playerPotInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.potential.ToString();
+                  
+                playerPotInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.potential.ToString();
+                 
+                playerPotInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.potential.ToString();
+                    
+                playerPotInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.potential.ToString();
+                     
+                playerPotInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.potential.ToString();
+                    
+                playerPotInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.potential.ToString();
+                     
+                playerPotInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.potential.ToString();
+                     
+                playerPotInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.potential.ToString();
+                    
+                playerPotInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.potential.ToString();
+
+                playerPotInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
+                    
+
+
+
+
+
                 GameObject playerContract = Instantiate(Contract, Table);
                 playerContract.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
 
@@ -132,7 +174,6 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
                 playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.contract.years.ToString();
 
-                playerContract.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
 
             }
         }

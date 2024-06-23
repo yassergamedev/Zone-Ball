@@ -452,8 +452,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.14600001}
   m_AnchorMax: {x: 0.5, y: 0.14600001}
-  m_AnchoredPosition: {x: 40, y: -963.8539}
-  m_SizeDelta: {x: 1641.8, y: 2989.536}
+  m_AnchoredPosition: {x: 40, y: -4763.469}
+  m_SizeDelta: {x: 1641.8, y: 8479.782}
   m_Pivot: {x: 0.50000006, y: 0.30793357}
 --- !u!1 &1126519470
 GameObject:
@@ -535,6 +535,8 @@ MonoBehaviour:
       oppTurnovers: 0
       extraTime: 0
       playersStats: []
+      homeStatsPersistent: []
+      guestStatsPersistent: []
 --- !u!114 &1126519473
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -110,8 +110,10 @@ public class PlayerPersistent
     }
 
 
+    public PlayerPersistent()
+    {
 
-
+    }
     // Constructor
     public PlayerPersistent(string id, int num, string name, string type,
         int yers, int age,
