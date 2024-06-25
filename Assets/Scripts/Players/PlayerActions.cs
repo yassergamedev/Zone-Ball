@@ -158,7 +158,7 @@ public class PlayerActions : MonoBehaviour
                 playerStatsPersistent.turnovers += 1;
                // 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false, teamObject.GetComponent<Team>().Plays);
                 break;
 
         }
@@ -295,7 +295,7 @@ public class PlayerActions : MonoBehaviour
         hasPicked = true;
         
         decPlays();
-        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false, teamObject.GetComponent<Team>().Plays);
     }
     //action 3 == the player tries to juke the other player
     public IEnumerator Juke()
@@ -333,7 +333,7 @@ public class PlayerActions : MonoBehaviour
                 playerStatsPersistent.turnovers += 1;
 
                 decPlays();
-                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
+                possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false, teamObject.GetComponent<Team>().Plays);
             }
             else
             {
@@ -441,7 +441,7 @@ public class PlayerActions : MonoBehaviour
         commentary.text = "";
 
         //decPlays();
-        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, true);
+        possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, true, teamObject.GetComponent<Team>().Plays);
 
 
         foulManager.GetComponent<FoulManager>().isFouled = false;
@@ -676,7 +676,7 @@ public class PlayerActions : MonoBehaviour
 
             isPicking = true;
             int action = UnityEngine.Random.Range(1, 4);
-            
+            //action = 3;
             commentary.text = "";
             switch (action)
             {
@@ -722,7 +722,7 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false);
+            possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false, teamObject.GetComponent<Team>().Plays);
         }
           
     }

@@ -120,7 +120,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
                      player.Outside.value - player.Outside.prevValue > 0 ? Color.green : (player.Outside.value - player.Outside.prevValue == 0 ? Color.white : Color.red);
 
                 playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString()
-                      + "(" + (player.ovrl - player.prevOvrl).ToString() + ")";
+                      ;
                 playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().color =
                      player.ovrl - player.prevOvrl > 0 ? Color.green : (player.ovrl - player.prevOvrl == 0 ? Color.white : Color.red);
 

@@ -56,49 +56,91 @@ public class PossessionManager : MonoBehaviour
             list[randomIndex] = temp;
         }
     }
-    public void ChangePossession( int ind, bool isFoulShot)
+    public void ChangePossession( int ind, bool isFoulShot, int teamPlays)
     {
         Debug.Log(ind);
         Debug.Log(otherPlayersToPlay.Count);
+        if (teamPlays > 0) {
 
-        if (CompareTag("Player"))
-        {
-            Vector3 offset = new Vector3(-0.3f, 0, 0);
-            ShuffleList(otherPlayersToPlay);  // Shuffle the list
-
-            for (int k = 0; k < otherPlayersToPlay.Count; k++)
+            if (CompareTag("Player"))
             {
-                if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                Vector3 offset = new Vector3(-0.3f, 0, 0);
+                ShuffleList(otherPlayersToPlay);  // Shuffle the list
+
+                for (int k = 0; k < otherPlayersToPlay.Count; k++)
                 {
-                    ball.transform.position = otherPlayersToPlay[k].transform.position + -1 * offset;
-                    ball.transform.parent = otherPlayersToPlay[k].transform;
-                    if (!isFoulShot)
+                    if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
                     {
-                        otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        ball.transform.position = otherPlayersToPlay[k].transform.position + -1 * offset;
+                        ball.transform.parent = otherPlayersToPlay[k].transform;
+                        if (!isFoulShot)
+                        {
+                            otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
+                        break;
                     }
-                    break;
+                }
+            }
+            else
+            {
+                Vector3 offset = new Vector3(0.3f, 0, 0);
+                ShuffleList(playersToPlay);  // Shuffle the list
+
+                for (int k = 0; k < playersToPlay.Count; k++)
+                {
+                    if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                    {
+                        ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
+                        ball.transform.parent = playersToPlay[k].transform;
+                        if (!isFoulShot)
+                        {
+                            playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
+                        break;
+                    }
                 }
             }
         }
         else
         {
-            Vector3 offset = new Vector3(0.3f, 0, 0);
-            ShuffleList(playersToPlay);  // Shuffle the list
-
-            for (int k = 0; k < playersToPlay.Count; k++)
+            if (CompareTag("Player"))
             {
-                if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
+                Vector3 offset = new Vector3(-0.3f, 0, 0);
+                ShuffleList(otherPlayersToPlay);  // Shuffle the list
+
+                for (int k = 0; k < otherPlayersToPlay.Count; k++)
                 {
-                    ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
-                    ball.transform.parent = playersToPlay[k].transform;
-                    if (!isFoulShot)
-                    {
-                        playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
-                    }
-                    break;
+                    
+                        ball.transform.position = otherPlayersToPlay[k].transform.position + -1 * offset;
+                        ball.transform.parent = otherPlayersToPlay[k].transform;
+                        if (!isFoulShot)
+                        {
+                            otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
+                        break;
+                    
+                }
+            }
+            else
+            {
+                Vector3 offset = new Vector3(0.3f, 0, 0);
+                ShuffleList(playersToPlay);  // Shuffle the list
+
+                for (int k = 0; k < playersToPlay.Count; k++)
+                {
+                   
+                        ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
+                        ball.transform.parent = playersToPlay[k].transform;
+                        if (!isFoulShot)
+                        {
+                            playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
+                        }
+                        break;
+                    
                 }
             }
         }
+        
 
         if (CompareTag("Player"))
         {
