@@ -722,6 +722,14 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
+            PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
+            //guardText.text = otherPlayerPersistent.Name;
+            gameObject.GetComponent<PlayerMovement>().possessionHold = true;
+            foreach (PlayerMovement playerMovement in playerMovements)
+            {
+                playerMovement.possessionHold = false;
+            }
+            isPicking = false;
             possessionManager.ChangePossession(otherPlayerObject.GetComponent<PlayerActions>().index, false, teamObject.GetComponent<Team>().Plays);
         }
           

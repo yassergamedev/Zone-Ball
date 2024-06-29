@@ -70,7 +70,7 @@ using UnityEngine;
         stealSuccess = new string[]
         {
              "Stolen! Going the other way",
-        "The double-move got em!",
+        
         "A well-timed steal!",
         "Turnover, that's a steal!"
         };
