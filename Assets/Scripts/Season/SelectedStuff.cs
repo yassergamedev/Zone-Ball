@@ -67,7 +67,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public GameObject teams;
     public GameObject hasPlayedObj;
     public GameObject[] tabs;
-    
+    private CurrentGame currGame;
     public Transform Table;
     public GameObject PlayerDepth;
     public GameObject coachingTable;
@@ -81,6 +81,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     List<TeamPersistent> orderedTeamsList;
     public void LoadData(GameData go)
     {
+        FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
+        currGame = currentGame.Load();
         gameData = go;
         FileDataHandler<TeamPersistent> teamLoader = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selectedTeam.name);
         TeamPersistent team = teamLoader.Load();
@@ -871,10 +873,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             isGamePlayed = false;
                 FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.name);
-                if (!selTeam.matchesPlayed[week].isReady)
-                {
+                
                     int totalPlays = 0;
                     int totalDefPlays = 0;
+                    int startingPlayers = 0;
                     for (int i = 0; i < selTeam.players.Length; i++)
                     {
                         if(selTeam.players[i]!="")
@@ -884,18 +886,63 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                             totalPlays += playerPersistent.plays;
                             totalDefPlays += playerPersistent.defPlays;
+                            if(playerPersistent.plays>0 || playerPersistent.defPlays>0)
+                            {
+                                startingPlayers += 1;
+                            }
                         }
                         
                     }
-                   
-                    if (totalPlays == 40 && totalDefPlays == 40 )
+                int totalOtherTeamsPlays = 0;
+                int totalOtherTeamDefPlays = 0;
+                int otherStartingPlayers = 0;
+                FileDataHandler<TeamPersistent> otherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
+                TeamPersistent otherTeam = otherTeamHandler.Load();
+                for (int i = 0; i < otherTeam.players.Length; i++)
+                {
+                    if (otherTeam.players[i] != "")
                     {
+                        FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", otherTeam.players[i]);
+                        PlayerPersistent playerPersistent = playerHandler.Load();
+                        totalOtherTeamsPlays += playerPersistent.plays;
+                        totalOtherTeamDefPlays += playerPersistent.defPlays;
+                        if (playerPersistent.plays > 0 || playerPersistent.defPlays > 0)
+                        {
+                            otherStartingPlayers += 1;
+                        }
+                    }
+                }
+                if (totalPlays == currGame.gamePlays && totalDefPlays == currGame.gamePlays && startingPlayers==8 &&
+                    totalOtherTeamsPlays == currGame.gamePlays && totalOtherTeamDefPlays == currGame.gamePlays && otherStartingPlayers == 8 
+                    )
+                    {
+                        Debug.Log("True");
+                        Debug.Log("Ready : " + totalPlays);
+                        Debug.Log("Ready : " + totalDefPlays);
+                        Debug.Log("Ready : " + startingPlayers);
                         selTeam.matchesPlayed[week].isReady = true;
                         
                         teamHandler.Save(selTeam);
 
-                    }
+                    otherTeam.matchesPlayed[week].isReady = true;
+                    
+                    otherTeamHandler.Save(otherTeam);
+
                 }
+                    else
+                    {
+                        Debug.Log("False");
+                        Debug.Log("Ready : " + totalPlays);
+                        Debug.Log("Ready : " + totalDefPlays);
+                        Debug.Log("Ready : " + startingPlayers);
+                        selTeam.matchesPlayed[week].isReady = false;
+
+                        teamHandler.Save(selTeam);
+                    otherTeam.matchesPlayed[week].isReady = false;
+
+                    otherTeamHandler.Save(otherTeam);
+                }
+                
                
 
                 isGameReady.text = selTeam.matchesPlayed[week].isReady ? "Ready" : "Not Ready";
@@ -985,38 +1032,61 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     Home.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.name : selTeam.playOffMatches[playOffRound]?.opponent;
                     Guest.text = selTeam.playOffMatches[playOffRound].isHome ? selTeam.playOffMatches[playOffRound]?.opponent : selTeam.name;
                     isGamePlayed = false;
-                    if (!selTeam.playOffMatches[playOffRound].isReady)
-                    {
+                    
                         FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.name);
                         int totalPlays = 0;
                         int totalDefPlays = 0;
+                        int startingPlayers = 0;
                         for (int i = 0; i < selTeam.players.Length; i++)
+                        {
+                        if (selTeam.players[i] != "")
                         {
                             FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", selTeam.players[i]);
                             PlayerPersistent playerPersistent = playerHandler.Load();
                             totalPlays += playerPersistent.plays;
                             totalDefPlays += playerPersistent.defPlays;
+                            if (playerPersistent.plays > 0 || playerPersistent.defPlays > 0)
+                            {
+                                startingPlayers += 1;
+                            }
+                        }
                         }
                         int totalOtherTeamsPlays = 0;
                         int totalOtherTeamDefPlays = 0;
-
-                        FileDataHandler<TeamPersistent> otherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[week].opponent);
+                        int otherStartingPlayers = 0;
+                        FileDataHandler<TeamPersistent> otherTeamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", selTeam.matchesPlayed[playOffRound].opponent);
                         TeamPersistent otherTeam = otherTeamHandler.Load();
                         for (int i = 0; i < otherTeam.players.Length; i++)
+                        {
+                        if (otherTeam.players[i] != "")
                         {
                             FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", otherTeam.players[i]);
                             PlayerPersistent playerPersistent = playerHandler.Load();
                             totalOtherTeamsPlays += playerPersistent.plays;
                             totalOtherTeamDefPlays += playerPersistent.defPlays;
+                            if (playerPersistent.plays > 0 || playerPersistent.defPlays > 0)
+                            {
+                                otherStartingPlayers += 1;
+                            }
                         }
-                        if (totalPlays == 40 && totalDefPlays == 40 && totalOtherTeamsPlays == 40 && totalOtherTeamDefPlays == 40)
+                        }
+                        if (totalPlays == currGame.gamePlays && totalDefPlays == currGame.gamePlays &&
+                            totalOtherTeamsPlays == currGame.gamePlays && totalOtherTeamDefPlays == currGame.gamePlays
+                            && startingPlayers == 8 && otherStartingPlayers == 8)
                         {
                             selTeam.playOffMatches[playOffRound].isReady = true;
                             otherTeam.playOffMatches[playOffRound].isReady = true;
                             teamHandler.Save(selTeam);
                             otherTeamHandler.Save(otherTeam);
                         }
-                    }
+                        else
+                        {
+                            selTeam.playOffMatches[playOffRound].isReady = false;
+                            otherTeam.playOffMatches[playOffRound].isReady = false;
+                            teamHandler.Save(selTeam);
+                            otherTeamHandler.Save(otherTeam);
+                        }
+                    
                     isGameReady.text = selTeam.playOffMatches[playOffRound].isReady ? "Ready" : "Not Ready";
                 }
             }
@@ -2053,7 +2123,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             {
                 matchStats.SetActive(false);
                 matchPlayed.SetActive(false);
-                Debug.Log("wow");
+               
                 NoGamesTab.SetActive(true);
             }
             else
@@ -2351,6 +2421,18 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         startNewWeek.SetActive(false);
         FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
        seasonHandler.Save(currentSeason);
+        FileDataHandler<Games> gamesHandler = new(Application.persistentDataPath, "Games");
+        Games games = gamesHandler.Load();
+
+        for (int i = 0; i < games.games.Count; i++)
+        {
+            if (games.games[i].currentGame == currentSeason.id)
+            {
+                games.games[i].week = week;
+                break;
+            }
+        }
+        gamesHandler.Save(games);
         CheckWeek();
         setProgress();
 
@@ -2829,7 +2911,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 && other.matchesPlayed[week].isReady)
             {
                 FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
-                CurrentGame currGame = currentGame.Load();
+                 currGame = currentGame.Load();
                 currGame.week = week;
                 currGame.game = selTeam.matchesPlayed[week];
                 currentGame.Save(currGame);
@@ -2865,9 +2947,6 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     }
     public IEnumerator SetPlays()
     {
-        
-
-
             int totalPlays = 0, totalDefPlays = 0;
             List<PlayerPersistent> Playerlist = new List<PlayerPersistent>(); notice.text = "trying to save";
             off.text = Table.childCount.ToString();
@@ -2900,7 +2979,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 notice.text = "stopped at " + i;
             }
             notice.text = "finished going through table";
-            if (totalPlays == 40 && totalDefPlays == 40)
+            if (totalPlays == currGame.maxPlays && totalDefPlays == currGame.maxPlays)
             {
                 foreach (PlayerPersistent player in Playerlist)
                 {

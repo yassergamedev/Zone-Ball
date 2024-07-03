@@ -27,7 +27,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
 
         League.text = "Game " + currGame.year.ToString() + "-" + currGame.month.ToString() + "-" +
             currGame.day.ToString() +" "+ currGame.hour.ToString()+":"+ currGame.min.ToString() + ":" + currGame.sec.ToString()+"\n "+
-            currGame.currentSeason.ToString() + "\nWeek: " + (currGame.week+1).ToString();
+            currGame.currentSeason.ToString() + "\nWeek: " + currGame.week.ToString();
 
         setStandings();
         salCap.GetComponent<InputField>().text = currGame.SalaryCap.ToString();

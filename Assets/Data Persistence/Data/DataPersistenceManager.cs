@@ -74,7 +74,7 @@ public class DataPersistenceManager : MonoBehaviour
         //without the hour
 
         string date = dateTime.ToString().Replace("/","");
-        date = date.Replace(":","");
+        date = date.Replace(":","-");
         string gameDataId = "Game " + date;
 
         FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");

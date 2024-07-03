@@ -10,7 +10,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
     public Transform AgingTable;
     private string selectedTeam;
     public string round;
-    public GameObject PlayerInfo;
+    public GameObject PlayerInfo,PlayerPot;
     public GameObject Contract;
     public GameObject ContractExtention;
     public GameObject Message, Vacancy;
@@ -128,38 +128,37 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
 
 
-                GameObject playerPotInfo = Instantiate(PlayerInfo, Table);
+                GameObject playerPotInfo = Instantiate(PlayerPot, Table);
 
                 playerPotInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Potentials";
                 //playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
 
-                playerPotInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
-
-                playerPotInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.potential.ToString();
+             
+                playerPotInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.consistency.potential.ToString();
                  
-                playerPotInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.potential.ToString();
+                playerPotInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.awareness.potential.ToString();
 
-                playerPotInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.potential.ToString();
+                playerPotInfo.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.juking.potential.ToString();
                    
-                playerPotInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.potential.ToString();
+                playerPotInfo.transform.GetChild(4).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.control.potential.ToString();
                   
-                playerPotInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.potential.ToString();
+                playerPotInfo.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.shooting.potential.ToString();
                  
-                playerPotInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.potential.ToString();
+                playerPotInfo.transform.GetChild(6).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.positioning.potential.ToString();
                     
-                playerPotInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.potential.ToString();
+                playerPotInfo.transform.GetChild(7).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.steal.potential.ToString();
                      
-                playerPotInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.potential.ToString();
+                playerPotInfo.transform.GetChild(8).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.guarding.potential.ToString();
                     
-                playerPotInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.potential.ToString();
+                playerPotInfo.transform.GetChild(9).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.pressure.potential.ToString();
                      
-                playerPotInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.potential.ToString();
+                playerPotInfo.transform.GetChild(10).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.potential.ToString();
                      
-                playerPotInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.potential.ToString();
+                playerPotInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.potential.ToString();
                     
-                playerPotInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.potential.ToString();
+                playerPotInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Outside.potential.ToString();
 
-                playerPotInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
+                playerPotInfo.transform.GetChild(13).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.potOvrl.ToString();
                     
 
 

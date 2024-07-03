@@ -8,20 +8,27 @@ public class PlaysChanger : MonoBehaviour,IDataPersistence
     // Start is called before the first frame update
     public string playType;
     private GameData gameData;
-
+    private CurrentGame currGame;
     public void SaveData(ref GameData gamdata)
     {
 
     }
     public void LoadData(GameData gameData)
     {
-        Debug.Log("hahahaha "+ gameData.id);
+       
         this.gameData = gameData;
+        
+       
     }
 
     public void changePlays(GameObject player)
     {
-       string playerName = player.name;
+        if (currGame == null)
+        {
+            FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
+            currGame = gameDataHandler.Load();
+        }
+        string playerName = player.name;
         string id = player.transform.parent.name;
 
         FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + id+ "/Players/", playerName);
@@ -31,15 +38,15 @@ public class PlaysChanger : MonoBehaviour,IDataPersistence
            if(playType == "off")
             {
                 int playerPlays = int.Parse(player.transform.GetChild(4).GetChild(0).GetChild(1).GetComponent<Text>().text);
-                if(playerPlays > 8)
+                if(playerPlays > currGame.maxPlays)
                 {
-                    playerPlays = 8;
+                    playerPlays = currGame.maxPlays;
                 }
                 else
                 {
-                    if(playerPlays<4 && playerPlays!=0)
+                    if(playerPlays<currGame.minPlays && playerPlays!=0)
                     {
-                        playerPlays = 4;
+                        playerPlays = currGame.minPlays;
                     }
                 }
                 
@@ -51,15 +58,15 @@ public class PlaysChanger : MonoBehaviour,IDataPersistence
             else
             {
                 int playerDeffPlays = int.Parse(player.transform.GetChild(3).GetChild(0).GetChild(1).GetComponent<Text>().text);
-                if (playerDeffPlays > 8)
+                if (playerDeffPlays > currGame.maxPlays)
                 {
-                    playerDeffPlays = 8;
+                    playerDeffPlays = currGame.maxPlays;
                 }
                 else
                 {
-                    if (playerDeffPlays < 4&&playerDeffPlays!=0)
+                    if (playerDeffPlays < currGame.minPlays && playerDeffPlays!=0)
                     {
-                        playerDeffPlays = 4;
+                        playerDeffPlays = currGame.minPlays;
                     }
                 }
                 playerPersistent.defPlays = playerDeffPlays;
