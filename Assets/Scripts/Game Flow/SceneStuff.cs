@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,31 +9,51 @@ public class SceneStuff : MonoBehaviour
     public GameObject loadingUI;
     public string sceneName;
     public CurrentGame game;
+    public bool isLeaving = false;
 
     private void Start()
     {
-        if(loadingUI == null)
+        if (loadingUI == null)
         {
             loadingUI = GameObject.FindGameObjectWithTag("Opp");
         }
     }
+    private void Update()
+    {
+     
+        
+    }
     public void LoadScene()
     {
-        if(loadingUI != null)
+        if (loadingUI != null)
         {
             loadingUI.SetActive(true);
         }
         // Activate the loading UI
-       
+        if (isLeaving)
+        {
+            if (GameTimer.Instance != null)
+            {
 
-        // Start loading the scene asynchronously
-        StartCoroutine(LoadSceneAsync());
-    }
+                GameTimer.Instance.EndGame();
+            }
+        }
+            // Start loading the scene asynchronously
+            StartCoroutine(LoadSceneAsync());
+
+      
+
+     }
     public void setGameAndLoadScene()
     {
-  
-        FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");
-        currHandler.Save(game);
+       
+            FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");
+            currHandler.Save(game);
+        
+        if (GameTimer.Instance != null)
+        {
+            GameTimer.Instance.StartGame();
+        }
         LoadScene();
     }
     IEnumerator LoadSceneAsync()
@@ -51,14 +72,14 @@ public class SceneStuff : MonoBehaviour
             // Yielding null in a Coroutine waits for the next frame
             yield return null;
         }
-        if(loadingUI != null)
-        // Deactivate the loading UI once the scene is fully loaded
-        loadingUI.SetActive(false);
+        if (loadingUI != null)
+            // Deactivate the loading UI once the scene is fully loaded
+            loadingUI.SetActive(false);
     }
     public void ExitGame()
     {
-        
-            Application.Quit();
-        
+        Application.Quit();
+
     }
+ 
 }

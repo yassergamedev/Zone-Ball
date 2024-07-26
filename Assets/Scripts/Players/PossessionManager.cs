@@ -16,7 +16,7 @@ public class PossessionManager : MonoBehaviour
     private bool ballFound = false;
     private void Start()
     {
-         ball = GameObject.FindGameObjectWithTag("Ball");
+        ball = GameObject.FindGameObjectWithTag("Ball");
         holderObject = GameObject.FindGameObjectWithTag("HolderText");
         holderText = holderObject.GetComponent<Text>();
     }
@@ -60,6 +60,7 @@ public class PossessionManager : MonoBehaviour
     {
         Debug.Log(ind);
         Debug.Log(otherPlayersToPlay.Count);
+        Debug.Log("team plays "+ teamPlays);
         if (teamPlays > 0) {
 
             if (CompareTag("Player"))
@@ -69,12 +70,15 @@ public class PossessionManager : MonoBehaviour
 
                 for (int k = 0; k < otherPlayersToPlay.Count; k++)
                 {
+                    Debug.Log("checking players " + otherPlayersToPlay[k].name);
                     if (otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
                     {
+                        Debug.Log("found a player " + otherPlayersToPlay[k].name);
                         ball.transform.position = otherPlayersToPlay[k].transform.position + -1 * offset;
                         ball.transform.parent = otherPlayersToPlay[k].transform;
                         if (!isFoulShot)
                         {
+                            Debug.Log("Decreasing Plays");
                             otherPlayersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
                         }
                         break;
@@ -88,12 +92,15 @@ public class PossessionManager : MonoBehaviour
 
                 for (int k = 0; k < playersToPlay.Count; k++)
                 {
+                    Debug.Log("checking players " + playersToPlay[k].name);
                     if (playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays > 0)
                     {
+                        Debug.Log("found a player " + playersToPlay[k].name);
                         ball.transform.position = playersToPlay[k].transform.position + -1 * offset;
                         ball.transform.parent = playersToPlay[k].transform;
                         if (!isFoulShot)
                         {
+                            Debug.Log("Decreasing Plays");
                             playersToPlay[k].GetComponent<PlayerActions>().playerPersistent.plays -= 1;
                         }
                         break;
@@ -103,6 +110,7 @@ public class PossessionManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("no team plays");
             if (CompareTag("Player"))
             {
                 Vector3 offset = new Vector3(-0.3f, 0, 0);

@@ -387,15 +387,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 640
-    m_Right: 20
-    m_Top: 87
+    m_Left: 519
+    m_Right: 135
+    m_Top: 90
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 373.1, y: 108.9}
-  m_Spacing: {x: 0, y: 137.13}
+  m_CellSize: {x: 554.6, y: 125}
+  m_Spacing: {x: 0, y: 131.3}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &561453717
@@ -537,6 +537,8 @@ MonoBehaviour:
       playersStats: []
       homeStatsPersistent: []
       guestStatsPersistent: []
+    timePlayed: 0
+  insideGame: 0
 --- !u!114 &1126519473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,7 +738,7 @@ GameObject:
   - component: {fileID: 1187842058}
   m_Layer: 0
   m_Name: Data Persistence Manager
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

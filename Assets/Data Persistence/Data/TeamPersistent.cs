@@ -41,11 +41,25 @@ public class TeamPersistent
     {
 
         //return the list of stats
-        return new List<(string, Func<int>)> {("wins", () => wins),("losses", () => losses),("otWins", () => otWins),("otLosses", () => otLosees),
-            ("playoffWins", () => playoffWins),("playoffLosses", () => playoffLosses),("championships", () => championships),
-            ("blocks", () => blocks), ("steals", () => steals), ("fouls", () => fouls),("pointsScored", () => pointsScored), ("pointsAllowed", () => pointsAllowed),
-                  ("jukes", () => jukes),   ("foulShotsMade", () => foulShotsMade), ("turnovers", () => turnovers), ("oppTurnovers", () => oppTurnovers), ("insidePoints", () => insidePoints), 
-                  ("midPoints", () => midPoints),  ("outsidePoints", () => outsidePoints) };
+        return new List<(string, Func<int>)> {("wins", () => wins)
+            ,("losses", () => losses)
+            ,("otWins", () => otWins)
+            ,("otLosses", () => otLosees),
+            ("playoffWins", () => playoffWins)
+            ,("playoffLosses", () => playoffLosses)
+            ,("championships", () => championships),
+            ("blocks", () => blocks)
+            , ("steals", () => steals)
+            , ("fouls", () => fouls)
+            ,("pointsScored", () => pointsScored)
+            , ("pointsAllowed", () => pointsAllowed),
+                  ("jukes", () => jukes)
+                  ,   ("foulShotsMade", () => foulShotsMade)
+                  , ("turnovers", () => turnovers)
+                  , ("oppTurnovers", () => oppTurnovers)
+                  , ("insidePoints", () => insidePoints), 
+                  ("midPoints", () => midPoints)
+                  ,  ("outsidePoints", () => outsidePoints) };
 
 
     }
@@ -85,6 +99,7 @@ public class MatchPlayed
     public int turnovers;
     public int oppTurnovers;
     public int extraTime;
+    public string season;
     public List<string> playersStats;
     public List<PlayerStatsPersistent> homeStatsPersistent;
     public List<PlayerStatsPersistent> guestStatsPersistent;

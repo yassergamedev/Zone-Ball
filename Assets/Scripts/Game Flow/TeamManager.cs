@@ -18,6 +18,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
     public GameObject ball;
     public SoundManager soundManager;
     public SceneStuff sceneManager;
+    public int overtime = 0;
     bool isTimeFinished = true;
     public void LoadData(GameData data)
     {
@@ -162,6 +163,22 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             {
                 GuestObject.GetComponent<Team>().Plays += 6;
                 HomeObject.GetComponent<Team>().Plays += 6;
+                GuestObject.GetComponent<Team>().PlaysText.GetComponent<Text>().text = (6).ToString();
+                HomeObject.GetComponent<Team>().PlaysText.GetComponent<Text>().text = (6).ToString();
+
+                for (int i = 0;i< GuestObject.transform.childCount; i++)
+                {
+                    GuestObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerPersistent.plays += 1;
+                    GuestObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerPersistent.defPlays += 1;
+                    Debug.Log("we adding possession");
+                }
+                for (int i = 0; i < HomeObject.transform.childCount; i++)
+                {
+                    HomeObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerPersistent.plays += 1;
+                    HomeObject.transform.GetChild(i).gameObject.GetComponent<PlayerActions>().playerPersistent.defPlays += 1;
+                    Debug.Log("we adding possession");
+                }
+                overtime += 1;
             }
             else
             {
@@ -184,13 +201,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             Home.matchesPlayed[cg.week].isReady = false;
             Home.matchesPlayed[cg.week].score = HomeObject.GetComponent<Team>().teamScore;
             Home.matchesPlayed[cg.week].oppScore = GuestObject.GetComponent<Team>().teamScore;
-
+            Home.matchesPlayed[cg.week].extraTime = overtime;
 
             Guest.matchesPlayed[cg.week].isPlayed = true;
             Guest.matchesPlayed[cg.week].isReady = false;
             Guest.matchesPlayed[cg.week].score = GuestObject.GetComponent<Team>().teamScore;
             Guest.matchesPlayed[cg.week].oppScore = HomeObject.GetComponent<Team>().teamScore;
-
+            Guest.matchesPlayed[cg.week].extraTime = overtime;
 
             if (GuestObject.GetComponent<Team>().teamScore > HomeObject.GetComponent<Team>().teamScore)
             {
@@ -305,7 +322,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             matchPlayed.homeStatsPersistent = HomeStats;
             matchPlayed.guestStatsPersistent = GuestStats;
 
-            FileDataHandler<MatchPlayed> matchHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Matches Played/" + cg.week.ToString(), Home.id + " vs " + Guest.id);
+            FileDataHandler<MatchPlayed> matchHandler = new(Application.persistentDataPath + "/" + gameData.id +"/" + currentSeason.id+ "/Matches Played/" + cg.week.ToString(), Home.id + " vs " + Guest.id);
             matchHandler.Save(matchPlayed);
             yield return new WaitForSeconds(2f);
             sceneManager.LoadScene();
@@ -317,13 +334,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
             Home.playOffMatches[currentSeason.PlayOffRound].isReady = false;
             Home.playOffMatches[currentSeason.PlayOffRound].score = HomeObject.GetComponent<Team>().teamScore;
             Home.playOffMatches[currentSeason.PlayOffRound].oppScore = GuestObject.GetComponent<Team>().teamScore;
-
+            Home.playOffMatches[currentSeason.PlayOffRound].extraTime = overtime;
 
             Guest.playOffMatches[currentSeason.PlayOffRound].isPlayed = true;
             Guest.playOffMatches[currentSeason.PlayOffRound].isReady = false;
             Guest.playOffMatches[currentSeason.PlayOffRound].score = GuestObject.GetComponent<Team>().teamScore;
             Guest.playOffMatches[currentSeason.PlayOffRound].oppScore = HomeObject.GetComponent<Team>().teamScore;
-
+            Guest.playOffMatches[currentSeason.PlayOffRound].extraTime = overtime;
 
             if (GuestObject.GetComponent<Team>().teamScore > HomeObject.GetComponent<Team>().teamScore)
             {

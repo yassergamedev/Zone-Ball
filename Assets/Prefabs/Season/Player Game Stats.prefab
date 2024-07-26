@@ -8460,7 +8460,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_Text
-      value: Shots Taken
+      value: Shots Made
       objectReference: {fileID: 0}
     - target: {fileID: 2663190851563320066, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -11128,7 +11128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3780150323651200891, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 402.4181
       objectReference: {fileID: 0}
     - target: {fileID: 3780150323651200891, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_SizeDelta.y
@@ -11164,7 +11164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3780150323651200891, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -1.2496
       objectReference: {fileID: 0}
     - target: {fileID: 3780150323651200891, guid: 291eca602d1fc4e409c98cf48eac6861, type: 3}
       propertyPath: m_AnchoredPosition.y

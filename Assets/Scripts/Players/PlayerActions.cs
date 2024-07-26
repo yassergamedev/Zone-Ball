@@ -422,7 +422,7 @@ public class PlayerActions : MonoBehaviour
             int RandShot = UnityEngine.Random.Range(0, 100);
             if (RandShot <= accuracy)
             {
-                playerStatsPersistent.foulShotsMade += 2;
+                playerStatsPersistent.foulShotsMade += 1;
                 playerStatsPersistent.foulPointsScored += 2;
                 playerStatsPersistent.pointsScored += 2;
                 AddScore(2);
@@ -665,6 +665,7 @@ public class PlayerActions : MonoBehaviour
     {
         if(teamObject.GetComponent<Team>().Plays >0)
         {
+            Debug.Log(teamObject.name + " is going to choose an action");
             PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
             guardText.text = otherPlayerPersistent.Name;
             gameObject.GetComponent<PlayerMovement>().possessionHold = true;
@@ -676,7 +677,7 @@ public class PlayerActions : MonoBehaviour
 
             isPicking = true;
             int action = UnityEngine.Random.Range(1, 4);
-            //action = 3;
+            action = 1;
             commentary.text = "";
             switch (action)
             {
@@ -722,6 +723,7 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
+            
             PlayerMovement[] playerMovements = GameObject.FindObjectsOfType<PlayerMovement>();
             //guardText.text = otherPlayerPersistent.Name;
             gameObject.GetComponent<PlayerMovement>().possessionHold = true;

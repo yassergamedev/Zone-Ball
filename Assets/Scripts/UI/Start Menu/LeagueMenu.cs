@@ -25,8 +25,7 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
          currGame = currHandler.Load();
         Load.GetComponent<SceneStuff>().game = currGame;
 
-        League.text = "Game " + currGame.year.ToString() + "-" + currGame.month.ToString() + "-" +
-            currGame.day.ToString() +" "+ currGame.hour.ToString()+":"+ currGame.min.ToString() + ":" + currGame.sec.ToString()+"\n "+
+        League.text =  currGame.currentGame+"\n "+
             currGame.currentSeason.ToString() + "\nWeek: " + currGame.week.ToString();
 
         setStandings();

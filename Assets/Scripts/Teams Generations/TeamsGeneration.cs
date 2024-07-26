@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
@@ -14,7 +16,7 @@ public class TeamsGeneration : MonoBehaviour,IDataPersistence
     public Transform Teamstable;
     public Transform Playerstable;
     public RandomNameGenerator rng;
-    public GameObject salCap, totalPlays, maxPlays, minPlays;
+    public GameObject salCap, totalPlays, maxPlays, minPlays, gameName,note;
     private Transform[] TeamsRows;
     private Transform[] PlayersRows;
     private TeamPersistent selectedTeam;
@@ -729,11 +731,12 @@ new("Oregon Trail Makers", false)
 
         }
 
-
+        
     }
     public void LoadData(GameData data)
     {
         gameData = data;
+        gameName.GetComponent<InputField>().text = gameData.id;
         Debug.Log(gameData.id);
     }
     public void SaveData(ref GameData data)
@@ -794,86 +797,86 @@ new("Oregon Trail Makers", false)
                     switch (experienceOptionChoice)
                     {
                         case "Young":
-                            int randomGenerationNum = Random.Range(0, 10);
+                            int randomGenerationNum = UnityEngine.Random.Range(0, 10);
                             if(randomGenerationNum <= 7)
                             {
-                                ovrl = Random.Range(31, 40);
-                                years = Random.Range(1, 3);
-                                age = Random.Range(18, 21);
+                                ovrl = UnityEngine.Random.Range(31, 40);
+                                years = UnityEngine.Random.Range(1, 3);
+                                age = UnityEngine.Random.Range(18, 21);
                             }
                             else
                             {
                                 if(randomGenerationNum == 8)
                                 {
-                                    ovrl = Random.Range(41, 50);
-                                    years = Random.Range(3, 6);
-                                    age = Random.Range(22, 25);
+                                    ovrl = UnityEngine.Random.Range(41, 50);
+                                    years = UnityEngine.Random.Range(3, 6);
+                                    age = UnityEngine.Random.Range(22, 25);
                                 }
                                 else
                                 {
                                     if(randomGenerationNum == 9)
                                     {
-                                        ovrl = Random.Range(51, 60);
-                                        years = Random.Range(6, 9);
-                                        age = Random.Range(26, 29);
+                                        ovrl = UnityEngine.Random.Range(51, 60);
+                                        years = UnityEngine.Random.Range(6, 9);
+                                        age = UnityEngine.Random.Range(26, 29);
                                     }
                                 }
                             }
                             
                             break;
                         case "Average":
-                            int randomGenerationNum1 = Random.Range(0, 10);
+                            int randomGenerationNum1 = UnityEngine.Random.Range(0, 10);
                             if (randomGenerationNum1 <= 7)
                             {
                                 
-                                ovrl = Random.Range(41, 50);
-                                years = Random.Range(3, 6);
-                                age = Random.Range(22, 25);
+                                ovrl = UnityEngine.Random.Range(41, 50);
+                                years = UnityEngine.Random.Range(3, 6);
+                                age = UnityEngine.Random.Range(22, 25);
                             }
                             else
                             {
                                 if (randomGenerationNum1 == 8)
                                 {
-                                    ovrl = Random.Range(31, 40);
-                                    years = Random.Range(1, 3);
-                                    age = Random.Range(18, 21);
+                                    ovrl = UnityEngine.Random.Range(31, 40);
+                                    years = UnityEngine.Random.Range(1, 3);
+                                    age = UnityEngine.Random.Range(18, 21);
                                 }
                                 else
                                 {
                                     if (randomGenerationNum1 == 9)
                                     {
-                                        ovrl = Random.Range(51, 60);
-                                        years = Random.Range(6, 9);
-                                        age = Random.Range(26, 29);
+                                        ovrl = UnityEngine.Random.Range(51, 60);
+                                        years = UnityEngine.Random.Range(6, 9);
+                                        age = UnityEngine.Random.Range(26, 29);
                                     }
                                 }
                             }
                             break;
                         case "Experienced":
-                            int randomGenerationNum2 = Random.Range(0, 10);
+                            int randomGenerationNum2 = UnityEngine.Random.Range(0, 10);
                             if (randomGenerationNum2 <= 7)
                             {
 
                                 
-                                ovrl = Random.Range(51, 60);
-                                years = Random.Range(6, 9);
-                                age = Random.Range(26, 29);
+                                ovrl = UnityEngine.Random.Range(51, 60);
+                                years = UnityEngine.Random.Range(6, 9);
+                                age = UnityEngine.Random.Range(26, 29);
                             }
                             else
                             {
                                 if (randomGenerationNum2 == 8)
                                 {
-                                    ovrl = Random.Range(31, 40);
-                                    years = Random.Range(1, 3);
-                                    age = Random.Range(18, 21);
+                                    ovrl = UnityEngine.Random.Range(31, 40);
+                                    years = UnityEngine.Random.Range(1, 3);
+                                    age = UnityEngine.Random.Range(18, 21);
                                 }
                                 else
                                 {
                                     if (randomGenerationNum2 == 9)
                                     {
-                                        ovrl = Random.Range(41, 50);
-                                        years = Random.Range(3, 6);
-                                        age = Random.Range(22, 25);
+                                        ovrl = UnityEngine.Random.Range(41, 50);
+                                        years = UnityEngine.Random.Range(3, 6);
+                                        age = UnityEngine.Random.Range(22, 25);
                                     }
                                 }
                             }
@@ -979,20 +982,105 @@ new("Oregon Trail Makers", false)
             }
         
     }
+    // New function to rename save folder
+    public void RenameFolderAndFile(string folderName, string newFolderName, string fileExtension)
+    {
+        string currentFolderPath = Path.Combine(UnityEngine.Application.persistentDataPath, folderName);
+        string newFolderPath = Path.Combine(UnityEngine.Application.persistentDataPath, newFolderName);
+
+        // Check if the new folder name already exists and adjust if necessary
+        int counter = 1;
+        while (Directory.Exists(newFolderPath))
+        {
+            newFolderPath = Path.Combine(UnityEngine.Application.persistentDataPath, newFolderName + counter.ToString());
+            counter++;
+        }
+        newFolderName = Path.GetFileName(newFolderPath); // Update newFolderName to reflect the unique name
+
+        try
+        {
+            FileDataHandler<Games> gamesHandler = new FileDataHandler<Games>(Application.persistentDataPath, "Games");
+            Games games = gamesHandler.Load();
+
+            FileDataHandler<CurrentGame> currentgameHandler = new FileDataHandler<CurrentGame>(Application.persistentDataPath, "Current Game");
+            CurrentGame cg = currentgameHandler.Load();
+
+            for (int i = 0; i < games.games.Count; i++)
+            {
+                if (games.games[i].currentGame == folderName)
+                {
+                    games.games[i].currentGame = newFolderName;
+
+                    if (cg.currentGame == folderName)
+                    {
+                        cg.currentGame = newFolderName;
+                    }
+                    break;
+                }
+            }
+            currentgameHandler.Save(cg);
+            gamesHandler.Save(games);
+
+            FileDataHandler<GameData> gameDatHandler = new FileDataHandler<GameData>(Application.persistentDataPath + "/" + folderName, folderName);
+            GameData data = gameDatHandler.Load();
+
+            data.id = newFolderName;
+
+            gameDatHandler.Save(data);
+
+            if (Directory.Exists(currentFolderPath) && currentFolderPath != newFolderPath)
+            {
+                // Rename file inside the folder
+                string currentFilePath = Path.Combine(currentFolderPath, folderName + fileExtension);
+                string newFilePath = Path.Combine(currentFolderPath, newFolderName + fileExtension);
+
+                if (File.Exists(currentFilePath))
+                {
+                    File.Move(currentFilePath, newFilePath);
+                    Debug.Log("File renamed successfully from " + folderName + fileExtension + " to " + newFolderName + fileExtension);
+                }
+                else
+                {
+                    Debug.LogError("The file " + folderName + fileExtension + " does not exist.");
+                }
+
+                // Rename folder
+                Directory.Move(currentFolderPath, newFolderPath);
+                Debug.Log("Folder renamed successfully from " + folderName + " to " + newFolderName);
+            }
+            else
+            {
+                Debug.LogError("The folder " + folderName + " does not exist.");
+            }
+
+            
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("An error occurred: " + ex.Message);
+            // Optionally, you can display a UI error message here
+        }
+    }
+
+
+
 
     public void StartSeason()
     {
         FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
         CurrentGame currGame = gameDataHandler.Load();
-
+        
         currGame.prevSalaryCap = currGame.SalaryCap;
         currGame.SalaryCap = int.Parse(salCap.GetComponent<InputField>().text);
         currGame.gamePlays = int.Parse(totalPlays.GetComponent<InputField>().text);
         currGame.maxPlays = int.Parse(maxPlays.GetComponent<InputField>().text);
         currGame.minPlays = int.Parse(minPlays.GetComponent<InputField>().text);
 
-        gameDataHandler.Save(currGame);
-        string[] west =
+        string newName = gameName.GetComponent<InputField>().text;
+
+
+
+            string[] west =
       {
             "Arizona Jaguars",
             "California Lightning",
@@ -1036,5 +1124,17 @@ new("Oregon Trail Makers", false)
             teamHandler.Save(team);
         }
 
+
+        gameDataHandler.Save(currGame);
+
+        RenameFolderAndFile(currGame.currentGame, newName, "");
+      
+            if (GameTimer.Instance != null)
+            {
+                GameTimer.Instance.StartGame();
+            }
+      
+      
+        
     }
 }

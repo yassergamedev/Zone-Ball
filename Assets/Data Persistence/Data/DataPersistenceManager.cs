@@ -2,50 +2,52 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using UnityEngine;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 public class DataPersistenceManager : MonoBehaviour
 {
     [Header("File Configuration")]
     public bool newGame = false;
     private GameData gameData;
-    
-    
+
     public static DataPersistenceManager instance { get; private set; }
 
     private List<IDataPersistence> dataPersistenceObjects;
 
     private FileDataHandler<GameData> GameDataHandler;
-    // Start is called before the first frame update
+
     void Awake()
     {
-        if(instance !=null)
+        if (instance != null)
         {
             Debug.LogError("More than one instance of DataPersistenceManager at scene");
         }
+        instance = this;
     }
+
     private void Start()
     {
-        //fileDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath, fileName);
         dataPersistenceObjects = FindAllDataPersistenceObjects();
-        if(newGame)
+        if (newGame)
         {
             NewGame();
-        }else
+        }
+        else
         {
-            FileDataHandler<CurrentGame> gameDataHandler = new(Application.persistentDataPath, "Current Game");
-
-           
+            Debug.Log(UnityEngine.Application.persistentDataPath);
+            FileDataHandler<CurrentGame> gameDataHandler = new(UnityEngine.Application.persistentDataPath, "Current Game");
             LoadGame(gameDataHandler.Load().currentGame);
         }
-      
     }
-    
+
     public void NewGame()
     {
         DateTime dateTime = DateTime.Now;
         int year = dateTime.Year;
-        string[] west = 
+        string[] west =
         {
             "Arizona Jaguars",
             "California Lightning",
@@ -71,19 +73,17 @@ public class DataPersistenceManager : MonoBehaviour
             "Virginia Bobcats",
             "Wisconsin Crows"
         };
-        //without the hour
-
-        string date = dateTime.ToString().Replace("/","");
-        date = date.Replace(":","-");
+        string date = dateTime.ToString().Replace("/", "");
+        date = date.Replace(":", "-");
         string gameDataId = "Game " + date;
 
-        FileDataHandler<CurrentGame> currHandler = new(Application.persistentDataPath, "Current Game");
+        FileDataHandler<CurrentGame> currHandler = new(UnityEngine.Application.persistentDataPath, "Current Game");
         CurrentGame current = currHandler.Load();
 
         if (current != null)
         {
-           current.currentGame = gameDataId;
-            current.week = 1;
+            current.currentGame = gameDataId;
+            current.week = 0;
             current.game = null;
             current.day = DateTime.Now.Day.ToString();
             current.month = DateTime.Now.Month.ToString();
@@ -91,19 +91,20 @@ public class DataPersistenceManager : MonoBehaviour
             current.hour = DateTime.Now.Hour.ToString();
             current.min = DateTime.Now.Minute.ToString();
             current.sec = DateTime.Now.Second.ToString();
+            current.currentSeason = "Season " + year;
+            current.timePlayed = 0f;
         }
         else
         {
             current = new(gameDataId, "Season " + year);
-           
         }
         currHandler.Save(current);
-        FileDataHandler<Games> gamesHandler = new(Application.persistentDataPath, "Games");
+
+        FileDataHandler<Games> gamesHandler = new(UnityEngine.Application.persistentDataPath, "Games");
         Games games = gamesHandler.Load();
-        if(games != null)
+        if (games != null)
         {
             games.games.Add(current);
-            
         }
         else
         {
@@ -111,53 +112,51 @@ public class DataPersistenceManager : MonoBehaviour
             games.games.Add(current);
         }
         gamesHandler.Save(games);
+
         for (int j = 0; j < west.Length; j++)
         {
-            FileDataHandler<TeamPersistent> teamhandler = new(Application.persistentDataPath + "/" + gameDataId + "/Teams/", west[j]);
+            FileDataHandler<TeamPersistent> teamhandler = new(UnityEngine.Application.persistentDataPath + "/" + gameDataId + "/Teams/", west[j]);
             TeamPersistent team = new(west[j], west[j], "West", new string[14]);
-
             teamhandler.Save(team);
         }
         for (int j = 0; j < east.Length; j++)
         {
-            FileDataHandler<TeamPersistent> teamhandler = new(Application.persistentDataPath + "/" + gameDataId + "/Teams/", east[j]);
+            FileDataHandler<TeamPersistent> teamhandler = new(UnityEngine.Application.persistentDataPath + "/" + gameDataId + "/Teams/", east[j]);
             TeamPersistent team = new(east[j], east[j], "East", new string[14]);
-
             teamhandler.Save(team);
         }
-        FileDataHandler<LeaguePersistent> leagueHandler = new(Application.persistentDataPath + "/" + gameDataId + "/Season "+ year +"/", "League "+ year);
-        LeaguePersistent league = new("League "+year, year.ToString());
 
+        FileDataHandler<LeaguePersistent> leagueHandler = new(UnityEngine.Application.persistentDataPath + "/" + gameDataId + "/Season " + year + "/", "League " + year);
+        LeaguePersistent league = new("League " + year, year.ToString());
         leagueHandler.Save(league);
-        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameDataId + "/Season " + year + "/", "Season " + year);
-        Season season = new("Season " + year, year.ToString(), "League "+year);
+
+        FileDataHandler<Season> seasonHandler = new(UnityEngine.Application.persistentDataPath + "/" + gameDataId + "/Season " + year + "/", "Season " + year);
+        Season season = new("Season " + year, year.ToString(), "League " + year);
         seasonHandler.Save(season);
 
-        GameDataHandler = new FileDataHandler<GameData>(Application.persistentDataPath + "/" + gameDataId, gameDataId);
-        this.gameData = new GameData(gameDataId,dateTime, "Season "+ year);
+        GameDataHandler = new FileDataHandler<GameData>(UnityEngine.Application.persistentDataPath + "/" + gameDataId, gameDataId);
+        this.gameData = new GameData(gameDataId, dateTime, "Season " + year);
         GameDataHandler.Save(gameData);
 
-
         LoadGame(gameDataId);
-       
     }
+
     public void SaveGame()
     {
-        foreach(var dataPersistenceObject in dataPersistenceObjects)
+        foreach (var dataPersistenceObject in dataPersistenceObjects)
         {
             dataPersistenceObject.SaveData(ref gameData);
         }
-
         GameDataHandler.Save(gameData);
     }
+
     public void LoadGame(string gameInfo)
     {
-        GameDataHandler = new(Application.persistentDataPath + "/" + gameInfo, gameInfo);
+        GameDataHandler = new(UnityEngine.Application.persistentDataPath + "/" + gameInfo, gameInfo);
         gameData = GameDataHandler.Load();
         if (gameData == null)
         {
-            Debug.Log("no data initialized. Initalizing default new game..");
-            //NewGame();
+            Debug.Log("no data initialized. Initializing default new game...");
         }
         else
         {
@@ -166,8 +165,6 @@ public class DataPersistenceManager : MonoBehaviour
                 dataPersistenceObject.LoadData(gameData);
             }
         }
-
-        
     }
 
     private void OnApplicationQuit()
@@ -178,10 +175,56 @@ public class DataPersistenceManager : MonoBehaviour
     private List<IDataPersistence> FindAllDataPersistenceObjects()
     {
         IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
+        return new List<IDataPersistence>(dataPersistenceObjects);
+    }
 
-        return new List<IDataPersistence>( dataPersistenceObjects);
+    // New function to open save file dialog and save game
+    public void OpenSaveFileDialog()
+    {
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.InitialDirectory = UnityEngine.Application.persistentDataPath;
+        saveFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+        saveFileDialog.Title = "Save Game Data";
+
+        IntPtr windowHandle = GetActiveWindow();
+        if (saveFileDialog.ShowDialog(new WindowWrapper(windowHandle)) == DialogResult.OK)
+        {
+            string saveFilePath = saveFileDialog.FileName;
+            SaveGameToFile(saveFilePath);
+        }
+    }
+
+    private void SaveGameToFile(string saveFilePath)
+    {
+        // Your game saving logic here
+        FileDataHandler<GameData> gameDataHandler = new FileDataHandler<GameData>(saveFilePath,"");
+        GameData gameData = new GameData("YourGameDataId", DateTime.Now, "Season");
+        gameDataHandler.Save(gameData);
+        Debug.Log("Game saved successfully at " + saveFilePath);
+    }
+
+   
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetActiveWindow();
+
+    // Helper class to handle window wrapper
+    public class WindowWrapper : IWin32Window
+    {
+        private IntPtr hwnd;
+
+        public WindowWrapper(IntPtr handle)
+        {
+            hwnd = handle;
+        }
+
+        public IntPtr Handle
+        {
+            get { return hwnd; }
+        }
     }
 }
+
 [System.Serializable]
 public class CurrentGame
 {
@@ -189,12 +232,13 @@ public class CurrentGame
     public string currentSeason;
     public int week;
     public string day, month, year, hour, min, sec;
-    public int prevSalaryCap = 360000,SalaryCap = 360000, gamePlays = 40, minPlays = 4, maxPlays = 8; 
+    public int prevSalaryCap = 360000, SalaryCap = 360000, gamePlays = 40, minPlays = 4, maxPlays = 8;
     public MatchPlayed game;
+    public float timePlayed; // New field for tracking total time played
     public CurrentGame(string currentGame, string currentSeason)
     {
         this.currentGame = currentGame;
-        week = 1;
+        week =0;
         game = null;
         day = DateTime.Now.Day.ToString();
         month = DateTime.Now.Month.ToString();
@@ -203,14 +247,16 @@ public class CurrentGame
         min = DateTime.Now.Minute.ToString();
         sec = DateTime.Now.Second.ToString();
         this.currentSeason = currentSeason;
+        timePlayed = 0f; // Initialize timePlayed
     }
 }
+
 [System.Serializable]
 public class Games
 {
     public List<CurrentGame> games;
     public bool isFirstBoot = true;
-    public Games( )
+    public Games()
     {
         games = new List<CurrentGame>();
     }

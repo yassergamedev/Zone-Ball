@@ -63,6 +63,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public GameObject AgingTeams, Roster,advanceAgingPhase, DraftTeams,DraftRound2;
     public GameObject nextWeek, prevWeek, startNewWeek,startNextRound,finishPlayOffs,startFAphase,startNewSeason, NoGamesTab;
     public GameObject playOffsTab,StartPlayOffs;
+    public GameObject sortableCareerContent, FullStats;
     public bool isNextWeekReady = true, isSeasonFinished = false;
     public GameObject teams;
     public GameObject hasPlayedObj;
@@ -75,10 +76,11 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Text off, def, notice;
     public Playfs playOffs;
     private bool isClickedBack = false, isComing = false;
-    private List<(string, PlayerStatsPersistent)> allPlayerStats = new();
+    private List<(string, PlayerStatsPersistent,string)> allPlayerStats = new();
     private List<(string,string, PlayerStatsPersistent)> allTimePlayerStats = new();
     private List<(string, int)> teamsStats = new();
     List<TeamPersistent> orderedTeamsList;
+    List<PlayerPersistent> players = new();
     public void LoadData(GameData go)
     {
         FileDataHandler<CurrentGame> currentGame = new(Application.persistentDataPath, "Current Game");
@@ -507,10 +509,11 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
      
             TeamStats();
             StartCoroutine(stretch(Content));
-            StartCoroutine(stretch(TeamSeasonStatsContent));
+            StartCoroutine(stretch(Content));
             SeasonRecords();
             CareerRecords();
         GameRecords();
+        SortableStats();
             CheckWeek();
             setProgress();
         
@@ -1219,7 +1222,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                         {
 
 
-                            row.GetChild(0).gameObject.GetComponent<Text>().text = west[i];
+                            row.GetChild(0).gameObject.GetComponent<Text>().text = east[i];
                         }
 
                         else if (row.gameObject.name == "conference")
@@ -1608,6 +1611,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                         playerTotalStats.midShotsMade += stats.midShotsMade;
                         playerTotalStats.outsideShots += stats.outsideShots;
                         playerTotalStats.outsideShotsMade += stats.outsideShotsMade;
+                        playerTotalStats.jukes += stats.jukes;
+
                     }
                 }
                 playersAll.Add(new(selTeam.players[p], playerTotalStats));
@@ -1712,9 +1717,15 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         {
             FileDataHandler<TeamPersistent> teamHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Teams/", west[i]);
             TeamPersistent selTeam = teamHandler.Load();
+
+
             for (int p = 0; p < selTeam.players.Length; p++)
             {
                
+                for(int s = 0; s< gameData.seasons.Count; s++)
+                {
+
+                
                 if (selTeam.players[p] != "")
                 {
 
@@ -1722,7 +1733,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     
                     for (int k = 0; k <= week; k++)
                     {
-                        FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/" + selTeam.name + "/" + k.ToString(),
+                        FileDataHandler<PlayerStatsPersistent> statsHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.seasons[s] + "/" + selTeam.name + "/" + k.ToString(),
                             selTeam.players[p]);
 
                         PlayerStatsPersistent stats = statsHandler.Load();
@@ -1756,16 +1767,18 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                             playerTotalStats.outsideShotsMade += stats.outsideShotsMade;
                         }
                     }
-                    allPlayerStats.Add(new(selTeam.players[p], playerTotalStats));
+                    allPlayerStats.Add(new(selTeam.players[p], playerTotalStats, gameData.seasons[s]));
                 }
+
+            }
             }
         }
 
-        List<(string statName, int statVal, string player,string team)> records = new();
+        List<(string statName, int statVal, string player,string team,string season)> records = new();
         PlayerStatsPersistent record = new("record");
         for(int i = 0; i< record.getStats().Count; i++)
         {
-            (string statName, int statVal,string player,string team) rec = new();
+            (string statName, int statVal,string player,string team,string season) rec = new();
           
 
            int max = 0;
@@ -1784,6 +1797,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                             rec.statVal = allPlayerStats[k].Item2.getStats()[l].Item2();
                             
                             rec.team = allPlayerStats[k].Item2.team;
+                            rec.season = allPlayerStats[k].Item3;
                         }
                     }
                 }
@@ -1813,6 +1827,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item3.ToString();
                 Debug.Log("some team : " +records[b].Item4);
                 row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item4;
+                row.GetChild(4).GetChild(0).gameObject.GetComponent<Text>().text = records[b].Item5;
                 FileDataHandler<PlayerPersistent> plHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", records[b].Item3.ToString());
                     PlayerPersistent p = plHandler.Load();
                   //  row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = p.team!=null?p.team:"";
@@ -1941,115 +1956,214 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         }
 
     }
+
+  
+    public void SortableStats()
+    {
+
+        FileDataHandler<PlayerPersistent> playersHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", "");
+        List<string> playerNames = playersHandler.GetAllFiles();
+       
+        foreach(string p in playerNames)
+        {
+            FileDataHandler<PlayerPersistent> playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players", p);
+            PlayerPersistent player = playerHandler.Load();
+            players.Add(player);
+        }
+     
+            Vector2 sizeDelta = StandingsTable.transform.GetComponent<RectTransform>().sizeDelta;
+        sizeDelta.y = players.Count * 50;
+        sortableCareerContent.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+
+       
+        foreach(PlayerPersistent player in players)
+        {
+            GameObject fullStats = Instantiate(FullStats, sortableCareerContent.transform);
+
+            fullStats.gameObject.name = player.Name;
+            fullStats.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = player.Name;
+            fullStats.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Age.ToString();
+            fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+
+            for(int k = 3,s=0; s<player.stats.getStats().Count; k++,s++)
+            {
+                fullStats.transform.GetChild(k).GetChild(0).GetComponent<Text>().text = player.stats.getStats()[s].Item2().ToString();
+            }
+        }
+    }
+
+    public void SortTable(GameObject stat)
+    {
+        string statName = stat.name;
+        PlayerStatsPersistent p = new("");
+        int i;
+        for ( i = 0; i < p.getStats().Count; i++)
+        {
+            if (p.getStats()[i].Item1 == statName)
+                break;
+        }
+
+        switch (statName){
+            case "Name":
+                players = players.OrderBy(player => player.Name).ToList();
+                break;
+            case "Age":
+                players = players.OrderByDescending(player => player.Age).ToList();
+                break;
+            case "Team":
+                players = players.OrderBy(player => player.team).ToList();
+                break;
+            default:
+                players = players.OrderByDescending(player => player.stats.getStats()[i].Item2()).ToList();
+                break;
+        }
+
+       
+
+
+        for(int k = 0; k< sortableCareerContent.transform.childCount; k++)
+        {
+            Destroy(sortableCareerContent.transform.GetChild(k).gameObject);
+        }
+
+
+        Vector2 sizeDelta = StandingsTable.transform.GetComponent<RectTransform>().sizeDelta;
+        sizeDelta.y = players.Count * 50;
+        sortableCareerContent.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
+
+
+        foreach (PlayerPersistent player in players)
+        {
+            GameObject fullStats = Instantiate(FullStats, sortableCareerContent.transform);
+
+            fullStats.gameObject.name = player.Name;
+            fullStats.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = player.Name;
+            fullStats.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Age.ToString();
+            fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+
+            for (int k = 3, s = 0; s < player.stats.getStats().Count; k++, s++)
+            {
+                fullStats.transform.GetChild(k).GetChild(0).GetComponent<Text>().text = player.stats.getStats()[s].Item2().ToString();
+            }
+        }
+    }
     public void GameRecords()
     {
-        List<(string statName, int statVal, string player, string team, string game, int week)> overallRecords = new();
-        List<(string statName, int statVal, string player, string team, string game, int week)> gameRecords = new();
-        List<(string statName, int statVal, string player, string team, string game, int week)> localRecords = new();
+        List<(string statName, int statVal, string player, string team, string game, int week, string season)> overallRecords = new();
+        List<(string statName, int statVal, string player, string team, string game, int week, string season)> gameRecords = new();
+        List<(string statName, int statVal, string player, string team, string game, int week, string season)> localRecords = new();
         PlayerStatsPersistent iterableStat = new("record");
+        List<string> seasons = gameData.seasons;
 
-        for (int w = 0; w <= week; w++)
+        for (int s = 0; s < seasons.Count; s++) // Loop through each season
         {
-            Debug.Log($"Processing week {w}");
-            FileDataHandler<MatchPlayed> matchesPlayedHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Matches Played/" + w, "");
-            List<string> matchesPlayed = matchesPlayedHandler.GetAllFiles();
-            foreach (string match in matchesPlayed)
+            string season = seasons[s];
+
+            for (int w = 0; w <= week; w++)
             {
-                Debug.Log($"Processing match {match}");
-                (string statName, int statVal, string player, string team, string game, int week) homeGameRec = new();
-                (string statName, int statVal, string player, string team, string game, int week) guestGameRec = new();
-                string[] teams = match.Split(new string[] { " vs " }, StringSplitOptions.None);
-                string homeTeam = "", guestTeam = "";
-                if (teams.Length == 2)
+                Debug.Log($"Processing week {w}");
+                FileDataHandler<MatchPlayed> matchesPlayedHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + season + "/Matches Played/" + w, "");
+                List<string> matchesPlayed = matchesPlayedHandler.GetAllFiles();
+                foreach (string match in matchesPlayed)
                 {
-                    homeTeam = teams[0];
-                    guestTeam = teams[1];
-                }
-                else
-                {
-                    Debug.LogError("Invalid match format: " + match);
-                    continue;
-                }
-
-                FileDataHandler<MatchPlayed> matchHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Matches Played/" + w, match);
-                MatchPlayed p = matchHandler.Load();
-
-                if (p == null)
-                {
-                    Debug.LogError("Failed to load match: " + match);
-                    continue;
-                }
-
-                List<PlayerStatsPersistent> homeStats = p.homeStatsPersistent;
-                List<PlayerStatsPersistent> guestStats = p.guestStatsPersistent;
-
-                for (int k = 0; k < iterableStat.getStats().Count; k++)
-                {
-                    int max = 0;
-                    for (int i = 0; i < homeStats.Count; i++)
+                    Debug.Log($"Processing match {match}");
+                    (string statName, int statVal, string player, string team, string game, int week, string season) homeGameRec = new();
+                    (string statName, int statVal, string player, string team, string game, int week, string season) guestGameRec = new();
+                    string[] teams = match.Split(new string[] { " vs " }, StringSplitOptions.None);
+                    string homeTeam = "", guestTeam = "";
+                    if (teams.Length == 2)
                     {
-                        Debug.Log("big stat coming :" +homeStats[i].id);
-                        for (int j = 0; j < iterableStat.getStats().Count; j++)
+                        homeTeam = teams[0];
+                        guestTeam = teams[1];
+                    }
+                    else
+                    {
+                        Debug.LogError("Invalid match format: " + match);
+                        continue;
+                    }
+
+                    FileDataHandler<MatchPlayed> matchHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + season + "/Matches Played/" + w, match);
+                    MatchPlayed p = matchHandler.Load();
+
+                    if (p == null)
+                    {
+                        Debug.LogError("Failed to load match: " + match);
+                        continue;
+                    }
+
+                    List<PlayerStatsPersistent> homeStats = p.homeStatsPersistent;
+                    List<PlayerStatsPersistent> guestStats = p.guestStatsPersistent;
+
+                    for (int k = 0; k < iterableStat.getStats().Count; k++)
+                    {
+                        int max = 0;
+                        for (int i = 0; i < homeStats.Count; i++)
                         {
-                            if (homeStats[i].getStats()[j].Item1 == iterableStat.getStats()[k].Item1)
+                            Debug.Log("big stat coming :" + homeStats[i].id);
+                            for (int j = 0; j < iterableStat.getStats().Count; j++)
                             {
-                                if (homeStats[i].getStats()[j].Item2() >= max)
+                                if (homeStats[i].getStats()[j].Item1 == iterableStat.getStats()[k].Item1)
                                 {
-                                    max = homeStats[i].getStats()[j].Item2();
-                                    homeGameRec.statName = homeStats[i].getStats()[j].Item1;
-                                    homeGameRec.statVal = max;
-                                    homeGameRec.player = homeStats[i].id;
-                                    homeGameRec.team = homeTeam;
-                                    homeGameRec.game = match;
-                                    homeGameRec.week = w;
+                                    if (homeStats[i].getStats()[j].Item2() >= max)
+                                    {
+                                        max = homeStats[i].getStats()[j].Item2();
+                                        homeGameRec.statName = homeStats[i].getStats()[j].Item1;
+                                        homeGameRec.statVal = max;
+                                        homeGameRec.player = homeStats[i].id;
+                                        homeGameRec.team = homeTeam;
+                                        homeGameRec.game = match;
+                                        homeGameRec.week = w;
+                                        homeGameRec.season = season; // Register the season
+                                    }
                                 }
                             }
                         }
-                    }
-                    localRecords.Add(homeGameRec);
-                    max = 0;
-                    for (int i = 0; i < guestStats.Count; i++)
-                    {
-                        for (int j = 0; j < iterableStat.getStats().Count; j++)
+                        localRecords.Add(homeGameRec);
+                        max = 0;
+                        for (int i = 0; i < guestStats.Count; i++)
                         {
-                            if (guestStats[i].getStats()[j].Item1 == iterableStat.getStats()[k].Item1)
+                            for (int j = 0; j < iterableStat.getStats().Count; j++)
                             {
-                                if (guestStats[i].getStats()[j].Item2() >= max)
+                                if (guestStats[i].getStats()[j].Item1 == iterableStat.getStats()[k].Item1)
                                 {
-                                    max = guestStats[i].getStats()[j].Item2();
-                                    guestGameRec.statName = guestStats[i].getStats()[j].Item1;
-                                    guestGameRec.statVal = max;
-                                    guestGameRec.player = guestStats[i].id;
-                                    guestGameRec.team = guestTeam;
-                                    guestGameRec.game = match;
-                                    guestGameRec.week = w;
+                                    if (guestStats[i].getStats()[j].Item2() >= max)
+                                    {
+                                        max = guestStats[i].getStats()[j].Item2();
+                                        guestGameRec.statName = guestStats[i].getStats()[j].Item1;
+                                        guestGameRec.statVal = max;
+                                        guestGameRec.player = guestStats[i].id;
+                                        guestGameRec.team = guestTeam;
+                                        guestGameRec.game = match;
+                                        guestGameRec.week = w;
+                                        guestGameRec.season = season; // Register the season
+                                    }
                                 }
                             }
                         }
+                        localRecords.Add(guestGameRec);
                     }
-                    localRecords.Add(guestGameRec);
                 }
-            }
 
-            // Find top stats for each statName in a single game (localRecords)
-            foreach (var stat in iterableStat.getStats())
-            {
-                var topStat = localRecords
-                    .Where(r => r.statName == stat.Item1 && r.week == w)
-                    .OrderByDescending(r => r.statVal)
-                    .FirstOrDefault();
-
-                if (topStat != default)
+                // Find top stats for each statName in a single game (localRecords)
+                foreach (var stat in iterableStat.getStats())
                 {
-                    gameRecords.Add(topStat);
-                }
-                else
-                {
-                    Debug.LogWarning($"No records found for stat {stat.Item1} in week {w}");
-                }
-            }
+                    var topStat = localRecords
+                        .Where(r => r.statName == stat.Item1 && r.week == w)
+                        .OrderByDescending(r => r.statVal)
+                        .FirstOrDefault();
 
-            localRecords.Clear();
+                    if (topStat != default)
+                    {
+                        gameRecords.Add(topStat);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No records found for stat {stat.Item1} in week {w}");
+                    }
+                }
+
+                localRecords.Clear();
+            }
         }
 
         // Find top stats for each statName overall (gameRecords)
@@ -2074,7 +2188,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         Console.WriteLine("Overall Records:");
         foreach (var record in overallRecords)
         {
-            Console.WriteLine($"Stat: {record.statName}, Value: {record.statVal}, Player: {record.player}, Team: {record.team}, Game: {record.game}, Week: {record.week}");
+            Console.WriteLine($"Stat: {record.statName}, Value: {record.statVal}, Player: {record.player}, Team: {record.team}, Game: {record.game}, Week: {record.week}, Season: {record.season}");
         }
 
         // Update UI
@@ -2096,7 +2210,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     row.GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = overallRecords[b].player;
                     row.GetChild(3).GetChild(0).gameObject.GetComponent<Text>().text = overallRecords[b].team;
                     row.GetChild(4).GetChild(0).gameObject.GetComponent<Text>().text = overallRecords[b].game;
-                    row.GetChild(5).GetChild(0).gameObject.GetComponent<Text>().text = (overallRecords[b].week+1).ToString();
+                    row.GetChild(5).GetChild(0).gameObject.GetComponent<Text>().text = (overallRecords[b].week + 1).ToString();
+                    row.GetChild(6).GetChild(0).gameObject.GetComponent<Text>().text = overallRecords[b].season; 
                     b++;
                 }
                 else
@@ -2107,6 +2222,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             }
         }
     }
+
 
     public void setTableActive()
     {
@@ -2640,6 +2756,10 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         SetSelectedOption(selectedOption);
         SetSelectedOption2(selectedOption2);
 
+    }
+    public void callStretch(Transform Content)
+    {
+        StartCoroutine(stretch(Content));
     }
     public IEnumerator stretch(Transform Content)
     {

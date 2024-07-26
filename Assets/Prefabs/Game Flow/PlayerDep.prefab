@@ -305,7 +305,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
-  columnSpan: 1
+  columnSpan: 2
   dontUseTableCellBackground: 0
   overrideGlobalPadding: 0
   m_tableLayout: {fileID: 0}
