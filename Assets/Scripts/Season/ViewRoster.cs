@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,14 +45,23 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
 
 
 
-        Debug.Log(Table.transform.GetComponent<RectTransform>().rect.height);
+        List<PlayerPersistent> teamPlayers = new List<PlayerPersistent>();
+
         for (int i = 0; i < team.players.Length; i++)
         {
             if (team.players[i] != "")
             {
                 FileDataHandler<PlayerPersistent> _playerHandler = new(Application.persistentDataPath + "/" + gameData.id + "/Players/", team.players[i]);
                 PlayerPersistent player = _playerHandler.Load();
-
+                teamPlayers.Add(player);
+            }
+        }
+        teamPlayers = teamPlayers.OrderByDescending(player => player.ovrl).ToList();
+                //Debug.Log(Table.transform.GetComponent<RectTransform>().rect.height);
+        foreach (PlayerPersistent player in teamPlayers)
+        {
+           
+               
                 GameObject playerInfo = Instantiate(PlayerInfo, Table);
 
                 playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
@@ -107,7 +117,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
                 playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.inside.value.ToString()
                       + "(" + (player.inside.value - player.inside.prevValue).ToString() + ")";
                 playerInfo.transform.GetChild(11).GetChild(0).GetComponent<UnityEngine.UI.Text>().color =
-                     player.inside.value - player.inside.prevValue > 0 ? Color.green : (player.pressure.value - player.pressure.prevValue == 0 ? Color.white : Color.red);
+                     player.inside.value - player.inside.prevValue > 0 ? Color.green : (player.inside.value - player.inside.prevValue == 0 ? Color.white : Color.red);
 
                 playerInfo.transform.GetChild(12).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.mid.value.ToString()
                       + "(" + (player.mid.value - player.mid.prevValue).ToString() + ")";
@@ -174,7 +184,7 @@ public class ViewRoster : MonoBehaviour, IDataPersistence
                 playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.contract.years.ToString();
 
 
-            }
+            
         }
     }
 

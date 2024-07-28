@@ -13,6 +13,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
     public Text HomeText, GuestText;
     public GameObject HomeObject, GuestObject;
     public GameObject teamPlayer, oppPlayer;
+    public GameObject Overtime;
     public Transform teamDepth, oppDepth;
     public GameObject playerDepth;
     public GameObject ball;
@@ -161,6 +162,7 @@ public class TeamManager : MonoBehaviour,IDataPersistence
         {
             if(GuestObject.GetComponent<Team>().teamScore == HomeObject.GetComponent<Team>().teamScore)
             {
+                Overtime.SetActive(true);
                 GuestObject.GetComponent<Team>().Plays += 6;
                 HomeObject.GetComponent<Team>().Plays += 6;
                 GuestObject.GetComponent<Team>().PlaysText.GetComponent<Text>().text = (6).ToString();

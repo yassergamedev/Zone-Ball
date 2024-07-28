@@ -677,7 +677,7 @@ public class PlayerActions : MonoBehaviour
 
             isPicking = true;
             int action = UnityEngine.Random.Range(1, 4);
-            action = 1;
+            //action = 1;
             commentary.text = "";
             switch (action)
             {

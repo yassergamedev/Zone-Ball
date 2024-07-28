@@ -895,7 +895,7 @@ RectTransform:
   m_GameObject: {fileID: 27219407}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1086037793}
@@ -927,7 +927,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 27
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -9604,8 +9604,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 16210824}
   m_HandleRect: {fileID: 16210823}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333537
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9905,7 +9905,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &313246412
@@ -10838,6 +10838,7 @@ MonoBehaviour:
       turnovers: 0
       oppTurnovers: 0
       extraTime: 0
+      season: 
       playersStats: []
       homeStatsPersistent: []
       guestStatsPersistent: []
@@ -12626,7 +12627,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000045776367}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &393895713
@@ -14240,7 +14241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000045776367}
+  m_AnchoredPosition: {x: 0, y: 0.000076293945}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &440724871
@@ -15679,7 +15680,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1001 &480470484
@@ -15967,7 +15968,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &485982886
@@ -16195,7 +16196,7 @@ RectTransform:
   m_GameObject: {fileID: 500616615}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 17302435}
@@ -16227,7 +16228,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 27
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -16970,8 +16971,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 654381821}
   m_HandleRect: {fileID: 654381820}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -22141,7 +22142,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 804548924}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.013333638
+  m_Size: 0.013333231
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25594,7 +25595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &727186548
@@ -26506,8 +26507,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 519680327}
   m_HandleRect: {fileID: 519680326}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.01333313
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -28994,6 +28995,7 @@ MonoBehaviour:
       turnovers: 0
       oppTurnovers: 0
       extraTime: 0
+      season: 
       playersStats: []
       homeStatsPersistent: []
       guestStatsPersistent: []
@@ -33519,7 +33521,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1962654392}
   m_HandleRect: {fileID: 1962654391}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.01333313
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -34263,7 +34265,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000076293945}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &966556601
@@ -37604,7 +37606,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 817729312}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.01333313
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -40211,8 +40213,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2132568622}
   m_HandleRect: {fileID: 2132568621}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.01333313
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41330,8 +41332,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1361122572}
   m_HandleRect: {fileID: 1361122571}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.013333231
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -45359,7 +45361,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 458727264}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.013332825
+  m_Size: 0.013334045
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -46067,7 +46069,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.000045776367}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1279497574
@@ -47619,7 +47621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1001 &1336647313
@@ -48622,8 +48624,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1729301898}
   m_HandleRect: {fileID: 1729301897}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -54447,7 +54449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: -0.000091552734}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1502064949
@@ -56513,7 +56515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000045776367}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1545325512
@@ -56893,8 +56895,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1077603818}
   m_HandleRect: {fileID: 1077603817}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -57495,8 +57497,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 473169922}
   m_HandleRect: {fileID: 473169921}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333435
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -63746,8 +63748,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 563280667}
   m_HandleRect: {fileID: 563280666}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333028
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -63872,8 +63874,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1875793698}
   m_HandleRect: {fileID: 1875793697}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333231
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -65927,8 +65929,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 919832354}
   m_HandleRect: {fileID: 919832353}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -70767,7 +70769,7 @@ RectTransform:
   m_GameObject: {fileID: 1891678480}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1882204900}
@@ -70799,7 +70801,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 27
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -71864,8 +71866,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1635320457}
   m_HandleRect: {fileID: 1635320456}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.01333313
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -72264,6 +72266,7 @@ MonoBehaviour:
       turnovers: 0
       oppTurnovers: 0
       extraTime: 0
+      season: 
       playersStats: []
       homeStatsPersistent: []
       guestStatsPersistent: []
@@ -72894,8 +72897,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1248951981}
   m_HandleRect: {fileID: 1248951980}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.013333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -73718,7 +73721,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 37.9888}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1967123336
@@ -75869,7 +75872,7 @@ RectTransform:
   m_GameObject: {fileID: 2023631147}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1675283954}
@@ -75901,7 +75904,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 27
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -76074,7 +76077,7 @@ RectTransform:
   m_GameObject: {fileID: 2032206608}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1721552279}
@@ -76106,7 +76109,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 27
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10

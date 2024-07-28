@@ -44,13 +44,13 @@ public class Season
         finalTeamStandings = new List<TeamPersistent> { };
         progress = new Progress[]
         {
-            new(3,false),
-            new(7,false),
-            new(11,false),
-            new(15, false),
-            new(19,false),
-            new(23,false),
-            new(27,false),
+            new(1,false),
+            new(5,false),
+            new(9,false),
+            new(13, false),
+            new(17,false),
+            new(21,false),
+            new(25,false),
         };
     }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Security.Cryptography;
 using TMPro;
@@ -72,6 +73,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
     public Transform Table;
     public GameObject PlayerDepth;
     public GameObject coachingTable;
+    public GameObject advanceTraining,StartNewGame;
     public TeamPersistent team;
     public Text off, def, notice;
     public Playfs playOffs;
@@ -105,18 +107,28 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 Home.text = team.matchesPlayed[week].isHome ? team.name : team.matchesPlayed[week]?.opponent;
                 Guest.text = team.matchesPlayed[week].isHome ? team.matchesPlayed[week]?.opponent : team.name;
                 Vector2 sizeDelta = SeasonDraft.transform.GetComponent<RectTransform>().sizeDelta;
-                sizeDelta.y = 4000;
+                sizeDelta.y = 2000;
                 SeasonDraft.transform.GetComponent<RectTransform>().sizeDelta = sizeDelta;
                 SeasonDraft.name = gameData.id;
                 FileDataHandler<PlayerPersistent> playerHandlerr = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", "");
                 List<string> playersDrafted = playerHandlerr.GetAllFiles();
-                for (int i = 0; i < 20; i++)
+
+                List<PlayerPersistent> draftPlayers = new();
+                
+                for(int i = 0; i < 20; i++)
                 {
                     FileDataHandler<PlayerPersistent> playerHandler = new FileDataHandler<PlayerPersistent>(Application.persistentDataPath + "/" + gameData.id + "/" + currentSeason.id + "/Draft R1/", playersDrafted[i]);
                     PlayerPersistent player = playerHandler.Load();
+                    draftPlayers.Add(player);
+                }
+                draftPlayers = draftPlayers.OrderByDescending(player => player.ovrl).ToList();
+                
+                foreach (PlayerPersistent player in draftPlayers)
+                {
+                   
                     GameObject playerInfo = Instantiate(DraftPlayer, SeasonDraft.transform);
 
-                    playerInfo.name = playersDrafted[i];
+                    playerInfo.name = player.Name;
                     playerInfo.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Name;
                     //playerInfo.transform.GetChild(2).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
                     playerInfo.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Age.ToString();
@@ -159,14 +171,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
 
                     playerInfo.transform.GetChild(14).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.ovrl.ToString();
 
-                    GameObject playerContract = Instantiate(Contract, SeasonDraft.transform);
-                    playerContract.transform.GetChild(1).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.Number.ToString();
-
-
-                    playerContract.transform.GetChild(3).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = player.contract.salary.ToString();
-
-                    playerContract.transform.GetChild(5).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "0";
-
+                    
                    
 
 
@@ -1301,15 +1306,34 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 {
                     Debug.Log("team " + teamPersistent.name + "'s match is played");
                     teamsPlay[i].Item2 = true;
-                    if (teams.transform.GetChild(i).transform.childCount == 2)
+                    for (int c = 0; c < teams.transform.childCount; c++)
                     {
-                        Destroy(teams.transform.GetChild(i).GetChild(1).gameObject);
+                        if (teams.transform.GetChild(c).gameObject.name == teamsPlay[i].Item1)
+                        {
+                            if (teams.transform.GetChild(i).transform.childCount == 2)
+                                {
+                       
+                                Destroy(teams.transform.GetChild(c).GetChild(1).gameObject);
+                                break;
+                            }
+                            
+                        }
+                       
                     }
                 }
                 else
                 {
                     isNextWeekReady = false;
-                    Instantiate(hasPlayedObj, teams.transform.GetChild(i).transform);
+                    for (int c = 0; c < teams.transform.childCount; c++)
+                    {
+                        if (teams.transform.GetChild(c).gameObject.name == teamsPlay[i].Item1)
+                        {
+                            Instantiate(hasPlayedObj, teams.transform.GetChild(c).transform);
+                            break;
+                        }
+                    }
+                            
+                   
                 }
             }
         }
@@ -1983,7 +2007,22 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             fullStats.gameObject.name = player.Name;
             fullStats.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = player.Name;
             fullStats.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Age.ToString();
-            fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+            if (player.team == "New York Owls")
+            {
+                fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "NY";
+            }
+            else
+            {
+                if(player.team == "New Mexico Dragons")
+                {
+                    fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "NM";
+                }
+                else
+                {
+                    fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+                }
+            }
+            
 
             for(int k = 3,s=0; s<player.stats.getStats().Count; k++,s++)
             {
@@ -2039,7 +2078,22 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             fullStats.gameObject.name = player.Name;
             fullStats.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = player.Name;
             fullStats.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Age.ToString();
-            fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+            fullStats.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = player.Age.ToString();
+            if (player.team == "New York Owls")
+            {
+                fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "NY";
+            }
+            else
+            {
+                if (player.team == "New Mexico Dragons")
+                {
+                    fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "NM";
+                }
+                else
+                {
+                    fullStats.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = player.team;
+                }
+            }
 
             for (int k = 3, s = 0; s < player.stats.getStats().Count; k++, s++)
             {
@@ -2551,23 +2605,23 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
         gamesHandler.Save(games);
         CheckWeek();
         setProgress();
-
-    }
+       }
 
     public void setProgress()
     {
 
-        if((week+1) %4 ==0)
+        if((week+1)  ==1 || (week + 1) == 5 || (week + 1) == 9 || (week + 1) == 13 || (week + 1) == 17 || (week + 1) == 21 || (week + 1) == 21 || (week + 1) == 25)
         {
-            Debug.Log("Players Progressing");
+           
             for(int i = 0; i<currentSeason.progress.Length;i++)
             {
-                if(week == currentSeason.progress[i].week)
+                if(week+1 == currentSeason.progress[i].week)
                 {
                     if(!currentSeason.progress[i].hasProgressed)
                     {
-                        ProgressPlayers();
-                        currentSeason.progress[i].setHasProgressed(true) ;
+                        advanceTraining.SetActive(true);
+                        StartNewGame.SetActive(false);
+                        
                         break;
                     }
                     else
@@ -2576,14 +2630,32 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                     }
                 }
             }
-            FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
-            seasonHandler.Save(currentSeason);
+           
         }
        
     }
 
     public void ProgressPlayers()
     {
+        for (int i = 0; i < currentSeason.progress.Length; i++)
+        {
+            if (week + 1 == currentSeason.progress[i].week)
+            {
+                if (!currentSeason.progress[i].hasProgressed)
+                {
+                    currentSeason.progress[i].setHasProgressed(true);
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+       
+       
+        FileDataHandler<Season> seasonHandler = new(Application.persistentDataPath + "/" + gameData.id + "/" + gameData.currentSeason + "/", gameData.currentSeason);
+        seasonHandler.Save(currentSeason);
         string[] west =
 {
             "Arizona Jaguars",
