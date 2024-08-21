@@ -92,6 +92,22 @@ public class LeagueMenu : MonoBehaviour, IDataPersistence
             teamHandler.Save(team);
         }
 
+        FileDataHandler<Games> gamesHandler = new(Application.persistentDataPath, "Games");
+        Games games = gamesHandler.Load();
+
+        foreach (CurrentGame game in games.games) { 
+        
+            if(game.currentGame == currGame.currentGame)
+            {
+                game.minPlays = currGame.minPlays;
+                game.maxPlays = currGame.maxPlays;
+                game.gamePlays = currGame.gamePlays;
+                break;
+            }
+        }
+        
+        gamesHandler.Save(games);
+
     }
     public void setStandings()
     {

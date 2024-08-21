@@ -1294,6 +1294,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
             ("Texas Rattlesnakes",false),
         
         };
+        Array.Sort(teamsPlay, (team1, team2) => team1.Item1.CompareTo(team2.Item1));
         if (currentSeason.phase == "Season")
         {
             for (int i = 0; i<teamsPlay.Length;i++)
@@ -1774,7 +1775,8 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                             playerTotalStats.blocks += stats.blocks;
                             playerTotalStats.steals += stats.steals;
                             playerTotalStats.fouls += stats.fouls;
-                            playerTotalStats.pointsAllowed += stats.pointsAllowed;
+                                playerTotalStats.jukes += stats.jukes;
+                                playerTotalStats.pointsAllowed += stats.pointsAllowed;
                             playerTotalStats.shots += stats.shots;
                             playerTotalStats.shotsTaken += stats.shotsTaken;
                             playerTotalStats.pointsScored += stats.pointsScored;
@@ -1929,6 +1931,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                 {
                     if (allTimePlayerStats[k].Item3.getStats()[l].Item1 == record.getStats()[i].Item1)
                     {
+                        Debug.Log("current points of " + allTimePlayerStats[k].Item3.getStats()[l].Item1 + " of "+ allTimePlayerStats[k].Item1+ ": " + allTimePlayerStats[k].Item3.getStats()[l].Item2());
 
                         if (allTimePlayerStats[k].Item3.getStats()[l].Item2() >= max)
                         {
@@ -1937,7 +1940,7 @@ public class SelectedStuff : MonoBehaviour,IDataPersistence
                             max = allTimePlayerStats[k].Item3.getStats()[l].Item2();
                             if(max != 0)
                             {
-                                Debug.Log("current max  of " + allTimePlayerStats[k].Item3.getStats()[l].Item1 + ": " + max);
+                                Debug.Log("current max of " + allTimePlayerStats[k].Item3.getStats()[l].Item1 + ": " + max);
                             }
                             rec.statName = allTimePlayerStats[k].Item3.getStats()[l].Item1;
                             rec.player = allTimePlayerStats[k].Item1;

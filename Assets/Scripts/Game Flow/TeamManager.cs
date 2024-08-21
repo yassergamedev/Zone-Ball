@@ -252,7 +252,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 stats.id = player.id;
                 stats.team = player.team;
                 statsHandler.Save(stats);
-
+                player.stats.foulShots += stats.foulShots;
+                player.stats.shots += stats.shots;
+                player.stats.shotsTaken += stats.shotsTaken;
+                player.stats.midShots += stats.midShots;
+                player.stats.insideShots += stats.insideShots;
+                player.stats.outsideShotsMade += stats.outsideShotsMade;
+                player.stats.pressures += stats.pressures;
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.insideShotsMade += stats.insideShotsMade;
@@ -294,6 +300,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 stats.id = player.id;
                 stats.team = Home.id;
                 statsHandler.Save(stats);
+                player.stats.foulShots += stats.foulShots;
+                player.stats.shots += stats.shots;
+                player.stats.shotsTaken += stats.shotsTaken;
+                player.stats.midShots += stats.midShots;
+                player.stats.insideShots += stats.insideShots;
+                player.stats.outsideShotsMade += stats.outsideShotsMade;
+                player.stats.pressures += stats.pressures;
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.insideShotsMade += stats.insideShotsMade;
@@ -405,7 +418,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 stats.id = player.id;
                 stats.team = player.team;
                 statsHandler.Save(stats);
-
+                player.stats.foulShots += stats.foulShots;
+                player.stats.shots += stats.shots;
+                player.stats.shotsTaken += stats.shotsTaken;
+                player.stats.midShots += stats.midShots;
+                player.stats.insideShots += stats.insideShots;
+                player.stats.outsideShotsMade += stats.outsideShotsMade;
+                player.stats.pressures += stats.pressures;
                 player.stats.blocks += stats.blocks;
                 player.stats.midShotsMade += stats.midShotsMade;
                 player.stats.plays += stats.plays;
@@ -446,6 +465,13 @@ public class TeamManager : MonoBehaviour,IDataPersistence
                 stats.team = player.team;
                 statsHandler.Save(stats);
 
+                player.stats.shots += stats.shots;
+                player.stats.shotsTaken += stats.shotsTaken;
+                player.stats.midShots += stats.midShots;
+                player.stats.insideShots += stats.insideShots;
+                player.stats.outsideShotsMade += stats.outsideShotsMade;
+                player.stats.pressures += stats.pressures;
+                player.stats.foulShots += stats.foulShots;
                 player.stats.blocks += stats.blocks;
                 player.stats.plays += stats.plays;
                 player.stats.defPlays += stats.defPlays;    

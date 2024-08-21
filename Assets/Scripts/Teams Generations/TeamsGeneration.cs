@@ -71,7 +71,7 @@ public class TeamsGeneration : MonoBehaviour,IDataPersistence
                 new("California Lightning", true),
                 new("Florida Dolphins",false),
                 new("Georgia Bears",false),
-                new("Nevada Magic",false),
+                new("New Mexico Dragons",false),
                 new("Maryland Sharks",false),
                 new("Michigan Warriors", true),
                 new("Kansas Coyotes",true),

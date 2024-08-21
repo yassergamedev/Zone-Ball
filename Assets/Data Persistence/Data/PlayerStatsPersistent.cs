@@ -53,6 +53,7 @@ public class PlayerStatsPersistent
     ("plays", () => plays, (value) => plays = value),
     ("defPlays", () => defPlays, (value) => defPlays = value),
        ("shots", () => shots, (value) => shots = value),
+
     ("shotsTaken", () => shotsTaken, (value) => shotsTaken = value),
     ("pointsScored", () => pointsScored, (value) => pointsScored = value),
     ("foulShots", () => foulShots, (value) => foulShots = value),
